@@ -1,0 +1,1345 @@
+
+笔记: WebGL编程指南
+
+-----------------------
+
+顶点着色器内置变量
+vec4 gl_Position 顶点位置, 必须被赋值
+float gl_PointSize 点的尺寸, 不是必须被赋值, 默认值为 1.0
+
+片元着色器内置变量
+vec4 gl_FragColor 片元颜色, RGBA 格式
+vec4 gl_FragCoord 片元在窗口坐标系统中的坐标值
+vec4 gl_PointCoord 片元在点内的坐标
+
+gl 指 WebGL 上下文, 从 canvas 中获取.
+
+
+P50, 设置 canvas 背景色
+gl.clearColor(r, g, b, a);
+指定绘图区域的背景色. rgba值的范围 [0.0, 1.0], 超出范围会被截断为 0.0 或 1.0 .
+
+RGB的值越高, 颜色越亮.
+
+
+P51, 清空 canvas
+WebGL缓冲区: 颜色缓冲区, 深度缓冲区, 模板缓冲区
+gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT, gl.STENCIL_BUFFER_BIT
+
+gl.clear(buffer);
+将指定缓冲区设定为预定值. 如果清空的是颜色缓冲区, 那么将使用 gl.clearColor(r,g,b,a) 指定的值(作为预定值).
+
+// 设置背景色, 清空颜色缓冲区
+gl.clearColor(0.0, 0.0, 0.0, 1.0);
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+
+P55, 着色器是什么?
+顶点着色器: 用来描述顶点特性(位置, 颜色等)的程序.
+片元着色器: 处理每个片元(像素)的程序, 如光照.
+
+颜色缓冲区的内容会自动显示到 canvas 上.
+
+着色器使用 GLSL ES 语言.
+
+齐次坐标(x, y, z, w), 当 w = 1.0 时, 表示三维坐标点.
+(x/w, y/w, z/w, 1), 齐次坐标对应的三维坐标.
+
+
+P64, 绘制操作
+gl.drawArrays(mode, first, count);
+执行顶点着色器, 按照 mode 参数指定的方式绘制图形.
+mode: 指定绘制的方式. 取值: gl.POINTS, gl.LINES, gl.LINE_STRIP, gl.LINE_LOOP, gl.TRIANGLES, gl.TRIANGLE_STRIP, gl.TRIANGLE_FAN
+first: 整型, 指定从哪个顶点开始绘制
+count: 整型, 指定绘制需要用到多少个顶点
+
+
+P65, WebGL 坐标系统
+面向屏幕, x 轴向右, y 轴向上, 视线方向是 z 轴的负方向
+取值范围: [-1， 1]
+默认为右手坐标系
+
+WebGL 不需要交换颜色缓冲区
+
+
+P68, 使用 attribute 变量
+使用 attribute, uniform 变量, 实现从JavaScript程序传递参数给着色器.
+attribute 变量传输的是与顶点相关的数据.
+uniform 变量传输的是对于所有顶点都相同的数据(与顶点无关的).
+
+// 声明 attribute 变量
+attribute vec4 a_Position;
+
+// 使用 attribute 变量
+gl_Position = a_Position;
+
+// 在 JavaScript 程序中, 获取 attribute 变量的存储位置
+var a_Position = gl.getAttribLocation(gl.program, "a_Position");
+
+// 在 JavaScript 程序中, 向 attribute 变量赋值
+gl.vertexAttrib3f(a_Position, 0.3, 0.6, 0.0);
+
+attribute: 存储限定符
+一般, a_ 开头, 表示 attribute 变量.
+u_ 开头, 表示 uniform 变量.
+存储限定符 + 类型 + 变量名
+
+gl.getAttribLocation(program, name);
+获取由 name 参数指定的 attribute 变量的存储地址.
+program: 指定包含顶点着色器和片元着色器的着色器程序对象.
+name: 指定想要获取其存储地址的 attribute 变量的名称.
+返回值: 大于等于0, attribute 变量的存储地址
+       -1, attribute 变量不存在 或者 attribute 变量名含有 gl_ 或 webgl_前缀
+
+
+gl.vertexAttrib3f(location, v0, v1, v2)
+将数据(v0, v1, v2)传给由 location 参数指定的 attribute 变量.
+location: 指定将要修改的 attribute 变量的存储位置.
+该方法默认对第4个分量赋值1.0, 如果 location 指定的变量是 vec4 类型.
+
+默认 attribute 变量数量最多是 8.
+
+gl.vertexAttrib3f的同族函数:
+                                       其他分量的默认值
+gl.vertexAttrib1f(location, v0); // v1 = 0, v2 = 0, v3 = 1.0
+gl.vertexAttrib2f(location, v0, v1); // v2 = 0, v3 = 1.0
+gl.vertexAttrib3f(location, v0, v1, v2); // v3 = 1.0
+gl.vertexAttrib4f(location, v0, v1, v2, v3);
+
+
+使用 类型化数组 作为参数
+var position = new Float32Array([-0.2, 0.4, 0.0]);
+gl.vertexAttrib3fv(a_Position, position);
+
+
+P74, WebGL 相关函数的命名规范
+基础函数名 + 参数个数 + 参数类型
+f: 浮点数
+i: 整型
+
+基础函数名: vertexAttrib
+
+
+P88, uniform 变量
+
+// 声明 uniform 变量, 需要声明精度
+precision mediump float;
+uniform vec4 u_FragColor;
+
+// 使用 uniform 变量
+gl_FragColor = u_FragColor;
+
+// 获取 uniform 变量的存储地址
+var u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
+
+// 向 uniform 变量赋值
+gl.uniform4f(u_FragColor, 0.9, 1.0, 0.0, 1.0);
+
+
+precision, 精度限定词
+
+gl.getUniformLocation(program, name);
+获取指定名称的 uniform 变量的存储位置.
+program: 着色器程序对象.
+name: uniform 变量名.
+返回值: null, 表示变量不存在或者使用了保留字前缀(gl_, webgl_), 与 getAttribLocation 的 -1 返回值不同
+
+gl.uniform4f(location, v0, v1, v2, v3);
+将数据(v0, v1, v2, v3)传递给由 location 指定的 uniform 变量.
+
+同族函数:
+gl.unifrom1f(location, v0);
+gl.unifrom2f(location, v0, v1);
+gl.unifrom3f(location, v0, v1, v2);
+gl.unifrom4f(location, v0, v1, v2, v3);
+
+客户区域空间 转换到 WebGL 坐标空间
+// 在事件处理函数中(onmousedown)
+var x = ev.clientX;
+var y = ev.clientY;
+var rect = ev.target.getBoundingClientRect();
+x = ((x - rect.left) - canvas.width / 2) / (canvas.width / 2);
+y = (canvas.height / 2 - (y - rect.top)) / (canvas.height / 2);
+
+
+第3章 绘制和变换三角形
+缓冲区对象, buffer object, 可以一次性传递多个顶点数据给着色器.
+缓冲区对象是 WebGL系统的一块内存区域.
+
+P99, 使用缓冲区对象
+// 创建缓冲区对象
+var vertexBuffer = gl.createBuffer();
+
+// 绑定缓冲区对象
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+// 将数据写入缓冲区对象
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+// 将缓冲区对象分配给 attribute 变量
+gl.vertexAttribPointer(location, size, type, normalize, stride, offset);
+
+// 开启(激活) attribute 变量
+gl.enableVertexAttribArray(a_Position);
+
+gl.createBuffer();
+创建缓冲区对象.
+
+gl.deleteBuffer(buffer);
+删除缓冲区对象(buffer).
+
+gl.bindBuffer(target, buffer);
+将 buffer 表示的缓冲区对象绑定到 target 表示的目标上. 表明缓冲区对象的用途.
+target: gl.ARRAY_BUFFER, 表示缓冲区对象中包含了顶点的数据;
+        gl.ELEMENT_ARRAY_BUFFER, 表示缓冲区对象中包含了顶点的索引值.
+
+不能直接写入数据到缓冲区对象, 而是向 target 中写入数据, 所以要先绑定缓冲区对象到 target(目标).
+
+gl.bufferData(target, data, usage);
+开辟存储空间, 向绑定在 target 上的缓冲区对象中写入数据 data.
+target: gl.ARRAY_BUFFER, gl.ELEMENT_ARRAY_BUFFER
+data: 类型化数据
+usage: 表示将 如何使用 存储在缓冲区对象中的数据.
+       gl.STATIC_DRAW, 只会向缓冲区对象中写入一次数据, 但需要绘制很多次
+       gl.STREAM_DRAW, 只会向缓冲区对象中写入一次数据, 然后绘制若干次
+       gl.DYNAMIC_DRAW, 会向缓冲区对象中多次写入数据, 并绘制很多次
+
+P104, 类型化数组
+BYTES_PER_ELEMENT, 数组中每个元素所占的字节数
+
+  vertexAttrib + Pointer
+gl.vertexAttribPointer(location, size, type, normalize, stride, offset);
+将绑定到 gl.ARRAY_BUFFER 的缓冲区对象分配给由 location 指定的 attribute 变量.
+location: 指定待分配 attribute 变量的存储位置
+size: 指定缓冲区中每个顶点的分量个数. 如果 size 比 attribute 变量需要的分量数小, 则自动补全.
+type: gl.UNSIGNED_BYTE, 无符号字节,   Uint8Array
+      gl.SHORT,         短整型,       Int16Array
+      gl.UNSIGNED_SHORT, 无符号短整型, Uint16Array
+      gl.INT,            整型,        Int32Array
+      gl.UNSIGNED_INT,   无符号整型,   Uint32Array
+      gl.FLOAT,          浮点型,       Float32Array
+normalize, 是否将非浮点型数据归一化到 [0, 1] 或 [-1, 1]区间
+stride: 指定相邻两个顶点间的字节数, 默认为0
+offset: 指定缓冲区对象中的偏移量(以字节为单位), attribute 变量从缓冲区中的何处开始存储. offset 为 0, 表示从起始位置开始.
+
+gl.enableVertexAttribArray(location);
+开启 location 指定的 attribute 变量.
+
+gl.disableVertexAttribArray(location);
+关闭 attribute 变量.
+
+
+P112, 基本图形
+图形, mode, 绘制顺序
+点, gl.POINTS, v0 v1 v2 v3 v4 v5
+线段, gl.LINES, v0-v1 v2-v3 v4-v5
+线条, gl.LINE_STRIP, v0-v1 v1-v2 v2-v3 v3-v4 v4-v5
+回路, gl.LINE_LOOP, v0-v1 v1-v2 v2-v3 v3-v4 v4-v5 v5-v1
+三角形, gl.TRIANGLES, v0-v1-v2 v3-v4-v5
+三角带, gl.TRIANGLE_STRIP, v0-v1-v2 v2-v1-v3 v2-v3-v4
+三角扇, gl.TRIANGLE_FAN, v0-v1-v2 v0-v2-v3 v0-v3-v4
+
+
+平移, 需要指明: 平移矢量
+uniform vec4 u_Translation;
+
+gl_Position = a_Position + u_Translation;
+
+// 对表示平移的 uniform 变量赋值
+gl.uniform4f(u_Translation, tx, ty, tz, 0);
+
+
+P121, 旋转, 需要指明: 旋转轴, 旋转方向, 旋转角度.
+绕 Z 轴, 视线沿着 Z 轴的负方向, 逆时针旋转 b 角度, b > 0.
+右手旋转法则, 右手握拳, 大拇指指向旋转轴正方向, 其余四指的指向是旋转方向.
+
+绕 Z 轴旋转 b 度后的坐标(x1, y1)
+x1 = x * cos(b) - y * sin(b);
+y1 = x * sin(b) + y * cos(b);
+
+vec4 p = a_Position + u_Translation;
+gl_Position.x = p.x * cos(u_Angle) - p.y * sin(u_Angle);
+gl_Position.y = p.x * sin(u_Angle) + p.y * cos(u_Angle);
+gl_Position.z = p.z;
+gl_Position.w = 1.0;
+
+
+比较矩阵与矢量相乘的结果 和 变换公式, 得到变换矩阵
+
+| x1 |   | a b c d |   | x |
+| y1 | = | e f g h | x | y |
+| z1 |   | i j k l |   | z |
+| 1  |   | m n o p |   | 1 |
+
+=>
+x1 = ax + by + cz + d
+y1 = ex + fy + gz + h
+z1 = ix + jy + kz + l
+1  = mx + ny + oz + p
+
+记忆技巧: 字母顺序
+
+P130, 变换矩阵: 平移
+
+P131, 4x4的旋转矩阵
+| cos(B)  -sin(B)  0  0 |
+| sin(B)   cos(B)  0  0 |
+|   0        0     1  0 |
+|   0        0     0  1 |
+
+列主序: a,e,i,m,b,f,j,n,c,g,k,o,d,h,l,p
+WebGL 的矩阵使用列主序.
+
+着色器支持矢量和矩阵运算功能.
+
+// 声明4x4矩阵类型
+uniform mat4 u_xformMatrix;
+
+// 将矩阵传给着色器
+let cosB = Math.cos(angle);
+let sinB = Math.sin(angle);
+
+let xformMatrix = new Float32Array([
+    cosB, sinB, 0, 0,
+    -sinB, cosB, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+]);
+gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix);
+
+// 使用矩阵
+gl_Position = u_xformMatrix * a_Position;
+
+gl.uniformMatrix4fv(location, transpose, array);
+将 array 表示的4x4矩阵分配给由 location 指定的 uniform 变量.
+location: uniform 变量的存储位置
+transpose: WebGL 指定为 false
+array: 类型化数组, 4x4矩阵按列主序存储
+
+4x4平移矩阵
+| 1 0 0 Tx |
+| 0 1 0 Ty |
+| 0 0 1 Tz |
+| 0 0 0  1 |
+
+4x4缩放矩阵
+| Sx  0  0  0 |
+| 0  Sy  0  0 |
+| 0   0  Sz 0 |
+| 0   0  0  1 |
+
+=> 将 cos, sin 值传到缩放矩阵... 效果有点奇特
+let xformMatrix = new Float32Array([
+    cosB, 0, 0, 0,
+    0, -sinB, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+]);
+
+
+P139 第4章 高级变换与动画基础
+
+OpenGL 有提供创建变换矩阵的函数, 而 WebGL 没有.
+
+矩阵变换库 cuon-matrix.js
+Matrix4 类型
+
+var matrix4 = new Matrix4();
+matrix4.elements 是 Float32Array 类型.
+
+旋转矩阵:
+                  角度    旋转轴
+matrix4.setRotate(angle, 0, 0, 1);
+
+P142, Matrix4 的方法和属性
+
+多个变换组合在一起的 模型变换矩阵(model matrix):
+先平移, 后旋转:
+旋转矩阵 x 平移矩阵 x 向量
+matrix4.setRotate(angle, 0, 0, 1);
+matrix4.translate(tx, ty, tz);
+
+动画, "翻书页", 对影像插值, 帧.
+每次绘制前, 都清除上一次绘制的内容.
+
+requestAnimationFrame(func), 只有在标签页激活的情况下才会执行.
+func 会收到一个 time 参数.
+返回一个 ID.
+
+取消 id 对应的 tick.
+cancelAnimationFrame(id);
+
+两帧的时间间隔不一定相等.
+
+
+P161, 第5章 颜色与纹理
+图元光栅化, 图形到片元的转化.
+
+将顶点相关的数据通过缓冲区对象传入顶点着色器.
+方法1: 使用多个缓冲区对象, 一种顶点数据(位置, 颜色, 大小等)对应一个缓冲区对象
+方法2: 使用一个缓冲区对象, 所有顶点数据放到同一个缓冲区对象(交错存储, interleaved)
+
+P168, gl.vertexAttribPointer 的参数解释
+stride: 单个顶点的所有数据的字节数.
+offset: 当前考虑的数据项距离首个元素的距离.
+
+
+
+P171, varying 变量, 顶点着色器向片元着色器传输数据
+可变的变量, 经过内部插值过程, 再传给片元着色器
+varying vec4 v_Color;
+
+P175, 几何形状的装配和光栅化
+顶点坐标 -> 图元装配 -> 光栅化 -> 片元着色器
+图元装配(primitive assembly): 根据 gl.drawArrays(mode,first,count); 指定的 mode, 将顶点坐标装配成几何图形.
+光栅化(rasterization): 将装配好的图形转化为片元.
+对每一个片元执行片元着色器.
+
+gl.drawingBufferWidth  颜色缓冲区的宽度 w
+gl.drawingBufferHeight 颜色缓冲区的高度 h
+gl_FragCoord 表示的范围:
+(0,0) ---- (w,0)
+  |          |
+  |          |
+(0,h) ---- (w,h)
+
+P181, varying 变量的作用和内插过程
+顶点着色器内的 varying 变量与片元着色器的 varying 变量不同(因为经过了内插).
+
+P184, 纹理映射, 将纹理图像粘贴到几何图形上
+纹素, 组成纹理图像的像素.
+
+P186, 纹理坐标 st坐标, 或 uv 坐标
+  t
+(0,1) ---- (1,1)
+  |          |
+  |          |
+(0,0) ---- (1,0) s
+
+// 在顶点着色器中, 指定纹理坐标
+attribute vec2 a_TexCoord;
+varying vec2 v_TexCoord;
+
+v_TexCoord = a_TexCoord;
+
+// 在片元着色器中, 根据纹理坐标抽取纹素
+uniform sampler2D u_Sampler;
+varying vec2 v_TexCoord;
+
+gl_FragColor = texture2D(u_Sampler, v_TexCoord);
+
+// 设置顶点纹理坐标, 顶点坐标与纹理坐标的对应关系
+  var verticesTexCoords = new Float32Array([
+    // Vertex coordinates, texture coordinate
+    -0.5, 0.5,              0.0, 1.0,
+    -0.5, -0.5,             0.0, 0.0,
+    0.5, 0.5,               1.0, 1.0,
+    0.5, -0.5,              1.0, 0.0,
+  ]);
+
+// 创建纹理对象, 以存储纹理图像
+var texture = gl.createTexture();
+
+// 配置纹理
+    // 对纹理图像进行 y 轴反转, WebGL 纹理坐标系的 t 轴与图片坐标系的 Y 轴方向相反
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+
+    // 开启0号纹理单元, 8个纹理单元: gl.TEXTURE0 ~ gl.TEXTURE7, 每个纹理单元管理一张纹理图像
+    gl.activeTexture(gl.TEXTURE0);
+
+    // 绑定纹理对象
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // 配置纹理参数
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+    // 配置纹理图像
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+    // 将0号纹理单元传递给着色器中的采样器变量(sampler2D 变量)
+    gl.uniform1i(u_Sampler, 0);
+
+
+gl.deleteTexture(texture);
+使用 texture 删除纹理对象.
+
+gl.pixelStorei(pname, param);
+使用 pname, param 指定的方式处理加载后的图像.
+pname: gl.UNPACK_FLIP_Y_WEBGL, 对图像进行 Y 轴反转, 默认为 false(param).
+       gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 将图像 RGB 颜色值的每一个分量乘以 A 值. 默认为 false(param).
+
+gl.activeTexture(texUnit);
+激活 texUnit 指定的纹理单元.
+
+gl.bindTexture(target, texture);
+开启 texture 指定的纹理对象, 并将其绑定到 target 上.
+target: 纹理类型
+  gl.TEXTURE_2D, 二维纹理
+  gl.TEXTURE_CUBE_MAP, 立方体纹理
+texture: 绑定的纹理单元.
+
+gl.texParameteri(target, pname, param);
+将 param 的值赋给绑定到目标的纹理对象的 pname 参数上.
+target: gl.TEXTURE_2D 或 gl.TEXTURE_CUBE_MAP
+pname 与 param 组合:
+gl.TEXTURE_MAG_FILTER(纹理放大): gl.NEAREST | gl.LINEAR(默认值)
+gl.TEXTURE_MIN_FILTER(纹理缩小): gl.NEAREST | gl.LINEAR | gl.NEAREST_MIPMAP_LINEAR(默认值)
+gl.TEXTURE_WRAP_S(纹理水平填充): gl.REPEAT(默认值) | gl.MIRRORED_REPEAT | gl.CLAMP_TO_EDGE
+gl.TEXTURE_WRAP_T(纹理垂直填充): gl.REPEAT(默认值) | gl.MIRRORED_REPEAT | gl.CLAMP_TO_EDGE(最边缘纹素填充)
+
+MIPMAP: 金字塔纹理, 纹理中有不同分辨率版本的图像.
+
+gl.texImage2D(target, level, internalformat, format, type, image);
+将 image 指定的图像分配给绑定到目标的纹理对象.
+target: gl.TEXTURE_2D 或 gl.TEXTURE_CUBE_MAP
+level: 传 0. 该参数为金字塔纹理准备.
+internalformat: 图像的内部格式.
+format: 纹理数据的格式, 与 internalformat 的值相同.
+type: 纹理数据的类型.
+image: 包含纹理图像的 Image 对象.
+
+纹理数据的格式
+gl.RGB
+gl.RGBA
+gl.ALPHA
+gl.LUMINANCE(流明, 物体表面的亮度. 通常使用物体表面红, 蓝, 绿颜色分量值的加权平均来计算流明)
+gl.LUMINANCE_ALPHA
+
+纹理数据的类型(数据格式)
+gl.UNSIGNED_BYTE           无符号整型, 每个分量占1个字节(8位, 比特)
+gl.UNSIGNED_SHORT_5_6_5    RGB, 每个分量分别占 5, 6, 5位
+gl.UNSIGNED_SHORT_4_4_4_4  RGBA, 每个分量分别占 4位
+gl.UNSIGNED_SHORT_5_5_5_1  RGBA, RGB 每个分量分别占 5位, A 分量占 1位
+
+用于纹理的数据类型:
+sampler2D    绑定到 gl.TEXTURE_2D 上的纹理数据类型
+samplerCube  绑定到 gl.TEXTURE_CUBE_MAP 上的纹理数据类型
+
+
+P205, 内置函数 texture2D()
+vec4 texture2D(sampler2D sampler, vec2 coord);
+返回值的格式由 gl.texImage2D() 的 internalformat 参数决定.
+
+internalformat         返回值
+gl.RGB                (R, G, B, 1.0)
+gl.RGBA               (R, G, B, A)
+gl.ALPHA              (0.0, 0.0, 0.0, A)
+gl.LUMINANCE          (L, L, L, 1.0)
+gl.LUMINANCE_ALPHA    (L, L, L, A)
+
+
+P207, 使用多个纹理.
+
+
+第6章 OpenGL ES 着色器语言
+
+P238, GLSL ES 的内置函数
+
+P240, attribute 变量, uniform 变量, varying 变量的数量限制.
+gl_MaxVertexAttribs
+gl_MaxVertexUniformVectors
+gl_MaxFragmentUniformVectors
+gl_MaxVaryingVectors
+
+P242, 精度限定字(highp, mediump, lowp)
+
+在低精度下运行, 提高内存使用效率, 减少性能开销, 降低能好, 延长电池续航能力.
+
+声明精度:
+方法1. precision 精度限定字 类型. 如 precision mediump float;
+方法2. mediump float x;
+
+WebGL 的片元着色器如果支持 highp, 会定义内置宏 GL_FRAGMENT_PRECISION_HIGH
+
+GL_ES 宏, 在 OpenGL ES 2.0 中定义为 1.
+
+在着色器顶部确定 GLSL ES 版本, 默认为 1.00.
+#version number
+(#version 100 或者 #version 101)
+
+
+第7章 进入三维世界
+
+绘制三维物体, 需要考虑 深度信息(Z轴).
+
+视图矩阵(view matrix): 由视点, 视线, 上方向构成的矩阵, 对 观察者观察到的场景 有影响.
+
+确定可视范围(可视空间):
+盒状空间: 由正射投影产生. 场景中的物体大小与所在位置无关.
+四棱锥空间: 由透视投影产生. 有深度感("近大远小").
+
+近裁剪面(near clipping plane), 远裁剪面(far clipping plane).
+
+p250, Matrix4.setLookAt(eyeX, eyeY, eyeZ, atX, atY, atZ, upX, upY, upZ);
+
+P265 投影矩阵: 将可视空间中的物体投影到近裁剪面上, 供 canvas 显示.
+
+近裁剪面的宽高比 应与 canvas 的宽高比 一致.
+
+// 设置正射投影矩阵
+Matrix4.setOrtho(left, right, bottom, top, near, far);
+
+P277, 透视投影的可视空间
+
+MVP: 投影矩阵 x 视图矩阵 x 模型矩阵
+
+顶点在规范立方体的坐标 = MVP x 顶点坐标
+
+规范立方体: 经过投影变换的盒状可视空间.
+
+// 设置透视投影矩阵
+Matrix4.setPerspective(fov, aspect, near, far);
+
+P290, 隐藏面消除
+
+开启隐藏面消除功能(需要与 MVP 矩阵配合使用)
+gl.enable(gl.DEPTH_TEST);
+
+绘制之前, 清除深度缓冲区( Z缓冲区 )
+gl.clear(gl.DEPTH_BUFFER_BIT);
+
+gl.enable(cap);
+开启 cap 表示的功能.
+cap:
+    gl.DEPTH_TEST  隐藏面消除
+    gl.BLEND       混合
+    gl.POLYGON_OFFSET_FILL  多边形位移
+    ...
+
+同时清除颜色缓冲区和深度缓冲区
+gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+gl.disable(cap);
+关闭 cap 表示的功能.
+
+执行完 片元着色器 后, 会进行深度检测, 不绘制被挡住的物体.
+
+P294, 深度冲突(Z fighting), 当两个物体极为接近时, 区分不了前后关系.
+
+WebGL 使用 多边形偏移 解决 深度冲突.
+
+开启多边形偏移
+gl.enable(gl,POLYGON_OFFSET_FILL);
+
+在绘制之前, 指定用来计算偏移量的参数
+gl.polygonOffset(1.0, 1.0);
+
+
+P298, 通过顶点索引绘制物体
+
+gl.drawElements(mode, count, type, offset);
+根据绑定到 gl.ELEMENT_ARRAY_BUFFER 的缓冲区对象中的顶点索引值绘制图形.
+count: 顶点数量.
+type: 索引值的数据类型, gl.UNSIGNED_BYTE 或者 gl.UNSIGNED_SHORT.
+offset: 指定索引数组中开始绘制的位置, 以字节为单位
+例子:
+  // 顶点索引数组
+  var indices = new Uint8Array([       // Indices of the vertices
+     0, 1, 2,   0, 2, 3,    // front
+     4, 5, 6,   4, 6, 7,    // right
+     8, 9,10,   8,10,11,    // up
+    12,13,14,  12,14,15,    // left
+    16,17,18,  16,18,19,    // down
+    20,21,22,  20,22,23     // back
+  ]);
+
+  var indexBuffer = gl.createBuffer();
+
+  // Write the indices to the buffer object
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+  // Draw the cube
+  gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+
+WebGL 根据索引值, 从 绑定到 gl.ARRAY_BUFFER 的缓冲区对象中获取顶点的数据, 再传递顶点数据给 attribute 变量.
+
+
+
+第8章 光照
+
+物体反射光线的颜色, 就是它的颜色.
+
+光源类型: 平行光, 点光源, 环境光, 聚光灯.
+
+反射类型: 漫反射(diffuse), 环境反射(ambient).
+
+与反射相关的因素: 入射光颜色和方向, 物体表面的固有颜色(基底色)和反射特性.
+
+漫反射光颜色 = 入射光颜色 * 表面基底色 * cos(B), B是 入射光与法线形成的夹角
+           = 入射光颜色 * 表面基底色 * (光线方向向量 · 法向量)
+
+环境光各方向均匀, 强度相等.
+
+环境反射光颜色 = 入射光颜色 * 表面基底色
+
+表面的反射光颜色 = 漫反射光颜色 + 环境反射光颜色
+
+平面正面的法向量, 顶点的绘制顺序是逆时针的.
+
+两个平面平行, 可以共用一个法向量.
+
+P331, 逆转置矩阵, inverse transpose matrix
+用 法向量 乘以 模型变换矩阵的逆转置矩阵, 就可以得到 变换后的法向量.
+求逆矩阵, 对逆矩阵进行转置.
+
+计算顶点的世界坐标(变换后的坐标)
+vec4 vertexPosition = u_ModelMatrix * a_Position;
+
+P338, 逐片元光照
+
+
+第9章 层次模型
+
+由小部件组成的复杂模型.
+
+keyCode: 37 38 39 40, 左 上 右 下
+
+子部件的变换要合并父部件的变换
+
+先绘制父部件, 再绘制子部件
+如: 上臂, 前臂, 手掌, 手指
+
+P362, 着色器的初始化
+
+gl.createShader(type);
+创建由 type 指定的着色器对象.
+type:
+  gl.VERTEX_SHADER    顶点着色器
+  gl.FRAGMENT_SHADER  片元着色器
+
+gl.shaderSource(shader, source);
+装载着色器代码.
+
+gl.compileShader(shader);
+编译 shader 源代码.
+
+// 检查编译结果
+var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+
+gl.getShaderInfoLog(shader);
+获取 shader 指定的着色器的信息日志.
+
+gl.attachShader(program, shader);
+分配 着色器对象 到 程序对象.
+
+gl.detachShader(program, shader);
+取消分配.
+
+gl.linkProgram(program);
+连接 program 中的着色器.
+
+gl.getProgramParameter(program, pname);
+检查程序对象状态
+
+gl.getProgramInfoLog(program);
+获取 program 指定的程序对象的信息日志.
+
+
+
+
+第10章 高级技术
+
+
+
+P377, 选中物体
+
+gl.readPixels(x, y, width, height, format, type, pixels);
+从 颜色缓冲区 中读取由 x,y,width,height 参数确定的 矩形块 中的所有像素值, 并保存到 pixels 中.
+x, y: 指定矩形块的左上角坐标, 也是读取的第1个像素的坐标.
+width, height: 矩形块的宽高, 单位: 像素.
+format: 像素值的颜色格式, gl.RGBA.
+type: 像素值的数据格式, gl.UNSIGNED_BYTE.
+pixels: 接收像素值数据的 Uint8Array 类型化数组.
+
+
+
+P394, 绘制圆点
+
+float d = distance(gl_PointCoord, vec2(0.5, 0.5));
+if(d < 0.5) {
+  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+} else { discard; }
+
+
+P397, alpha 混合
+
+开启混合功能
+gl.enable(gl.BLEND);
+
+指定混合函数
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+p399, 混合函数
+gl.blendFunc(src_factor, dst_factor);
+src_factor: 源颜色的权重因子
+dst_factor: 目标颜色的权重因子
+  gl.ZERO
+  gl.ONE
+  gl.SRC_COLOR
+  gl.ONE_MINUS_SRC_COLOR
+  gl.DST_COLOR
+  gl.ONE_MINUS_DST_COLOR
+  gl.SRC_ALPHA
+  gl.ONE_MINUS_SRC_ALPHA
+  gl.DST_ALPHA
+  gl.ONE_MINUS_DST_ALPHA
+  gl.SRC_ALPHA_SATURATE
+
+源颜色: (Rs, Gs, Bs, As),  后绘制的颜色
+目标颜色: (Rd, Gd, Bd, Ad), 先绘制的颜色
+混合后的颜色 = 源颜色 * src_factor + 目标颜色 * dst_factor
+
+加法混合: gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+
+P403 隐藏面消除原理
+深度缓冲区存储的 Z 坐标值已经归一化到 [0.0, 1.0]
+
+gl.depthMask(mask);
+锁定或释放 深度缓冲区 的写入操作
+mask: 锁定(false), 释放(true)
+
+...
+
+
+P409, 渲染到纹理
+动态生成纹理, 绘制到帧缓冲区.
+
+帧缓冲区对象(framebuffer object, FBO), 代替 颜色缓冲区 或 深度缓冲区.
+
+离屏绘制(offscreen drawing): 在帧缓冲区中绘制的过程.
+绘制操作并不是直接在帧缓冲区中进行, 而是发生在帧缓冲区的关联对象.
+
+一个帧缓冲区有3个关联对象: 颜色关联对象, 深度关联对象, 模板关联对象.
+对于每个关联对象, 可以是纹理对象, 也可以是 渲染缓冲区对象(renderbuffer object).
+在同一个帧缓冲区中, 关联对象的绘图区域尺寸需要相同.
+
+渲染缓冲区对象表示通用的绘图区域.
+
+隐藏面消除 -- 深度缓冲区 -- 渲染缓冲区, gl.enable(gl.DEPTH_TEST);
+
+OpenGL API 使用规律: 绑定缓冲区到目标, 再通过操作目标来操作缓冲区, 不是直接操作缓冲区.
+
+-----------------------
+// 创建帧缓冲区对象
+framebuffer = gl.createFramebuffer();
+
+// 创建纹理对象, 设置尺寸和参数(OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT 是绘制区域尺寸)
+texture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, texture);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+framebuffer.texture = texture;
+
+gl.texImage2D() 最后的参数设置为 null, 可以新建一块空白区域.
+
+// 创建渲染缓冲区对象
+depthBuffer = gl.createRenderbuffer();
+
+// 绑定渲染缓冲区对象, 设置尺寸
+gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer); // Bind the object to target
+gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+
+// 将帧缓冲区的 颜色关联对象 指定为一个 纹理对象
+gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+
+// 将帧缓冲区的 深度关联对象 指定为一个 渲染缓冲区对象
+gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
+
+// 检查帧缓冲区是否正确配置
+var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+if (gl.FRAMEBUFFER_COMPLETE !== e) {
+  console.log('Frame buffer object is incomplete: ' + e.toString());
+  return error();
+}
+
+// 在帧缓冲区中进行绘制 (注意: 调用了 gl.viewport() )
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);              // Change the drawing destination to FBO
+  gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT); // Set a viewport for FBO
+
+  gl.clearColor(0.2, 0.2, 0.4, 1.0); // Set clear color (the color is slightly changed)
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // Clear FBO
+
+  // 进行离屏绘制绘制命令...                        vvvvv
+  drawTexturedCube(gl, gl.program, cube, angle, texture, viewProjMatrixFBO);   // Draw the cube
+
+// 在颜色缓冲区中进行绘制(使用帧缓冲的绘制结果)
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);        // Change the drawing destination to color buffer
+  gl.viewport(0, 0, canvas.width, canvas.height);  // Set the size of viewport back to that of <canvas>
+
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the color buffer
+
+                                                    vvvvv
+  drawTexturedPlane(gl, gl.program, plane, angle, fbo.texture, viewProjMatrix);  // Draw the plane
+-----------------------
+
+取消绑定缓冲对象
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+gl.bindTexture(gl.TEXTURE_2D, null);
+gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+
+gl.createFramebuffer();
+创建帧缓冲区对象
+
+gl.deleteFramebuffer();
+删除帧缓冲区对象
+
+gl.createRenderbuffer();
+创建渲染缓冲区对象
+
+gl.deleteRenderbuffer();
+删除渲染缓冲区对象
+
+gl.bindRenderbuffer(target, renderbuffer);
+将 renderbuffer 指定的 渲染缓冲区对象 绑定到 target, 如果 renderbuffer 为 null, 则将已绑定在 target 上的渲染缓冲区对象 解除绑定.
+target: gl.RENDERBUFFER
+renderbuffer: 渲染缓冲区对象
+
+gl.renderbufferStorage(target, internalformat, width, height);
+创建并初始化渲染缓冲区的数据区.
+target: gl.RENDERBUFFER
+internalformat: 指定渲染缓冲区的数据格式
+  gl.DEPTH_COMPONENT16, 表示渲染缓冲区将替代 深度缓冲区
+  gl.STENCIL_INDEX8,    表示渲染缓冲区将替代 模板缓冲区
+  gl.RGBA4,             表示渲染缓冲区将替代 颜色缓冲区, RGBA各分量占4位
+  gl.RGB5_A1,                                       RGB各分量占5位, A占1位
+  gl.RGB565,                                        RGB的分量分别是 5位, 6位, 5位
+width, height: 指定渲染缓冲区的宽高, 单位是像素
+
+gl.bindFramebuffer(target, framebuffer);
+将 framebuffer 指定的帧缓冲区对象绑定到 target.
+target: gl.FRAMEBUFFER
+
+gl.framebufferTexture2D(target, attachment, textarget, texture, level);
+将 texture 指定的纹理对象关联到绑定在 target 上的帧缓冲区对象.
+target: gl.FRAMEBUFFER
+attachment: 指定关联类型
+  gl.COLOR_ATTACHMENT0    表示 texture 是颜色关联对象(WebGL 只有1个颜色关联对象)
+  gl.DEPTH_ATTACHMENT     表示 texture 是深度关联对象
+textarget: gl.TEXTURE_2D 或 gl.TEXTURE_CUBE_MAP
+texture: 纹理对象
+level: 0
+
+gl.framebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
+将 renderbuffer 指定的渲染缓冲区对象 关联到 绑定在 target 上的帧缓冲区对象.
+target: gl.FRAMEBUFFER
+attachment: 关联类型
+  gl.COLOR_ATTACHMENT0
+  gl.DEPTH_ATTACHMENT
+  gl.STENCIL_ATTACHMENT
+renderbuffertarget: gl.RENDERBUFFER
+renderbuffer: 渲染缓冲区对象
+
+gl.checkFramebufferStatus(target);
+检查绑定在 target 上的帧缓冲区对象的配置状态.
+target: gl.FRAMEBUFFER
+返回值:
+  0       target 不是 gl.FRAMEBUFFER
+  gl.FRAMEBUFFER_COMPLETE    帧缓冲区对象已正确配置
+  gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT    某个关联对象为空, 或者关联对象不合法
+  gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS    颜色关联对象和深度关联对象的尺寸不一致
+  gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT    帧缓冲区尚未关联任何一个关联对象
+
+
+gl.viewport(x, y, width, height);
+设置 gl.drawArrays() 和 gl.drawElements() 的绘制区域. 在 canvas 上绘图时, x 和 y 是 canvas 中的坐标.
+x, y           绘图区域的左上角, 单位: 像素
+width, height  绘图区域宽度, 高度
+
+
+// 开启消隐功能, WebGL 不绘制图形的背面.
+gl.enable(gl.CULL_FACE);
+
+
+P474, 裁剪坐标系和可视空间
+在 裁剪空间 中, 使用的是 左手坐标系.
+
+
+P479, 逆转置矩阵
+
+----------------------- ----------------------- -----------------------
+----------------------- ----------------------- -----------------------
+----------------------- ----------------------- -----------------------
+
+实验001: 点击画点
+程序: ClickedPoints
+功能: 点击画布, 绘制点
+分析:
+
+依赖:
+lib/webgl-utils.js
+lib/webgl-debug.js
+lib/cuon-utils.js
+lib/cuon-matrix.js
+
+程序结构:
+1. 在 main() 函数中( body元素加载完成后, 会执行 main() 函数 ), 找到 canvas 元素;
+var canvas = document.getElementById('webgl');
+
+2. 从 canvas 中, 获取 webgl 环境;
+var gl = getWebGLContext(canvas);
+
+3. 初始化 shader, VSHADER_SOURCE是顶点着色器, FSHADER_SOURCE是片段着色器
+initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)
+
+4. 获取 attribute 变量的位置, 变量名是定义在顶点着色器里的 a_Position
+var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+
+5. 给 canvas 添加鼠标点击事件监听
+canvas.onmousedown = function(ev){}
+
+6. 设置背景色
+gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+7. 清空颜色缓冲区, 以绘制新内容
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+
+重点:
+P81( PDF 里面的第81页 ), 坐标转换, 浏览器客户区坐标 => canvas 绘制区域坐标 => webgl 坐标
+webgl 坐标的范围 [-1, 1], 中心点是(0, 0)
+
+获取客户区域坐标:
+var x = ev.clientX;
+var y = ev.clientY;
+
+canvas区域坐标:
+var rect = ev.target.getBoundingClientRect();
+
+P74, gl.vertexAttrib3f(), 给 attribute 变量传值的 API, attribute 是存储限定符
+
+P64, gl.drawArrays(mode, first, count), 绘制操作
+绘制点时, mode = gl.POINTS
+
+gl_Position, gl_PointSize 由顶点着色器输出;
+gl_FragColor 由片段着色器输出;
+
+---------------------------------------------------------------------
+
+实验002: 绘制不同颜色的点
+程序:  ColoredPoints
+功能: 点击画布, 绘制点, 点的颜色会根据所在象限变化
+分析:
+
+1. 获取 uniform 变量位置
+var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+
+2. 片段着色器上, 设置了 float类型的默认精度
+precision mediump float;
+
+3. 给 uniform 变量传值, 4f 中的 4 表示分量个数, f 表示 float.
+gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+
+重点:
+P88, uniform 变量, 在片元着色器上声明的变量
+
+P242, precision 精度限定字, highp, mediump, lowp
+
+
+---------------------------------------------------------------------
+
+实验003: 绘制多个点
+程序:  MultiPoint
+功能: 使用缓冲区对象, 一次性绘制多个点
+分析:
+
+1. 创建缓冲区对象
+var vertexBuffer = gl.createBuffer();
+
+2. 绑定缓冲区对象
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+3. 给缓冲区对象传值
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+4. 获取 attribute 变量
+var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+
+5. 使用缓冲区对象赋值 attribute 变量
+gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+
+6. 开启 attribute 变量
+gl.enableVertexAttribArray(a_Position);
+
+7. 删除缓冲区对象
+gl.deleteBuffer(buffer);
+
+
+重点:
+P99, 使用缓冲区对象, buffer object
+P104, 类型化数组, Float32Array
+
+P106, gl.vertexAttribPointer(location, size, type, normalized, stride, offset) API
+size: 分量个数
+type: gl.FLOAT, gl.INT, ...
+stride: 相邻两个顶点间的字节数
+offset: 起始偏移量
+
+gl.ARRAY_BUFFER, 传递的是顶点数据
+gl.ELEMENT_ARRAY_BUFFER, 传递顶点的索引值, 需要使用 gl.drawElements() API 来绘制
+P298, 通过顶点索引绘制物体
+
+---------------------------------------------------------------------
+
+实验004: 绘制三角形
+程序: HelloTriangle 等
+功能: 测试绘制基本图形
+分析:
+
+gl.drawArrays(gl.POINTS, 0, n);
+gl.drawArrays(gl.LINES, 0, n);
+gl.drawArrays(gl.LINE_STRIP, 0, n);
+gl.drawArrays(gl.LINE_LOOP, 0, n);
+gl.drawArrays(gl.TRIANGLES, 0, n);
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+gl.drawArrays(gl.TRIANGLE_FAN, 0, n);
+
+重点:
+P112, 基本图形, gl.TRIANGLES, gl.LINES, gl.LINE_STRIP, gl.TRIANGLE_FAN, ...
+
+---------------------------------------------------------------------
+
+实验005: 旋转运动的三角形
+程序: RotatingTriangle
+功能: 每隔一段时间, 绘制旋转后的三角形
+分析:
+
+程序由4个函数组成: main(), initVertexBuffers(), draw(), animate()
+
+每帧调用
+var tick = function() {
+    requestAnimationFrame(tick, canvas);
+};
+tick();
+
+使用矩阵对象计算变换矩阵
+var modelMatrix = new Matrix4();
+modelMatrix.setRotate(currentAngle, 0, 0, 1); // Rotation angle, rotation axis (0, 0, 1)
+
+在顶点着色器中声明矩阵
+uniform mat4 u_ModelMatrix;
+
+传递矩阵数据给顶点着色器
+gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+
+计算新角度
+var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
+newAngle %= 360;
+
+
+重点:
+P142, Matrix4 用法
+P135, 行主序和列主序
+
+---------------------------------------------------------------------
+
+实验006: 纹理映射
+程序: TexturedQuad
+功能: 渲染图片
+分析:
+
+创建纹理对象, 管理 webgl 中的纹理
+var texture = gl.createTexture();
+
+在片段着色器中, 声明用于存储纹理图像的变量
+uniform sampler2D u_Sampler;
+
+在顶点着色器, 片段着色器中, 声明表示纹理坐标的变量
+varying vec2 v_TexCoord;
+
+纹理单元, 一个纹理单元对应一张纹理图像
+gl.TEXTURE0 ~ gl.TEXTURE7
+
+翻转图像的 Y 轴
+gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+
+激活纹理单元
+gl.activeTexture(gl.TEXTURE0);
+
+绑定纹理对象
+gl.bindTexture(gl.TEXTURE_2D, texture);
+
+纹理类型
+TEXTURE_2D, 2D 纹理
+TEXTURE_CUBE_MAP, 立方体纹理
+
+配置纹理对象的参数(缩放, 填充)
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+将纹理图像分配给纹理对象(纹理数据格式)
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+将纹理单元0 分配给 sampler2D 变量
+gl.uniform1i(u_Sampler, 0);
+
+在片段着色器中, 使用纹理
+gl_FragColor = texture2D(u_Sampler, v_TexCoord);
+
+
+重点:
+P186, 纹理坐标, 可以用 st 或者 uv 表示
+P195, 激活纹理单元
+
+区分纹理单元, 纹理对象, 取样器
+
+---------------------------------------------------------------------
+
+实验007: 多张纹理叠加
+程序: MultiTexture
+功能: 重叠两张纹理
+分析:
+
+在片段着色器中, 声明了两个 sampler2D 变量
+uniform sampler2D u_Sampler0;
+uniform sampler2D u_Sampler1;
+
+颜色叠加:
+vec4 color0 = texture2D(u_Sampler0, v_TexCoord);
+vec4 color1 = texture2D(u_Sampler1, v_TexCoord);
+gl_FragColor = color0 * color1;
+
+使用 gl.RGBA 格式
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+重点:
+P207, 使用多幅纹理
+
+---------------------------------------------------------------------
+
+实验008: 立方体
+程序: HelloCube, ColoredCube
+功能: 纹理立方体
+分析:
+
+无符号8位整型数组类型
+Uint8Array
+
+索引数组(ELEMENT_ARRAY_BUFFER)存储了顶点的绘制顺序
+通过顶点索引, 找到缓冲区(ARRAY_BUFFER)对应的顶点数据
+
+一个缓冲区对象可以分配给一个或多个 attribute 变量.
+
+
+重点:
+P287, 模型视图投影矩阵
+P290, 隐藏面消除 gl.DEPTH_TEST
+
+---------------------------------------------------------------------
+
+实验009: 光照
+程序: ch08/*
+功能: 实现光照
+分析:
+
+光类型:
+点光源, 平行光
+环境光
+
+反射类型:
+漫反射, 环境反射
+
+光照公式:
+物体表面的反射光颜色 = 漫反射光颜色 + 环境反射光颜色
+漫反射光颜色 = 入射光颜色 * 物体表面基底色 * (光线方向·法线方向)
+环境反射光颜色 = 入射光颜色 * 物体表基底色
+
+逐片元光照, 使得物体表面的颜色更加逼真. 在片段着色器里计算光照.
+
+点光源的光线方向与顶点法线方向需要重新计算.
+
+物体运动后的法线方向, 可以通过 模型矩阵的逆转置矩阵 计算得到.
+
+
+重点:
+P311, 光照原理
+
+---------------------------------------------------------------------
+
+实验010: 雾化
+程序: Fog.js
+功能: 雾化效果
+分析:
+
+mix(a, b, t)  =>  a * (1 - t) + b * t
+
+雾化公式:
+片元颜色 = 物体表面颜色 * 雾化因子 + 雾的颜色 * (1 - 雾化因子)
+
+雾化因子 = (终点 - 顶点与视点之间的距离) / (终点 - 起点)
+终点: 完全雾化.
+起点: 开始雾化.
+
+
+重点:
+P389, 雾化(大气效果)
+
+---------------------------------------------------------------------
+
+实验011: 切换着色器程序
+程序: ProgramObject.js
+功能: 使用两个着色器程序
+分析:
+
+1. 启用着色器程序
+gl.useProgram(program);
+
+2. 重新设置 ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER, 纹理对象
+
+
+重点:
+P403, 切换着色器
+
+---------------------------------------------------------------------
+
+实验012: 渲染到纹理
+程序: FramebufferObject.js
+功能: 将旋转的立方体作为矩形的纹理
+
+离屏绘制: 在帧缓冲区绘制的过程.
+帧缓冲区对象: framebuffer object
+
+帧缓冲区的3个关联对象:
+颜色关联对象, 深度关联对象, 模板关联对象
+关联对象的类型可以是, 纹理对象, 渲染缓冲区对象(renderbuffer)
+
+深度 -- 隐藏面消除
+
+
+重点:
+P410, 渲染到纹理
+
+
+---------------------------------------------------------------------
+
+实验013: 绘制阴影
+程序: Shadow.js, Shadow_highp.js
+功能: 实现阴影
+
+阴影贴图/深度贴图
+阴影映射: 使用阴影贴图实现阴影
+
+1. 以光源为视点, 把在物体之后(背光)的片元 z 值记录到纹理(阴影贴图);
+2. 恢复视点, 将顶点变换到光源坐标系, 判断 z 值与阴影贴图相应位置的 z 值大小, 如果大于阴影贴图的 z 值,
+就说明顶点在阴影中;
+
+
+从 [-1, 1] 映射到 [0, 1]
+(v.xyz / v.w) / 2.0 + 0.5
+
+马赫带, 由于纹理分量的精度与浮点数的精度不同导致. RGBA分量占8位, float 类型占16位.
+0.005 > 1 / 256, 0.005 是略大于精度的偏移量.
+
+gl_FragCoord 是片元坐标.
+gl_FragCoord.z 是 0, 表示在近裁剪平面.
+gl_FragCoord.z 是 1, 表示在远裁剪平面.
+
+
+重点:
+P422, 绘制阴影
+P431, 使用 RGBA 四个分量存储 z 值
+gl_FragCoord.z 的计算方式
+
+---------------------------------------------------------------------
