@@ -1,5 +1,6 @@
-/* nuklear - 1.32.0 - public domain */
 /**
+ * Nuklear + OpenGL
+ *
  * TODO:
    - [ ] program struct
    - [ ] press space to lock or unlock camera movement
@@ -22,9 +23,11 @@
 
 using namespace std;
 
-//#include <GL/glew.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -50,49 +53,13 @@ using namespace std;
 #define MAX_VERTEX_BUFFER 512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
-/* ===============================================================
- *
- *                          EXAMPLE
- *
- * ===============================================================*/
-/* This are some code examples to provide a small overview of what can be
- * done with this library. To try out an example uncomment the defines */
-//#define INCLUDE_ALL
-/*#define INCLUDE_STYLE */
-/*#define INCLUDE_CALCULATOR */
-//#define INCLUDE_OVERVIEW
-//#define INCLUDE_NODE_EDITOR
-
-#ifdef INCLUDE_ALL
-#define INCLUDE_STYLE
-#define INCLUDE_CALCULATOR
-#define INCLUDE_OVERVIEW
-#define INCLUDE_NODE_EDITOR
-#endif
-
-#ifdef INCLUDE_STYLE
-#include "style.c"
-#endif
-#ifdef INCLUDE_CALCULATOR
-#include "calculator.c"
-#endif
-#ifdef INCLUDE_OVERVIEW
-#include "overview.c"
-#endif
-#ifdef INCLUDE_NODE_EDITOR
-#include "node_editor.c"
-#endif
-
 void renderCube();
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window, float);
 
-/* ===============================================================
- *
- *                          DEMO
- *
- * ===============================================================*/
+unsigned int loadTexture(char const * path);
+
 static void error_callback(int e, const char *d)
 {
     printf("Error %d: %s\n", e, d);
@@ -202,7 +169,6 @@ int main(void)
 {
     initState();
 
-
     /* Platform */
     static GLFWwindow *win;
     int width = 0, height = 0;
@@ -232,11 +198,6 @@ int main(void)
     /* OpenGL */
     gladLoadGL();
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    //    glewExperimental = 1;
-    //    if (glewInit() != GLEW_OK) {
-    //        fprintf(stderr, "Failed to setup GLEW\n");
-    //        exit(1);
-    //    }
 
     std::string vertexShaderPath = "vertex.vs";
     std::string fragmentShaderPath = "fragment.fs";
@@ -244,6 +205,14 @@ int main(void)
     if (!pShader) {
         std::cout << "pShader is NULL." << std::endl;
     }
+
+	//////////////////////////////////////////
+	// for texture
+	static int texture0 = loadTexture("container.jpg");
+
+	pShader->use();
+	pShader->setInt("texture0", 0);
+	//////////////////////////////////////////
 
     ctx = nk_glfw3_init(win, NK_GLFW3_INSTALL_CALLBACKS);
     /* Load Fonts: if none of these are loaded a default font will be used  */
@@ -260,13 +229,6 @@ int main(void)
         /*nk_style_load_all_cursors(ctx, atlas->cursors);*/
         /*nk_style_set_font(ctx, &droid->handle);*/
     }
-
-#ifdef INCLUDE_STYLE
-    /*set_style(ctx, THEME_WHITE);*/
-    /*set_style(ctx, THEME_RED);*/
-    /*set_style(ctx, THEME_BLUE);*/
-    /*set_style(ctx, THEME_DARK);*/
-#endif
 
     bg.r = 0.10f, bg.g = 0.18f, bg.b = 0.24f, bg.a = 1.0f;
     int cacheProperty = 0;
@@ -689,7 +651,7 @@ int main(void)
             nk_layout_row_dynamic(ctx, 30, 1);
             static float aSliderFloatValue = 0;
             static char strSliderValue[10] = "";
-            static unsigned long v = 0;
+            static nk_size v = 0;
             sprintf(strSliderValue, "%.2f", aSliderFloatValue);
             nk_label(ctx, strSliderValue, NK_TEXT_LEFT);
             nk_slider_float(ctx, 0.0f, &aSliderFloatValue, 100.0f, 0.01f);
@@ -792,19 +754,6 @@ int main(void)
 
         }
         nk_end(ctx);
-
-        /* -------------- EXAMPLES ---------------- */
-#ifdef INCLUDE_CALCULATOR
-        calculator(ctx);
-#endif
-#ifdef INCLUDE_OVERVIEW
-        overview(ctx);
-#endif
-#ifdef INCLUDE_NODE_EDITOR
-        node_editor(ctx);
-#endif
-        /* ----------------------------------------- */
-
 
 //        nk_window_close(ctx, "Overview");
 //        nk_window_collapse(ctx, "Demo GUI", NK_MINIMIZED);
@@ -917,12 +866,18 @@ int main(void)
 //        }
 
         pShader->use();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture0);
+
         glm::vec3 vT = glm::vec3(-0.5, -0.2, -3.0);
         glm::mat4 mvp_1 = glm::translate(mvp, vT);
         pShader->setMat4("mvp", mvp_1);
         pShader->setMat4("uMat4Model", glm::translate(glm::mat4(1.0), vT));
+
         nk_colorf col = nk_color_cf(G.comboColor);
         pShader->setVec3("uColor", glm::vec3(col.r, col.g, col.b));
+
         renderCube();
 
 
@@ -1057,4 +1012,42 @@ void processInput(GLFWwindow *window, float deltaTime)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+
+unsigned int loadTexture(char const * path)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	stbi_set_flip_vertically_on_load(true);
+	//unsigned char *data = stbi_load(FileSystem::getPath(path).c_str(), &width, &height, &nrComponents, 0);
+	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format = GL_RGB;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+	}
+
+	stbi_image_free(data);
+	return textureID;
 }
