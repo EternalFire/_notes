@@ -10,18 +10,19 @@ in vec3 vsFragPos;
 uniform sampler2D texture0;
 uniform vec3 uColor;
 uniform vec3 uViewPos;
-uniform float uRatioMixTex2Color;
+uniform float uRatioMixTex2Color;     // textureColor to mix(vertexColor, uColor)
+uniform float uRatioMixAColor2UColor; // vertexColor to uColor
+uniform float uTime;
 
 vec3 invertColor(const vec3 color);
 vec3 grayColor(const vec3 color);
 vec3 kernelEffect(sampler2D tex, vec2 texCoords);
-vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, vec3 viewPos, vec3 objectColor);
+vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, vec3 viewPos, vec3 objectColor, float ambientStrength, float specularStrength, float shininess);
 
 void main()
 {
     vec4 textureColor = texture(texture0, texCoord);
-
-    vec4 color = vec4(uColor, 1.0);
+    vec4 color = vec4(mix(vertexColor, uColor, uRatioMixAColor2UColor), 1.0);
 
     //              from          to     ratio
     FragColor = mix(textureColor, color, uRatioMixTex2Color);
@@ -31,15 +32,17 @@ void main()
     // FragColor.rgb = grayColor(FragColor.rgb);
     // FragColor.rgb = kernelEffect(texture0, texCoord);
 
-    // vec3 lightPos = vec3(0, 0, 0.5);
-    // vec3 lightColor = vec3(1.0);
-    // FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, textureColor.rgb);
+    vec3 lightPos = vec3(3.0 * cos(uTime), 3.0 * sin(uTime), 0.0);
+    vec3 lightColor = vec3(1.0);
+    FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20);
 }
 
-vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, vec3 viewPos, vec3 objectColor)
+// Phong Lighting
+//                  world position
+vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, vec3 viewPos, vec3 objectColor, float ambientStrength, float specularStrength, float shininess)
 {
     // ambient
-    float ambientStrength = 0.1;
+    // float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
 
     // diffuse
@@ -49,10 +52,10 @@ vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, ve
     vec3 diffuse = diff * lightColor;
 
     // specular
-    float specularStrength = 0.5;
+    // float specularStrength = 0.5;
     vec3 viewDir = normalize(viewPos - fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     vec3 specular = specularStrength * spec * lightColor;
 
     vec3 result = (ambient + diffuse + specular) * objectColor;
