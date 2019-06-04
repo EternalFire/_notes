@@ -12,6 +12,7 @@
     - [摄像机](#%E6%91%84%E5%83%8F%E6%9C%BA)
     - [颜色, 基础光照, 材质](#%E9%A2%9C%E8%89%B2-%E5%9F%BA%E7%A1%80%E5%85%89%E7%85%A7-%E6%9D%90%E8%B4%A8)
     - [光照贴图](#%E5%85%89%E7%85%A7%E8%B4%B4%E5%9B%BE)
+    - [投光物](#%E6%8A%95%E5%85%89%E7%89%A9)
     - [Assimp](#assimp)
     - [深度测试](#%E6%B7%B1%E5%BA%A6%E6%B5%8B%E8%AF%95)
     - [模板测试](#%E6%A8%A1%E6%9D%BF%E6%B5%8B%E8%AF%95)
@@ -264,6 +265,17 @@ sampler2D是不透明类型(Opaque Type)
 法线/凹凸贴图(Normal/Bump Map)
 
 反射贴图(Reflection Map)
+
+---
+
+### 投光物
+
+Light casters
+
+平行光, 点光源, 聚光灯
+
+
+---
 
 ### Assimp
 
@@ -1010,6 +1022,32 @@ struct Light {
     vec3 diffuse;  // 漫反射分量, 设置为光所具有的颜色
     vec3 specular; // 镜面光分量, 通常设置为最大强度, vec3(1.0)
 };
+
+
+// Phong Lighting
+//                  world position
+vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, vec3 viewPos, vec3 objectColor, float ambientStrength, float specularStrength, float shininess)
+{
+    // ambient
+    // float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightColor;
+
+    // diffuse
+    vec3 norm = normalize(normal);
+    vec3 lightDir = normalize(lightPos - fragPos);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor;
+
+    // specular
+    // float specularStrength = 0.5;
+    vec3 viewDir = normalize(viewPos - fragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    vec3 specular = specularStrength * spec * lightColor;
+
+    vec3 result = (ambient + diffuse + specular) * objectColor;
+    return result;
+}
 
 
 ```
