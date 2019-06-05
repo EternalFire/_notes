@@ -310,12 +310,13 @@ unsigned int loadTexture(char const * path)
 
 int initStCommonShader(StCommonShader* p)
 {
-	// p->objectColor.r = 0.88;
-	// p->objectColor.g = 0.9;
-	// p->objectColor.b = 0.88;
-	// p->objectColor.a = 1.0;
-	p->objectColor = { 0.88f, 0.9f, 0.88f, 1.0f };
-	p->uRatioMixTex2Color = 0.5f;
+    // p->objectColor.r = 0.88;
+    // p->objectColor.g = 0.9;
+    // p->objectColor.b = 0.88;
+    // p->objectColor.a = 1.0;
+    // objectColor (r:218 g:178 b:82 a:255)
+	p->objectColor = {CNTo1(218), CNTo1(178), CNTo1(82), 1.0f};
+	p->uRatioMixTex2Color = 0.1f;
 	p->uUsePointLight = 1;
 	p->uSwitchEffectInvert = 0;
 	p->uSwitchEffectGray = 0;
@@ -325,7 +326,8 @@ int initStCommonShader(StCommonShader* p)
 int initStColorShader(StColorShader* p)
 {
 	if (p != NULL) {
-		p->uColor = { 0.20f, 0.17f, 0.68f, 1.0f };
+        // lightColor (r:229 g:41 b:31 a:255)
+		p->uColor = {CNTo1(229), CNTo1(41), CNTo1(31), 1.0f};
 	}
 	return 0;
 }
@@ -358,7 +360,8 @@ int initState() {
 	// color shader
 	initStColorShader(&G.stColorShader);
 
-	G.bgColor = nk_rgba(47, 74, 87, 255);
+    //#bgColor (r:51 g:51 b:43 a:255)
+    G.bgColor = nk_rgba(51, 51, 43, 255);
 
 	printf("sizeof(StState) = %lu\n", sizeof(StState));
 	return 0;
@@ -776,7 +779,8 @@ void renderMain(struct nk_context *ctx)
 		nk_layout_row_dynamic(ctx, 25, 1);
 
 		if (nk_button_label(ctx, BTN_COMMON_SHADER)) {
-			G.isShowPanelCommonShader = 1;
+			// G.isShowPanelCommonShader = 1;
+            G.isShowPanelCommonShader = !G.isShowPanelCommonShader;
 		}
 
 		// background color
@@ -1062,7 +1066,7 @@ void renderScene()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture0);
 
-	glm::vec3 lightPos = glm::vec3(10.0 * cos(G.currentTime), 0.0, 10.0 * sin(G.currentTime));
+	glm::vec3 lightPos = glm::vec3(3.0 * cos(G.currentTime), 4.0 * sin(G.currentTime), 5.0 * sin(G.currentTime));
 
 	// use common shader
 	if (pShader != NULL)
@@ -1080,7 +1084,7 @@ void renderScene()
 		glm::vec3 vT = glm::vec3(0.0f);
 		// glm::mat4 mvp_1 = glm::translate(mvp, vT);
 		glm::mat4 m = glm::translate(glm::mat4(1.0), vT);
-		m = glm::scale(m, glm::vec3(2.0));
+		m = glm::scale(m, glm::vec3(1.0));
 		glm::mat4 mvp_1 = mvp * m;
 		pShader->setMat4("mvp", mvp_1);
 		pShader->setMat4("uMat4Model", glm::translate(glm::mat4(1.0), vT));
