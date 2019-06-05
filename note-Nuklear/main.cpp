@@ -88,9 +88,6 @@ using namespace std;
 #define PANEL_MAIN_HEIGHT WINDOW_HEIGHT - PANEL_STATUS_HEIGHT
 
 
-
-#define RESET_firstMouse() firstMouse = true;
-
 /*
 	flow:
 
@@ -109,15 +106,27 @@ using namespace std;
 
 */
 
-glm::vec3 cameraPosition = glm::vec3(11.873, 11.375, 19.912);
-glm::vec3 cameraUp = glm::vec3(0, 1.0, 0);
-float cameraYaw = -113.4f;
-float cameraPitch = -20.5f;
-//Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
+/**
+ * Position = (7.640, 6.438, 11.394)
+ * WorldUp = (0.000, 1.000, 0.000)
+ * Pitch = -24.300  Yaw = -124.900
+ */
+const glm::vec3 cameraPosition = glm::vec3(7.640, 6.438, 11.394);
+const glm::vec3 cameraUp = glm::vec3(0, 1.0, 0);
+const float cameraYaw = -124.9f;  // around y axis
+const float cameraPitch = -24.3f; // around x axis
+
+glm::vec3 cameraPositionNew = cameraPosition;
+glm::vec3 cameraUpNew = cameraUp;
+float cameraYawNew = cameraYaw;
+float cameraPitchNew = cameraPitch;
+
 Camera camera(cameraPosition, cameraUp, cameraYaw, cameraPitch);
 float lastX = WINDOW_WIDTH / 2.0f; // center
 float lastY = WINDOW_HEIGHT / 2.0f;
 bool firstMouse = true;
+
 glm::mat4 mvp(1.0);
 
 Shader* pShader = NULL;
@@ -158,6 +167,25 @@ typedef struct StState StState;
 
 static StState G;
 
+//====================================
+void resetFirstMouse()
+{
+	firstMouse = true;
+}
+
+void resetCamera()
+{
+	camera.init(cameraPositionNew, cameraUpNew, cameraYawNew, cameraPitchNew);
+	resetFirstMouse();
+}
+
+void setCamera()
+{
+	cameraPositionNew = camera.Position;
+	cameraUpNew = camera.WorldUp;
+	cameraYawNew = camera.Yaw;
+	cameraPitchNew = camera.Pitch;
+}
 
 unsigned int loadTexture(char const * path)
 {
@@ -202,7 +230,7 @@ int initStCommonShader(StCommonShader *p)
 	p->objectColor.g = 0.9;
 	p->objectColor.b = 0.88;
 	p->objectColor.a = 1.0;
-	p->ratioTex2Color = 0.3f;
+	p->ratioTex2Color = 0.0f;
 	return 0;
 }
 
@@ -222,9 +250,10 @@ int initState() {
 	G.isShowPanelCommonShader = 0;
 
 	// camera
-	G.camera = NULL;
+	G.camera = &camera;
 	G.lockCamera = 1;
 	G.isLockingCamera = 0;
+	camera.MovementSpeed *= 1.3;
 
 	initStCommonShader(&G.stCommonShader);
 
@@ -314,7 +343,7 @@ void processInput(GLFWwindow* window, float deltaTime)
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 		if (G.isLockingCamera) {
 			G.isLockingCamera = 0;
-			RESET_firstMouse();
+			resetFirstMouse();
 		}
 	}
 
@@ -477,12 +506,13 @@ void renderCommonShaderPanel(struct nk_context *ctx)
 		// map shader parameter to widget
 		if (nk_begin(ctx, panelName, nk_rect(200, 10, 300, 400), NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE | NK_WINDOW_TITLE | NK_WINDOW_BORDER))
 		{
+			// uniform - propertyType
 			propertyFloat(ctx, "ratioTex2Color", &G.stCommonShader.ratioTex2Color);
 			propertyColor(ctx, "objectColor", &G.stCommonShader.objectColor, nk_vec2(200, 400));
 		}
 		else {
 			// panel closed
-			//            printf("closed ? %d\n", nk_window_is_closed(ctx, panelName));
+			// printf("closed ? %d\n", nk_window_is_closed(ctx, panelName));
 			G.isShowPanelCommonShader = 0;
 		}
 		nk_end(ctx);
@@ -496,6 +526,8 @@ void renderStatus(struct nk_context *ctx)
 		nk_layout_row_dynamic(ctx, PANEL_STATUS_HEIGHT, 2);
 
 		// column 1
+		//
+		// camera setting
 		if (nk_group_begin(ctx, "Camera", NULL)) {
 
 			glm::vec3* p = &(G.camera->Position);
@@ -503,22 +535,41 @@ void renderStatus(struct nk_context *ctx)
 
 			glm::vec3* up = &(G.camera->WorldUp);
 
-			nk_layout_row_dynamic(ctx, h * 2.3, 2);
+			// 2 cols
+			float rowHeight = h * 2.33;
+			nk_layout_row_dynamic(ctx, rowHeight, 2);
 			sprintf(G.panelStatusBuffer,
 				"Position = (%.3f, %.3f, %.3f)\n"\
 				"WorldUp = (%.3f, %.3f, %.3f)\n"\
-				"Pitch = %.3f Yaw = %.3f\n",
+				"Pitch = %.3f  Yaw = %.3f\n",
 				p->x, p->y, p->z,
 				up->x, up->y, up->z,
 				G.camera->Pitch, G.camera->Yaw
 			);
+
+			// col 1
 			propertyString(ctx, G.panelStatusBuffer);
 
-			memset(G.panelStatusBuffer, 0, sizeof(G.panelStatusBuffer));
-			sprintf(G.panelStatusBuffer, "lock camera(Space)");
+			// col 2
+			if (nk_group_begin(ctx, "#Camera_1", NULL)) {
+				nk_layout_row_dynamic(ctx, rowHeight / 3, 2);
 
-			// label color change after G.lockCamera modified
-			nk_label_colored(ctx, G.panelStatusBuffer, NK_TEXT_LEFT, G.lockCamera ? nk_rgb(200, 20, 20) : nk_rgb(20, 200, 20));
+				if (nk_button_label(ctx, "reset")) {
+					resetCamera();
+				}
+
+				if (nk_button_label(ctx, "set")) {
+					setCamera();
+				}
+
+				memset(G.panelStatusBuffer, 0, sizeof(G.panelStatusBuffer));
+				sprintf(G.panelStatusBuffer, "lock camera(Space)");
+
+				// label color change after G.lockCamera modified
+				nk_label_colored(ctx, G.panelStatusBuffer, NK_TEXT_LEFT, G.lockCamera ? nk_rgb(200, 20, 20) : nk_rgb(20, 200, 20));
+
+				nk_group_end(ctx);
+			}
 
 			nk_group_end(ctx);
 		}
@@ -707,6 +758,7 @@ void renderScene()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// use common shader
 	pShader->use();
 	pShader->setFloat("uTime", G.currentTime);
 
@@ -760,7 +812,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-	win = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Nuklear+OpenGL", NULL, NULL);
+	win = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Nuklear&OpenGL", NULL, NULL);
 
 	glfwMakeContextCurrent(win);
 	glfwGetWindowSize(win, &width, &height);
@@ -791,7 +843,6 @@ int main(void)
 	}
 
 	G.ctx = ctx;
-	G.camera = &camera;
 
 	//////////////////////////////////
 	// calculate frame
@@ -846,15 +897,11 @@ int main(void)
 		glfwPollEvents();
 		nk_glfw3_new_frame();
 
-		///////////////////////////////////////////
 		/* GUI */
 		renderUI(ctx);
-		///////////////////////////////////////////
 
-		//////////////////////////////////
 		/* Draw */
 		renderScene();
-		//////////////////////////////////
 
 		/* IMPORTANT: `nk_glfw_render` modifies some global OpenGL state
 		* with blending, scissor, face culling, depth test and viewport and
