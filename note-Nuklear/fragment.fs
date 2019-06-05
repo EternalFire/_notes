@@ -13,6 +13,10 @@ uniform vec3 uViewPos;
 uniform float uRatioMixTex2Color;     // textureColor to mix(vertexColor, uColor)
 uniform float uRatioMixAColor2UColor; // vertexColor to uColor
 uniform float uTime;
+uniform bool uUsePointLight; // point light switch
+uniform vec3 uLightPos;
+uniform bool uSwitchEffectInvert;
+uniform bool uSwitchEffectGray;
 
 vec3 invertColor(const vec3 color);
 vec3 grayColor(const vec3 color);
@@ -32,9 +36,23 @@ void main()
     // FragColor.rgb = grayColor(FragColor.rgb);
     // FragColor.rgb = kernelEffect(texture0, texCoord);
 
-    vec3 lightPos = vec3(3.0 * cos(uTime), 3.0 * sin(uTime), 0.0);
-    vec3 lightColor = vec3(1.0);
-    FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20);
+    if (uUsePointLight)
+    {
+        // vec3 lightPos = vec3(3.0 * cos(uTime), 3.0 * sin(uTime), 0.0);
+        vec3 lightPos = uLightPos;
+        vec3 lightColor = vec3(1.0);
+        FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20);
+    }
+
+    if (uSwitchEffectInvert)
+    {
+        FragColor.rgb = invertColor(FragColor.rgb);
+    }
+
+    if (uSwitchEffectGray)
+    {
+        FragColor.rgb = grayColor(FragColor.rgb);
+    }
 }
 
 // Phong Lighting

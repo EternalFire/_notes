@@ -8,7 +8,8 @@
 - [x] camera property panel
 - [ ] main panel
 - [ ] data driven
-- [ ] reset camera
+- [x] reset camera
+- [x] cache value
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +21,9 @@
 #include <math.h>
 #include <limits.h>
 #include <time.h>
+
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -71,7 +74,7 @@ using namespace std;
 // panel type
 #define PANEL_STATUS "Status"
 #define PANEL_MAIN   "Main"
-#define PANEL_COMMON_SHADER "#Common Shader"
+#define PANEL_COMMON_SHADER "Common Shader"
 
 // panel entrance
 #define BTN_COMMON_SHADER "Show Common Shader"
@@ -87,27 +90,52 @@ using namespace std;
 #define PANEL_MAIN_WIDTH 240
 #define PANEL_MAIN_HEIGHT WINDOW_HEIGHT - PANEL_STATUS_HEIGHT
 
+#define PANEL_NORMAL_WIDTH  300
+#define PANEL_NORMAL_HEIGHT 400
 
-/*
-	flow:
+#define PANEL_COMMON_SHADER_X PANEL_MAIN_WIDTH
+#define PANEL_COMMON_SHADER_Y 0
+#define PANEL_COMMON_SHADER_WIDTH PANEL_NORMAL_WIDTH
+#define PANEL_COMMON_SHADER_HEIGHT PANEL_NORMAL_HEIGHT
 
-	init glfw
-	init nuklear
-	init state
 
-	loop
-	calculate fame
-	update nuklear ui
-	calculate MVP
-	update camera
-	use shader
-	update GL scene
-	process event
+#define PROPERTY_COLOR_SIZE nk_vec2(200, 400)
+#define PROPERTY_LINE_NORMAL_HEIGHT 30
 
-*/
+// convert rgba color component to [0,1] by divided by 255
+#define CNTo1(component) (component/255.0)
 
 
 /**
+ * flow(main):
+ *   init glfw
+ *   init nuklear
+ *   init state
+ *
+ *   loop
+ *     calculate fame
+ *     update nuklear ui
+ *     calculate MVP
+ *     update camera
+ *     use shader
+ *     update GL scene
+ *     process event
+ *
+ */
+
+/**
+ * connect uniform with variable:
+ *
+ * define uniform in fragment shader
+ * define variable in global state
+ * create widget for variable
+ * shader object pass variable to fragment shader program
+ * update variable by widget
+ */
+
+/**
+ * Camera setting
+ *
  * Position = (7.640, 6.438, 11.394)
  * WorldUp = (0.000, 1.000, 0.000)
  * Pitch = -24.300  Yaw = -124.900
@@ -134,11 +162,24 @@ Shader* pShader = NULL;
 static int texture0;
 
 //====================================
+typedef struct StCache {
+	map<string, string> bufValue;
+	map<string, float> fValue;
+	map<string, int> iValue;
+	map<string, struct nk_colorf> cfValue;
+	map<string, struct nk_text_edit> textEditValue;
+
+} StCache;
+
 typedef struct StCommonShader {
-	float ratioTex2Color;
+	float uRatioMixTex2Color;
 	struct nk_colorf objectColor;
+	int uUsePointLight;
+	int uSwitchEffectInvert;
+	int uSwitchEffectGray;
 } StCommonShader;
 
+// Global State
 struct StState {
 	int id;
 	struct nk_context *ctx;
@@ -153,21 +194,45 @@ struct StState {
 
 	// panel common shader
 	int isShowPanelCommonShader;
+	struct nk_rect panelCommonShaderRect;
 
 	// camera
 	Camera* camera;
 	int lockCamera;
 	int isLockingCamera;
 
+	// shader
 	StCommonShader stCommonShader;
 
-	struct nk_color comboColor; //
+	struct nk_color bgColor; //
+
+	StCache cache;
 };
 typedef struct StState StState;
-
 static StState G;
 
+
 //====================================
+
+glm::vec3 convertCFToVec3(nk_colorf* col)
+{
+	return col ? glm::vec3((*col).r, (*col).g, (*col).b) : glm::vec3(1.0);
+}
+glm::vec3 convertCFToVec3(nk_color* col)
+{
+	const float c = 255.0;
+	return col ? glm::vec3((*col).r / c, (*col).g / c, (*col).b / c) : glm::vec3(1.0);
+}
+
+void printColorf(const char * key, struct nk_colorf colorf)
+{
+	printf("%s = %.2f %.2f %.2f %.2f\n", key, colorf.r, colorf.g, colorf.b, colorf.a);
+}
+void printColorB(const char * key, struct nk_color color)
+{
+	printf("%s = %d %d %d %d\n", key, color.r, color.g, color.b, color.a);
+}
+
 void resetFirstMouse()
 {
 	firstMouse = true;
@@ -225,12 +290,15 @@ unsigned int loadTexture(char const * path)
 
 int initStCommonShader(StCommonShader *p)
 {
-	//p->objectColor = nk_rgba(210, 220, 210, 255);
-	p->objectColor.r = 0.88;
-	p->objectColor.g = 0.9;
-	p->objectColor.b = 0.88;
-	p->objectColor.a = 1.0;
-	p->ratioTex2Color = 0.0f;
+	// p->objectColor.r = 0.88;
+	// p->objectColor.g = 0.9;
+	// p->objectColor.b = 0.88;
+	// p->objectColor.a = 1.0;
+	p->objectColor = { 0.88f, 0.9f, 0.88f, 1.0f };
+	p->uRatioMixTex2Color = 1.0f;
+	p->uUsePointLight = 0;
+	p->uSwitchEffectInvert = 0;
+	p->uSwitchEffectGray = 0;
 	return 0;
 }
 
@@ -248,16 +316,18 @@ int initState() {
 
 	// panel common shader
 	G.isShowPanelCommonShader = 0;
+	G.panelCommonShaderRect = nk_rect(PANEL_COMMON_SHADER_X, PANEL_COMMON_SHADER_Y, PANEL_COMMON_SHADER_WIDTH, PANEL_COMMON_SHADER_HEIGHT);
 
 	// camera
 	G.camera = &camera;
 	G.lockCamera = 1;
 	G.isLockingCamera = 0;
-	camera.MovementSpeed *= 1.3;
+	camera.MovementSpeed *= 1.75;
 
+	// common shader
 	initStCommonShader(&G.stCommonShader);
 
-	G.comboColor = nk_rgba(75, 227, 62, 255);
+	G.bgColor = nk_rgba(47, 74, 87, 255);
 
 	printf("sizeof(StState) = %lu\n", sizeof(StState));
 	return 0;
@@ -285,6 +355,14 @@ void initGLSetting()
 	pShader->use();
 	pShader->setInt("texture0", 0);
 	pShader->setFloat("uRatioMixTex2Color", 0.1);
+}
+
+void clear()
+{
+	if (pShader) {
+		delete pShader; pShader = NULL;
+	}
+
 }
 //====================================
 
@@ -359,20 +437,34 @@ void processInput(GLFWwindow* window, float deltaTime)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
-void propertyString(struct nk_context* ctx, const char* val)
+void propertySwitch(struct nk_context* ctx, const char* key, int* val)
+{
+	nk_layout_row_dynamic(ctx, PROPERTY_LINE_NORMAL_HEIGHT, 1);
+	nk_selectable_label(ctx, key, NK_TEXT_LEFT, val);
+}
+// without layout
+void propertyString(struct nk_context* ctx, const char* key, const char* val)
 {
 	static int field_len = 0;
 	static char field_buffer[512] = "";
 	static int max = 512;
 	strcpy(field_buffer, val);
 	field_len = (int)(strlen(field_buffer));
+
 	nk_edit_string(ctx, NK_EDIT_FIELD | NK_EDIT_AUTO_SELECT | NK_EDIT_MULTILINE, field_buffer, &field_len, max, nk_filter_default);
+}
+void propertyStringWithLayout(struct nk_context* ctx, const char* key, const char* val)
+{
+	nk_layout_row_dynamic(ctx, PROPERTY_LINE_NORMAL_HEIGHT, 1);
+	propertyString(ctx, key, val);
 }
 void propertyFloat(struct nk_context* ctx, const char* key, float* val)
 {
 	static char buffer[32];
-	nk_layout_row_begin(ctx, NK_DYNAMIC, 30, 1);
+	memset(buffer, 0, sizeof(buffer));
 	sprintf(buffer, "#%s", key);
+
+	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 1);
 	nk_layout_row_push(ctx, 1.0);
 	nk_property_float(ctx, buffer, -1024.0f, val, 1024.0f, 1, 0.5f);
 	nk_layout_row_end(ctx);
@@ -380,8 +472,10 @@ void propertyFloat(struct nk_context* ctx, const char* key, float* val)
 void propertyInt(struct nk_context* ctx, const char* key, int* val)
 {
 	static char buffer[32];
-	nk_layout_row_begin(ctx, NK_DYNAMIC, 30, 1);
+	memset(buffer, 0, sizeof(buffer));
 	sprintf(buffer, "#%s", key);
+
+	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 1);
 	nk_layout_row_push(ctx, 1.0);
 	nk_property_int(ctx, buffer, -1024, val, 1024, 1, 1);
 	nk_layout_row_end(ctx);
@@ -389,10 +483,12 @@ void propertyInt(struct nk_context* ctx, const char* key, int* val)
 void propertyVec2(struct nk_context* ctx, const char* key, float* x, float* y, struct nk_vec2 size /* nk_vec2(200, 200) */)
 {
 	static char buffer[32];
-	nk_layout_row_begin(ctx, NK_DYNAMIC, 30, 1);
-	nk_layout_row_push(ctx, 1.0);
-	//nk_label(ctx, key, NK_TEXT_CENTERED);
+	memset(buffer, 0, sizeof(buffer));
 	sprintf(buffer, "%s: %.2f, %.2f", key, *x, *y);
+
+	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 1);
+	nk_layout_row_push(ctx, 1.0);
+	nk_label(ctx, key, NK_TEXT_CENTERED);
 
 	if (nk_combo_begin_label(ctx, buffer, size)) {
 		nk_layout_row_dynamic(ctx, 25, 1);
@@ -405,10 +501,12 @@ void propertyVec2(struct nk_context* ctx, const char* key, float* x, float* y, s
 void propertyVec3(struct nk_context* ctx, const char* key, float* x, float* y, float* z, struct nk_vec2 size /* nk_vec2(200, 200) */)
 {
 	static char buffer[32];
-	nk_layout_row_begin(ctx, NK_DYNAMIC, 30, 2);
+	memset(buffer, 0, sizeof(buffer));
+	sprintf(buffer, "%.2f, %.2f, %.2f", *x, *y, *z);
+
+	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 2);
 	nk_layout_row_push(ctx, 0.30);
 	nk_label(ctx, key, NK_TEXT_CENTERED);
-	sprintf(buffer, "%.2f, %.2f, %.2f", *x, *y, *z);
 
 	nk_layout_row_push(ctx, 0.70);
 	if (nk_combo_begin_label(ctx, buffer, size)) {
@@ -422,37 +520,64 @@ void propertyVec3(struct nk_context* ctx, const char* key, float* x, float* y, f
 }
 void propertyColor(struct nk_context *ctx, const char* key, struct nk_colorf *colorf, struct nk_vec2 size /* nk_vec2(200, 200) */)
 {
-	static struct nk_colorf lastColorf;
-	static char buffer[64] = { 0 };
-	static char bufferA[64] = { 0 };
+	enum color_mode { COL_RGB, COL_HSV };
+	// extract to cache map
+	// static struct nk_colorf lastColorf;
+	// static char buffer[64] = { 0 };
+	// static char bufferA[64] = { 0 };
+	// static int len = 0;
+	// static int col_mode = COL_RGB;
+	// static struct nk_text_edit stTextEdit;
+	// static int isInitTextEdit = 0;
+
+	string sKey = key;
+	string sKey_A = sKey + "_A";
+	string sKey_B = sKey + "_B";
+
+	struct nk_colorf& lastColorf = G.cache.cfValue[sKey];
+	char buffer[64] = { 0 };
+	char bufferA[64] = { 0 };
+	int& len = G.cache.iValue[sKey];
+	int& col_mode = G.cache.iValue[sKey_A];
+ 	struct nk_text_edit& stTextEdit = G.cache.textEditValue[sKey];
+	int& isInitTextEdit = G.cache.iValue[sKey_B];
+
+	// read cache
+	strcpy(buffer, G.cache.bufValue[sKey].c_str());
+	strcpy(bufferA, G.cache.bufValue[sKey_A].c_str());
+
 	struct nk_color colorRGBA = nk_rgba_cf(*colorf);
 
 	int ret = memcmp(colorf, &lastColorf, sizeof(nk_colorf));
 	if (ret != 0) {
 		lastColorf = *colorf;
-		//printf("update lastColorf");
 
 		memset(buffer, 0, sizeof(buffer));
 		memset(bufferA, 0, sizeof(bufferA));
 		nk_color_hex_rgba(buffer, colorRGBA);
-		//sprintf(buffer, "%s: \#%s", key, buffer);
-		//sprintf(bufferA, "%s: \#%s", key, buffer);
 
 		// add #
-		//        sprintf(bufferA, "\#%s", buffer);
 		sprintf(bufferA, "#%s", buffer);
+		// printf("update key[%s] lastColorf %s\n", sKey.c_str(), bufferA);
 	}
 
 	memset(buffer, 0, sizeof(buffer));
-	sprintf(buffer, "%s  (r:%d g:%d b:%d a:%d)", key, colorRGBA.r, colorRGBA.g, colorRGBA.b, colorRGBA.a);
-	nk_layout_row_dynamic(ctx, 30, 1);
-	nk_label(ctx, buffer, NK_TEXT_LEFT);
+	sprintf(buffer, "%s (r:%d g:%d b:%d a:%d)", key, colorRGBA.r, colorRGBA.g, colorRGBA.b, colorRGBA.a);
+	len = strlen(buffer);
 
-	nk_layout_row_begin(ctx, NK_DYNAMIC, 30, 2);
-	nk_layout_row_push(ctx, 0.3);
+	// write cache
+	G.cache.bufValue[sKey] = buffer;
+	G.cache.bufValue[sKey_A] = bufferA;
 
-	static struct nk_text_edit stTextEdit;
-	static int isInitTextEdit = 0;
+	nk_layout_row_dynamic(ctx, PROPERTY_LINE_NORMAL_HEIGHT, 1);
+	// nk_label(ctx, buffer, NK_TEXT_LEFT);
+	nk_edit_string_zero_terminated(ctx, NK_EDIT_BOX | NK_EDIT_AUTO_SELECT, buffer, len + 1, nk_filter_default);
+
+	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 2);
+	nk_layout_row_push(ctx, 0.35);
+
+	// static struct nk_text_edit stTextEdit;
+	// static int isInitTextEdit = 0;
 	if (isInitTextEdit == 0) {
 		nk_textedit_init_default(&stTextEdit);
 		isInitTextEdit = 1;
@@ -462,13 +587,12 @@ void propertyColor(struct nk_context *ctx, const char* key, struct nk_colorf *co
 	if (ret != 0) {
 		nk_textedit_delete(&stTextEdit, 0, stTextEdit.string.len);
 		nk_textedit_text(&stTextEdit, bufferA, (int)(strlen(bufferA)));
-		//nk_textedit_select_all(&stTextEdit);
 	}
 
-	nk_layout_row_push(ctx, 0.7);
+	nk_layout_row_push(ctx, 0.65);
 	if (nk_combo_begin_color(ctx, nk_rgb_cf(*colorf), size)) {
-		enum color_mode { COL_RGB, COL_HSV };
-		static int col_mode = COL_RGB;
+		// enum color_mode { COL_RGB, COL_HSV };
+		// static int col_mode = COL_RGB;
 		nk_layout_row_dynamic(ctx, 120, 1);
 		*colorf = nk_color_picker(ctx, *colorf, NK_RGBA);
 
@@ -496,19 +620,37 @@ void propertyColor(struct nk_context *ctx, const char* key, struct nk_colorf *co
 	}
 	nk_layout_row_end(ctx);
 }
+void propertyColorB(struct nk_context* ctx, const char* key, struct nk_color* color, struct nk_vec2 size)
+{
+	// static struct nk_colorf colorf;
+	string sKey = string(key) + "__B_";
+	struct nk_colorf& colorf = G.cache.cfValue[sKey];
+	colorf = nk_color_cf(*color);
+	propertyColor(ctx, key, &colorf, size);
+	*color = nk_rgb_cf(colorf);
+}
 
-void renderCommonShaderPanel(struct nk_context *ctx)
+void renderCommonShaderPanel(struct nk_context* ctx)
 {
 	const char *panelName = PANEL_COMMON_SHADER;
 
 	if (G.isShowPanelCommonShader) {
 
 		// map shader parameter to widget
-		if (nk_begin(ctx, panelName, nk_rect(200, 10, 300, 400), NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE | NK_WINDOW_TITLE | NK_WINDOW_BORDER))
+		if (nk_begin(ctx, panelName, G.panelCommonShaderRect, NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE | NK_WINDOW_TITLE | NK_WINDOW_BORDER))
 		{
 			// uniform - propertyType
-			propertyFloat(ctx, "ratioTex2Color", &G.stCommonShader.ratioTex2Color);
-			propertyColor(ctx, "objectColor", &G.stCommonShader.objectColor, nk_vec2(200, 400));
+			propertyFloat(ctx, "uRatioMixTex2Color", &G.stCommonShader.uRatioMixTex2Color);
+			propertyColor(ctx, "objectColor", &G.stCommonShader.objectColor, PROPERTY_COLOR_SIZE);
+
+			// point light switch
+			propertySwitch(ctx, "uUsePointLight", &G.stCommonShader.uUsePointLight);
+
+			// other switch
+			// ...
+			propertySwitch(ctx, "uSwitchEffectInvert", &G.stCommonShader.uSwitchEffectInvert);
+			propertySwitch(ctx, "uSwitchEffectGray", &G.stCommonShader.uSwitchEffectGray);
+
 		}
 		else {
 			// panel closed
@@ -519,7 +661,7 @@ void renderCommonShaderPanel(struct nk_context *ctx)
 	}
 }
 
-void renderStatus(struct nk_context *ctx)
+void renderStatus(struct nk_context* ctx)
 {
 	if (nk_begin(ctx, PANEL_STATUS, G.panelStatusRect, NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_BORDER)) {
 		float h = PANEL_STATUS_HEIGHT / 3.0;
@@ -548,10 +690,14 @@ void renderStatus(struct nk_context *ctx)
 			);
 
 			// col 1
-			propertyString(ctx, G.panelStatusBuffer);
+			// if (nk_group_begin(ctx, "#Camera_col_1", NULL)) {
+			// 	nk_layout_row_dynamic(ctx, rowHeight, 1);
+				propertyString(ctx, "camera setting", G.panelStatusBuffer);
+			// 	nk_group_end(ctx);
+			// }
 
 			// col 2
-			if (nk_group_begin(ctx, "#Camera_1", NULL)) {
+			if (nk_group_begin(ctx, "#Camera_col_2", NULL)) {
 				nk_layout_row_dynamic(ctx, rowHeight / 3, 2);
 
 				if (nk_button_label(ctx, "reset")) {
@@ -596,6 +742,19 @@ void renderMain(struct nk_context *ctx)
 		if (nk_button_label(ctx, BTN_COMMON_SHADER)) {
 			G.isShowPanelCommonShader = 1;
 		}
+
+		// background color
+		propertyColorB(ctx, "#bgColor", &G.bgColor, PROPERTY_COLOR_SIZE);
+
+
+	///////////////////////////////////////////////////////////////////////
+		// static struct nk_color rgba;
+		// propertyColorB(ctx, "#test Color", &rgba, PROPERTY_COLOR_SIZE);
+
+		// static char bb[1000] = {0};
+		// sprintf(bb, "%lf", glfwGetTime());
+		// propertyStringWithLayout(ctx, "glfwGetTime() ", bb);
+	///////////////////////////////////////////////////////////////////////
 
 		nk_label(ctx, "...", NK_TEXT_LEFT);
 	}
@@ -758,12 +917,22 @@ void renderScene()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// use bgColor
+	glClearColor(CNTo1(G.bgColor.r), CNTo1(G.bgColor.g), CNTo1(G.bgColor.b), CNTo1(G.bgColor.a));
+
+	// ====================================================
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture0);
+
 	// use common shader
 	pShader->use();
 	pShader->setFloat("uTime", G.currentTime);
+	pShader->setInt("uUsePointLight", G.stCommonShader.uUsePointLight);
+	pShader->setInt("uSwitchEffectInvert", G.stCommonShader.uSwitchEffectInvert);
+	pShader->setInt("uSwitchEffectGray", G.stCommonShader.uSwitchEffectGray);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture0);
+	pShader->setVec3("uViewPos", G.camera->Position);
+	pShader->setVec3("uLightPos", glm::vec3(4.0 * cos(G.currentTime), 0.0, 4.0 * sin(G.currentTime)));
 
 	//glm::vec3 vT = glm::vec3(-0.5, -0.2, -3.0);
 	//glm::vec3 vT = glm::vec3(1.0, 1.0, 1.0);
@@ -772,16 +941,19 @@ void renderScene()
 	pShader->setMat4("mvp", mvp_1);
 	pShader->setMat4("uMat4Model", glm::translate(glm::mat4(1.0), vT));
 
-	nk_colorf* col = &G.stCommonShader.objectColor;
-	pShader->setVec3("uColor", glm::vec3((*col).r, (*col).g, (*col).b));
-	pShader->setFloat("uRatioMixTex2Color", G.stCommonShader.ratioTex2Color);
+	pShader->setVec3("uColor", convertCFToVec3(&G.stCommonShader.objectColor));
+	pShader->setFloat("uRatioMixTex2Color", G.stCommonShader.uRatioMixTex2Color);
 	pShader->setFloat("uRatioMixAColor2UColor", 1.0); // use uColor
 	renderCube();
+	// ====================================================
 
 	glm::vec3 vT0 = glm::vec3(0);
 	pShader->setMat4("mvp", glm::translate(mvp, vT0));
 	pShader->setFloat("uRatioMixTex2Color", 1.0);
 	pShader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
+	pShader->setInt("uUsePointLight", 0);
+	pShader->setInt("uSwitchEffectInvert", 0);
+	pShader->setInt("uSwitchEffectGray", 0);
 	renderCoordinateSystem();
 }
 
@@ -916,6 +1088,7 @@ int main(void)
 
 	nk_glfw3_shutdown();
 	glfwTerminate();
+	clear();
 
 	return 0;
 }
