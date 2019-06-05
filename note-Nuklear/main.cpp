@@ -6,10 +6,15 @@
 - [x] press space to lock or unlock camera movement
 - [x] property panel
 - [x] camera property panel
-- [ ] main panel
+- [ ] main panel*
 - [ ] data driven
 - [x] reset camera
 - [x] cache value
+- [ ] property data struct
+- [ ] change texture
+- [x] render sphere
+- [ ] dynamic create property widget
+- [ ] fixed window size
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -98,7 +103,6 @@ using namespace std;
 #define PANEL_COMMON_SHADER_WIDTH PANEL_NORMAL_WIDTH
 #define PANEL_COMMON_SHADER_HEIGHT PANEL_NORMAL_HEIGHT
 
-
 #define PROPERTY_COLOR_SIZE nk_vec2(200, 400)
 #define PROPERTY_LINE_NORMAL_HEIGHT 30
 
@@ -162,14 +166,9 @@ Shader* pShader = NULL;
 static int texture0;
 
 //====================================
-typedef struct StCache {
-	map<string, string> bufValue;
-	map<string, float> fValue;
-	map<string, int> iValue;
-	map<string, struct nk_colorf> cfValue;
-	map<string, struct nk_text_edit> textEditValue;
-
-} StCache;
+typedef struct StColorShader {
+	struct nk_colorf uColor;
+} StColorShader;
 
 typedef struct StCommonShader {
 	float uRatioMixTex2Color;
@@ -178,6 +177,15 @@ typedef struct StCommonShader {
 	int uSwitchEffectInvert;
 	int uSwitchEffectGray;
 } StCommonShader;
+
+typedef struct StCache {
+	map<string, string> bufValue;
+	map<string, float> fValue;
+	map<string, int> iValue;
+	map<string, struct nk_colorf> cfValue;
+	map<string, struct nk_text_edit> textEditValue;
+
+} StCache;
 
 // Global State
 struct StState {
@@ -203,6 +211,8 @@ struct StState {
 
 	// shader
 	StCommonShader stCommonShader;
+	StColorShader stColorShader;
+	Shader* colorShader = NULL;
 
 	struct nk_color bgColor; //
 
@@ -218,10 +228,20 @@ glm::vec3 convertCFToVec3(nk_colorf* col)
 {
 	return col ? glm::vec3((*col).r, (*col).g, (*col).b) : glm::vec3(1.0);
 }
-glm::vec3 convertCFToVec3(nk_color* col)
+glm::vec3 convertCToVec3(nk_color* col)
 {
 	const float c = 255.0;
 	return col ? glm::vec3((*col).r / c, (*col).g / c, (*col).b / c) : glm::vec3(1.0);
+}
+glm::vec4 convertCFToVec4(nk_colorf* col)
+{
+	if (col) return glm::vec4(convertCFToVec3(col), col->a);
+	return glm::vec4(1.0);
+}
+glm::vec4 convertCToVec4(nk_color* col)
+{
+	if (col) return glm::vec4(convertCToVec3(col), col->a);
+	return glm::vec4(1.0);
 }
 
 void printColorf(const char * key, struct nk_colorf colorf)
@@ -288,17 +308,25 @@ unsigned int loadTexture(char const * path)
 	return textureID;
 }
 
-int initStCommonShader(StCommonShader *p)
+int initStCommonShader(StCommonShader* p)
 {
 	// p->objectColor.r = 0.88;
 	// p->objectColor.g = 0.9;
 	// p->objectColor.b = 0.88;
 	// p->objectColor.a = 1.0;
 	p->objectColor = { 0.88f, 0.9f, 0.88f, 1.0f };
-	p->uRatioMixTex2Color = 1.0f;
-	p->uUsePointLight = 0;
+	p->uRatioMixTex2Color = 0.5f;
+	p->uUsePointLight = 1;
 	p->uSwitchEffectInvert = 0;
 	p->uSwitchEffectGray = 0;
+	return 0;
+}
+
+int initStColorShader(StColorShader* p)
+{
+	if (p != NULL) {
+		p->uColor = { 0.20f, 0.17f, 0.68f, 1.0f };
+	}
 	return 0;
 }
 
@@ -327,6 +355,9 @@ int initState() {
 	// common shader
 	initStCommonShader(&G.stCommonShader);
 
+	// color shader
+	initStColorShader(&G.stColorShader);
+
 	G.bgColor = nk_rgba(47, 74, 87, 255);
 
 	printf("sizeof(StState) = %lu\n", sizeof(StState));
@@ -346,6 +377,8 @@ void initGLSetting()
 		std::cout << "pShader is NULL." << std::endl;
 	}
 
+	G.colorShader = new Shader("vertex.vs", "colorFragment.fs");
+
 	//////////////////////////////////////////
 	// texture
 	texture0 = loadTexture("container.jpg");
@@ -354,7 +387,7 @@ void initGLSetting()
 
 	pShader->use();
 	pShader->setInt("texture0", 0);
-	pShader->setFloat("uRatioMixTex2Color", 0.1);
+	// pShader->setFloat("uRatioMixTex2Color", 0.1);
 }
 
 void clear()
@@ -363,6 +396,9 @@ void clear()
 		delete pShader; pShader = NULL;
 	}
 
+	if (G.colorShader) {
+		delete G.colorShader; G.colorShader = NULL;
+	}
 }
 //====================================
 
@@ -746,15 +782,17 @@ void renderMain(struct nk_context *ctx)
 		// background color
 		propertyColorB(ctx, "#bgColor", &G.bgColor, PROPERTY_COLOR_SIZE);
 
+		// light color
+		propertyColor(ctx, "lightColor", &G.stColorShader.uColor, PROPERTY_COLOR_SIZE);
 
-	///////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////
 		// static struct nk_color rgba;
 		// propertyColorB(ctx, "#test Color", &rgba, PROPERTY_COLOR_SIZE);
 
 		// static char bb[1000] = {0};
 		// sprintf(bb, "%lf", glfwGetTime());
 		// propertyStringWithLayout(ctx, "glfwGetTime() ", bb);
-	///////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////
 
 		nk_label(ctx, "...", NK_TEXT_LEFT);
 	}
@@ -792,6 +830,106 @@ void renderUI(struct nk_context *ctx)
 }
 
 // ---------------------------------------------------------------------------------------------------------
+// renders (and builds at first invocation) a sphere
+// -------------------------------------------------
+unsigned int sphereVAO = 0;
+unsigned int indexCount;
+void renderSphere()
+{
+    if (sphereVAO == 0)
+    {
+        glGenVertexArrays(1, &sphereVAO);
+
+        unsigned int vbo, ebo;
+        glGenBuffers(1, &vbo);
+        glGenBuffers(1, &ebo);
+
+        std::vector<glm::vec3> positions;
+        std::vector<glm::vec2> uv;
+        std::vector<glm::vec3> normals;
+        std::vector<unsigned int> indices;
+
+        const unsigned int X_SEGMENTS = 64;
+        const unsigned int Y_SEGMENTS = 64;
+        const float PI = 3.14159265359;
+        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        {
+            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            {
+                float xSegment = (float)x / (float)X_SEGMENTS;
+                float ySegment = (float)y / (float)Y_SEGMENTS;
+                float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+                float yPos = std::cos(ySegment * PI);
+                float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+                positions.push_back(glm::vec3(xPos, yPos, zPos));
+                uv.push_back(glm::vec2(xSegment, ySegment));
+                normals.push_back(glm::vec3(xPos, yPos, zPos));
+            }
+        }
+
+        bool oddRow = false;
+        for (int y = 0; y < Y_SEGMENTS; ++y)
+        {
+            if (!oddRow) // even rows: y == 0, y == 2; and so on
+            {
+                for (int x = 0; x <= X_SEGMENTS; ++x)
+                {
+                    indices.push_back(y       * (X_SEGMENTS + 1) + x);
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                }
+            }
+            else
+            {
+                for (int x = X_SEGMENTS; x >= 0; --x)
+                {
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                    indices.push_back(y       * (X_SEGMENTS + 1) + x);
+                }
+            }
+            oddRow = !oddRow;
+        }
+        indexCount = indices.size();
+
+        std::vector<float> data;
+        for (int i = 0; i < positions.size(); ++i)
+        {
+            data.push_back(positions[i].x);
+            data.push_back(positions[i].y);
+            data.push_back(positions[i].z);
+            if (uv.size() > 0)
+            {
+                data.push_back(uv[i].x);
+                data.push_back(uv[i].y);
+            }
+            if (normals.size() > 0)
+            {
+                data.push_back(normals[i].x);
+                data.push_back(normals[i].y);
+                data.push_back(normals[i].z);
+            }
+        }
+        glBindVertexArray(sphereVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+        float stride = (3 + 2 + 3) * sizeof(float);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+
+		glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+
+		glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
+    }
+
+    glBindVertexArray(sphereVAO);
+    glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
+}
 
 unsigned int cubeVAO = 0;
 unsigned int cubeVBO = 0;
@@ -924,37 +1062,61 @@ void renderScene()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture0);
 
+	glm::vec3 lightPos = glm::vec3(10.0 * cos(G.currentTime), 0.0, 10.0 * sin(G.currentTime));
+
 	// use common shader
-	pShader->use();
-	pShader->setFloat("uTime", G.currentTime);
-	pShader->setInt("uUsePointLight", G.stCommonShader.uUsePointLight);
-	pShader->setInt("uSwitchEffectInvert", G.stCommonShader.uSwitchEffectInvert);
-	pShader->setInt("uSwitchEffectGray", G.stCommonShader.uSwitchEffectGray);
+	if (pShader != NULL)
+	{
+		pShader->use();
+		pShader->setFloat("uTime", G.currentTime);
+		pShader->setInt("uUsePointLight", G.stCommonShader.uUsePointLight);
+		pShader->setInt("uSwitchEffectInvert", G.stCommonShader.uSwitchEffectInvert);
+		pShader->setInt("uSwitchEffectGray", G.stCommonShader.uSwitchEffectGray);
 
-	pShader->setVec3("uViewPos", G.camera->Position);
-	pShader->setVec3("uLightPos", glm::vec3(4.0 * cos(G.currentTime), 0.0, 4.0 * sin(G.currentTime)));
+		pShader->setVec3("uViewPos", G.camera->Position);
+		pShader->setVec3("uLightPos", lightPos);
+		pShader->setVec3("uLightColor", convertCFToVec3(&G.stColorShader.uColor));
 
-	//glm::vec3 vT = glm::vec3(-0.5, -0.2, -3.0);
-	//glm::vec3 vT = glm::vec3(1.0, 1.0, 1.0);
-	glm::vec3 vT = glm::vec3(0);
-	glm::mat4 mvp_1 = glm::translate(mvp, vT);
-	pShader->setMat4("mvp", mvp_1);
-	pShader->setMat4("uMat4Model", glm::translate(glm::mat4(1.0), vT));
+		glm::vec3 vT = glm::vec3(0.0f);
+		// glm::mat4 mvp_1 = glm::translate(mvp, vT);
+		glm::mat4 m = glm::translate(glm::mat4(1.0), vT);
+		m = glm::scale(m, glm::vec3(2.0));
+		glm::mat4 mvp_1 = mvp * m;
+		pShader->setMat4("mvp", mvp_1);
+		pShader->setMat4("uMat4Model", glm::translate(glm::mat4(1.0), vT));
 
-	pShader->setVec3("uColor", convertCFToVec3(&G.stCommonShader.objectColor));
-	pShader->setFloat("uRatioMixTex2Color", G.stCommonShader.uRatioMixTex2Color);
-	pShader->setFloat("uRatioMixAColor2UColor", 1.0); // use uColor
-	renderCube();
+		pShader->setVec3("uColor", convertCFToVec3(&G.stCommonShader.objectColor));
+		pShader->setFloat("uRatioMixTex2Color", G.stCommonShader.uRatioMixTex2Color);
+		pShader->setFloat("uRatioMixAColor2UColor", 1.0); // use uColor
+		renderCube();
+		// ====================================================
+
+		glm::vec3 vT0 = glm::vec3(0);
+		pShader->setMat4("mvp", glm::translate(mvp, vT0));
+		pShader->setFloat("uRatioMixTex2Color", 1.0);
+		pShader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
+		pShader->setInt("uUsePointLight", 0);
+		pShader->setInt("uSwitchEffectInvert", 0);
+		pShader->setInt("uSwitchEffectGray", 0);
+		renderCoordinateSystem();
+	}
 	// ====================================================
 
-	glm::vec3 vT0 = glm::vec3(0);
-	pShader->setMat4("mvp", glm::translate(mvp, vT0));
-	pShader->setFloat("uRatioMixTex2Color", 1.0);
-	pShader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
-	pShader->setInt("uUsePointLight", 0);
-	pShader->setInt("uSwitchEffectInvert", 0);
-	pShader->setInt("uSwitchEffectGray", 0);
-	renderCoordinateSystem();
+	if (G.colorShader)
+	{
+		Shader* shader = G.colorShader;
+		shader->use();
+
+		glm::mat4 m = glm::mat4(1.0f);
+		glm::mat4 m1 = glm::translate(m, lightPos);
+		glm::mat4 m2 = glm::scale(m1, glm::vec3(0.1f));
+		shader->setMat4("mvp", mvp * m2);
+		shader->setVec4("uColor", convertCFToVec4(&G.stColorShader.uColor));
+
+		// renderCube();
+		renderSphere();
+	}
+	// ====================================================
 }
 
 
@@ -1032,9 +1194,7 @@ int main(void)
 	double sumFrameCost = 0;
 	//////////////////////////////////
 
-	//
 	// loop
-	//
 	while (!glfwWindowShouldClose(win))
 	{
 		clockCount++;

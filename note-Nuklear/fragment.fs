@@ -13,8 +13,9 @@ uniform vec3 uViewPos;
 uniform float uRatioMixTex2Color;     // textureColor to mix(vertexColor, uColor)
 uniform float uRatioMixAColor2UColor; // vertexColor to uColor
 uniform float uTime;
-uniform bool uUsePointLight; // point light switch
 uniform vec3 uLightPos;
+uniform vec3 uLightColor;
+uniform bool uUsePointLight; // point light switch
 uniform bool uSwitchEffectInvert;
 uniform bool uSwitchEffectGray;
 
@@ -40,7 +41,7 @@ void main()
     {
         // vec3 lightPos = vec3(3.0 * cos(uTime), 3.0 * sin(uTime), 0.0);
         vec3 lightPos = uLightPos;
-        vec3 lightColor = vec3(1.0);
+        vec3 lightColor = uLightColor;
         FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20);
     }
 
