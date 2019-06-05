@@ -313,7 +313,7 @@ gl_FragCoord 是屏幕空间坐标. gl_FragCoord.z 是深度值.
 
 深度缓冲的可视化, 将片段的深度值经过转换后赋值给 gl_FragColor.
 
-```
+```c
 #version 330 core
 out vec4 FragColor;
 
@@ -545,7 +545,7 @@ T(切线)沿着法线贴图的x轴方向(u), B(副切线)沿着法线贴图的y�
 
 格拉姆-施密特正交化过程（Gram-Schmidt process）使 TBN 矩阵重新正交化.
 
-```
+```c
 vec3 T = normalize(vec3(model * vec4(tangent, 0.0)));
 vec3 N = normalize(vec3(model * vec4(normal, 0.0)));
 // re-orthogonalize T with respect to N
