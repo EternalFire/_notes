@@ -6,15 +6,16 @@
 - [x] press space to lock or unlock camera movement
 - [x] property panel
 - [x] camera property panel
-- [ ] main panel*
+- [x] main panel*
 - [ ] data driven
 - [x] reset camera
 - [x] cache value
-- [ ] property data struct
+- [ ] property data struct*
 - [ ] change texture
 - [x] render sphere
 - [ ] dynamic create property widget
 - [ ] fixed window size
+- [ ] other OpenGL case
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +30,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -77,12 +79,14 @@ using namespace std;
 #define TYPE_VEC2   3
 #define TYPE_VEC3   4
 #define TYPE_COLOR  5
-#define TYPE_STRING 6
+#define TYPE_COLORF 6
+#define TYPE_STRING 7
 
 // panel type
 #define PANEL_STATUS "Status"
 #define PANEL_MAIN   "Main"
 #define PANEL_COMMON_SHADER "Common Shader"
+#define PANEL_SHADER_1 "StShaderPanel_1"
 
 // panel entrance
 #define BTN_COMMON_SHADER "Show Common Shader"
@@ -130,6 +134,7 @@ using namespace std;
  *
  */
 
+
 /**
  * connect uniform with variable:
  *
@@ -139,6 +144,27 @@ using namespace std;
  * shader object pass variable to fragment shader program
  * update variable by widget
  */
+
+
+/**
+ *
+ * create panel and widget by shader property structure:
+ *
+ * 1. create switch to active shader program
+ * 2. create entrance in main panel
+ * 3. create panel with name to contain widget
+ * 4. iterate every property, create widget according to property type
+ * 5. use property data by shader object method
+ *
+ *
+ * `initStShaderPanels()`, create property struct data
+ * `initGLSetting()`, create shader
+ * `renderShaderPanelEntrance()`
+ * `renderShaderPanel()`, panel with widget which used for updating uniform
+ * `renderScene()`, shader object pass property value to shader program
+ *
+ */
+
 
 /**
  * Camera setting
@@ -194,6 +220,56 @@ typedef struct StCommonShader {
 	int uSwitchEffectGray;
 } StCommonShader;
 
+typedef struct StProperty {
+	int type;
+	string name;
+	union {
+		int iVal;
+		float fVal;
+		glm::vec2 v2Val;
+		glm::vec3 v3Val;
+		struct nk_colorf cfVal;
+		struct nk_color cVal;
+		string sVal;
+	};
+
+	StProperty():sVal(""), name("") {}
+	StProperty(const StProperty& prop) {
+		*this = prop;
+	}
+	StProperty(StProperty&& prop) {
+		*this = prop;
+	}
+	~StProperty() {}
+
+	StProperty& operator=(const StProperty& prop) {
+		type = prop.type;
+		name = prop.name;
+		if (type == TYPE_INT)    iVal = prop.iVal;
+		if (type == TYPE_FLOAT)  fVal = prop.fVal;
+		if (type == TYPE_VEC2)   v2Val = prop.v2Val;
+		if (type == TYPE_VEC3)   v3Val = prop.v3Val;
+		if (type == TYPE_COLORF) cfVal = prop.cfVal;
+		if (type == TYPE_COLOR)  cVal = prop.cVal;
+		if (type == TYPE_STRING) sVal = prop.sVal;
+		return *this;
+	}
+	StProperty& operator=(StProperty&& prop) {
+		*this = prop;
+		return *this;
+	}
+
+} StProperty;
+
+typedef struct StShaderPanel {
+	string name;
+	vector<StProperty> propertyArray;
+	Shader* shader;
+
+	StShaderPanel():name(""), shader(NULL) {}
+	~StShaderPanel() { name.clear(); shader = NULL; }
+} StShaderPanel;
+
 typedef struct StCache {
 	map<string, string> bufValue;
 	map<string, float> fValue;
@@ -233,6 +309,8 @@ struct StState {
 	StCommonShader stCommonShader;
 	StColorShader stColorShader;
 	Shader* colorShader = NULL;
+
+	map<string, StShaderPanel> stShaderPanelMap;
 
 	struct nk_color bgColor; //
 
@@ -335,6 +413,7 @@ void setCamera()
 	cameraPitchNew = camera.Pitch;
 }
 
+// rotate camera around y axis
 void rotateCameraY(float sinValue, float cosValue)
 {
 	float radius = glm::length(glm::vec2(G.camera->Position.xz));
@@ -343,6 +422,13 @@ void rotateCameraY(float sinValue, float cosValue)
 	G.camera->Front = glm::normalize(-p);
 	G.camera->Right = glm::normalize(glm::cross(G.camera->Front, G.camera->WorldUp));
 	G.camera->Up = glm::normalize(glm::cross(G.camera->Right, G.camera->Front));
+}
+
+void rotateCameraByYaw(float degree)
+{
+	if (G.camera) {
+		G.camera->ProcessMouseMovement(degree, 0);
+	}
 }
 
 unsigned int loadTexture(char const * path)
@@ -404,6 +490,25 @@ int initStColorShader(StColorShader* p)
 	return 0;
 }
 
+int initStShaderPanels()
+{
+	// create panel struct
+	StShaderPanel st1;
+	st1.name = PANEL_SHADER_1;
+
+	// create property struct
+	StProperty p0;
+	p0.name = "uSwitchEffectInvert";
+	p0.type = TYPE_INT;
+	p0.iVal = 0;
+	st1.propertyArray.push_back(p0);
+
+	// put panel struct into map
+	G.stShaderPanelMap[st1.name] = st1;
+
+	return 0;
+}
+
 int initState() {
 	G.id = 0;
 	G.ctx = NULL;
@@ -435,6 +540,8 @@ int initState() {
 	// color shader
 	initStColorShader(&G.stColorShader);
 
+	initStShaderPanels();
+
     //#bgColor (r:51 g:51 b:43 a:255)
     G.bgColor = nk_rgba(51, 51, 43, 255);
 
@@ -457,6 +564,8 @@ void initGLSetting()
 	}
 
 	G.colorShader = new Shader("vertex.vs", "colorFragment.fs");
+
+	G.stShaderPanelMap[PANEL_SHADER_1].shader = pShader;
 
 	//////////////////////////////////////////
 	// texture
@@ -745,6 +854,34 @@ void propertyColorB(struct nk_context* ctx, const char* key, struct nk_color* co
 	*color = nk_rgb_cf(colorf);
 }
 
+void renderShaderPanel(struct nk_context* ctx)
+{
+	for (auto it = G.stShaderPanelMap.begin(); it != G.stShaderPanelMap.end(); it++) {
+		string panelName = it->first;
+		auto& stShaderPanel = it->second;
+		auto& showValue = G.cache.iValue[panelName];
+
+		if (showValue) {
+			if (nk_begin(ctx, panelName.c_str(), G.panelCommonShaderRect, NK_WINDOW_MOVABLE | NK_WINDOW_CLOSABLE | NK_WINDOW_TITLE | NK_WINDOW_BORDER))
+			{
+				for (auto ite = stShaderPanel.propertyArray.begin(); ite != stShaderPanel.propertyArray.end(); ite++)
+				{
+					auto& stProperty = *ite;
+					if (stProperty.type == TYPE_INT) {
+						propertySwitch(ctx, stProperty.name.c_str(), &stProperty.iVal);
+					}
+					// ...
+				}
+			}
+			else
+			{
+				showValue = 0;
+			}
+			nk_end(ctx);
+		}
+	}
+}
+
 void renderCommonShaderPanel(struct nk_context* ctx)
 {
 	const char *panelName = PANEL_COMMON_SHADER;
@@ -847,6 +984,19 @@ void renderStatus(struct nk_context* ctx)
 	nk_end(ctx);
 }
 
+void renderShaderPanelEntrance(struct nk_context* ctx)
+{
+	for (auto it = G.stShaderPanelMap.begin(); it != G.stShaderPanelMap.end(); it++) {
+		string panelName = it->first;
+		string btnName = "Show ";
+		btnName += panelName;
+		auto& showValue = G.cache.iValue[panelName];
+		if (nk_button_label(ctx, btnName.c_str())) {
+            showValue = !showValue;
+		}
+	}
+}
+
 void renderMain(struct nk_context *ctx)
 {
 	if (nk_begin(ctx, PANEL_MAIN, G.panelMainRect, NK_WINDOW_BORDER | NK_WINDOW_MINIMIZABLE)) {
@@ -856,6 +1006,9 @@ void renderMain(struct nk_context *ctx)
 			// G.isShowPanelCommonShader = 1;
             G.isShowPanelCommonShader = !G.isShowPanelCommonShader;
 		}
+
+		// render other shader panel entrance
+		renderShaderPanelEntrance(ctx);
 
 		// background color
 		propertyColorB(ctx, "#bgColor", &G.bgColor, PROPERTY_COLOR_SIZE);
@@ -876,7 +1029,8 @@ void renderMain(struct nk_context *ctx)
 		// propertyStringWithLayout(ctx, "glfwGetTime() ", bb);
 		///////////////////////////////////////////////////////////////////////
 
-		nk_label(ctx, "...", NK_TEXT_LEFT);
+		nk_layout_row_dynamic(ctx, 25, 1);
+		nk_label(ctx, "...", NK_TEXT_CENTERED);
 	}
 	nk_end(ctx);
 }
@@ -909,6 +1063,9 @@ void renderUI(struct nk_context *ctx)
 	renderCommonShaderPanel(ctx);
 
 	renderStatus(ctx);
+
+	// render other shader panel
+	renderShaderPanel(ctx);
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -1168,6 +1325,7 @@ void renderScene()
 	{
 		// rotate camera
 		rotateCameraY(sin(G.currentTime), cos(G.currentTime));
+		// rotateCameraByYaw(10);
 
 		// update mvp
 		projectionMatrix = perspectiveMatrix();
@@ -1181,7 +1339,7 @@ void renderScene()
 		pShader->use();
 		pShader->setFloat("uTime", G.currentTime);
 		pShader->setInt("uUsePointLight", G.stCommonShader.uUsePointLight);
-		pShader->setInt("uSwitchEffectInvert", G.stCommonShader.uSwitchEffectInvert);
+		// pShader->setInt("uSwitchEffectInvert", G.stCommonShader.uSwitchEffectInvert);
 		pShader->setInt("uSwitchEffectGray", G.stCommonShader.uSwitchEffectGray);
 
 		pShader->setVec3("uViewPos", G.camera->Position);
@@ -1240,6 +1398,24 @@ void renderScene()
 		pShader->setInt("uSwitchEffectInvert", 0);
 		pShader->setInt("uSwitchEffectGray", 0);
 		renderCoordinateSystem();
+
+		{
+			auto& stShaderPanel =  G.stShaderPanelMap[PANEL_SHADER_1];
+			auto shader = stShaderPanel.shader;
+			if (shader != NULL) {
+				for (auto ite = stShaderPanel.propertyArray.begin(); ite != stShaderPanel.propertyArray.end(); ite++)
+				{
+					auto& stProperty = *ite;
+					if (stProperty.type == TYPE_INT) {
+						shader->setInt(stProperty.name.c_str(), stProperty.iVal);
+					}
+
+					// todo
+					// ...
+				}
+			}
+			// shader->
+		}
 	}
 	// ====================================================
 
