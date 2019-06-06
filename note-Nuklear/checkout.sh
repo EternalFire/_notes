@@ -1,5 +1,8 @@
-backupFirst=_backup_temp
-rm -r ../$backupFirst
+t0=`date "+%Y%m%d%H%M%S"`
+backupFirst=_backup_temp_at_$t0
+echo $backupFirst
+
+# rm -r ../$backupFirst
 cp -R . ../$backupFirst
 
 checkoutPath=/Users/fire/Documents/develop/gitProject/_notes/note-Nuklear
