@@ -107,7 +107,7 @@ using namespace std;
 #define PROPERTY_LINE_NORMAL_HEIGHT 30
 
 // convert rgba color component to [0,1] by divided by 255
-#define CNTo1(component) (component/255.0)
+#define CNTo1(component) (component/255.0f)
 
 
 /**
@@ -159,10 +159,16 @@ float lastX = WINDOW_WIDTH / 2.0f; // center
 float lastY = WINDOW_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-glm::mat4 mvp(1.0);
+/**
+ * transform
+ **/
+glm::mat4 mvp(1.0f);
+const glm::mat4 IMatrix4(1.0f); // identty matrix
+const glm::vec3 xAxis(1.0f, 0.0f, 0.0f);
+const glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
+const glm::vec3 zAxis(0.0f, 0.0f, 1.0f);
 
 Shader* pShader = NULL;
-
 static int texture0;
 
 //====================================
@@ -216,6 +222,7 @@ struct StState {
 
 	struct nk_color bgColor; //
 
+
 	StCache cache;
 };
 typedef struct StState StState;
@@ -223,6 +230,44 @@ static StState G;
 
 
 //====================================
+bool fuzzyEquals(float a, float b)
+{
+	const float epsilon = 0.001;
+	const float difference = a - b;
+	if (difference >= -epsilon && difference <= epsilon) {
+		return true;
+	}
+	return false;
+}
+
+glm::mat4 translate(const glm::vec3& v3, const glm::mat4& model = IMatrix4)
+{
+	return glm::translate(model, v3);
+}
+glm::mat4 rotateByX(float degree, const glm::mat4& model = IMatrix4)
+{
+	return glm::rotate(model, glm::radians(degree), xAxis);
+}
+glm::mat4 rotateByY(float degree, const glm::mat4& model = IMatrix4)
+{
+	return glm::rotate(model, glm::radians(degree), yAxis);
+}
+glm::mat4 rotateByZ(float degree, const glm::mat4& model = IMatrix4)
+{
+	return glm::rotate(model, glm::radians(degree), zAxis);
+}
+glm::mat4 scale(const glm::vec3& v3, const glm::mat4& model = IMatrix4)
+{
+	return glm::scale(model, v3);
+}
+glm::mat4 scale(float s, const glm::mat4& model = IMatrix4)
+{
+	return glm::scale(model, glm::vec3(s));
+}
+glm::mat3 normalMatrix(const glm::mat4& model)
+{
+	return glm::transpose(glm::inverse(glm::mat3(model)));
+}
 
 glm::vec3 convertCFToVec3(nk_colorf* col)
 {
@@ -326,8 +371,7 @@ int initStCommonShader(StCommonShader* p)
 int initStColorShader(StColorShader* p)
 {
 	if (p != NULL) {
-        // lightColor (r:229 g:41 b:31 a:255)
-		p->uColor = {CNTo1(229), CNTo1(41), CNTo1(31), 1.0f};
+		p->uColor = {CNTo1(209), CNTo1(221), CNTo1(200), 1.0f};
 	}
 	return 0;
 }
@@ -364,6 +408,7 @@ int initState() {
     G.bgColor = nk_rgba(51, 51, 43, 255);
 
 	printf("sizeof(StState) = %lu\n", sizeof(StState));
+
 	return 0;
 }
 
@@ -1066,7 +1111,18 @@ void renderScene()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture0);
 
-	glm::vec3 lightPos = glm::vec3(3.0 * cos(G.currentTime), 4.0 * sin(G.currentTime), 5.0 * sin(G.currentTime));
+	glm::vec3 lightPos;
+	float cosValue = cos(G.currentTime);
+
+	static int direction = 1;
+	if (fuzzyEquals(cosValue, 1.0)) {
+		direction = direction == 1 ? -1 : 1;
+	}
+
+	float theta = direction * G.currentTime;
+	float cosTheta = cos(theta);
+	float sinTheta = sin(theta);
+	lightPos = glm::vec3(3.0 * cosTheta, 3.0 * sinTheta, 3.0 * cosTheta * sinTheta);
 
 	// use common shader
 	if (pShader != NULL)
@@ -1083,16 +1139,42 @@ void renderScene()
 
 		glm::vec3 vT = glm::vec3(0.0f);
 		// glm::mat4 mvp_1 = glm::translate(mvp, vT);
-		glm::mat4 m = glm::translate(glm::mat4(1.0), vT);
+		glm::mat4 m = glm::translate(IMatrix4, vT);
 		m = glm::scale(m, glm::vec3(1.0));
+
 		glm::mat4 mvp_1 = mvp * m;
 		pShader->setMat4("mvp", mvp_1);
-		pShader->setMat4("uMat4Model", glm::translate(glm::mat4(1.0), vT));
+		pShader->setMat4("uMat4Model", m);
+		pShader->setMat3("uNormalMatrix", normalMatrix(m));
 
 		pShader->setVec3("uColor", convertCFToVec3(&G.stCommonShader.objectColor));
 		pShader->setFloat("uRatioMixTex2Color", G.stCommonShader.uRatioMixTex2Color);
 		pShader->setFloat("uRatioMixAColor2UColor", 1.0); // use uColor
-		renderCube();
+		renderCube(); // cube 1
+
+		glm::vec3 position = glm::vec3(5.0f, 0, 0);
+		glm::mat4 m1 = IMatrix4;
+		m1 = glm::translate(m1, position);
+
+		pShader->setMat4("mvp", mvp * m1);
+		pShader->setMat4("uMat4Model", m1);
+		pShader->setMat3("uNormalMatrix", normalMatrix(m1));
+		renderCube(); // cube 2
+
+		glm::mat4 m2 = translate(glm::vec3(2.0, 0.0, 6.0));
+		m2 = rotateByY(25 * G.currentTime, m2);
+		pShader->setMat4("mvp", mvp * m2);
+		pShader->setMat4("uMat4Model", m2);
+		pShader->setMat3("uNormalMatrix", normalMatrix(m2));
+		renderCube(); // cube 3
+
+		glm::mat4 m3 = translate(glm::vec3(4.0, 0.0, -2.0));
+		m3 = scale(glm::vec3(2.0, 0.5, 0.5), m3);
+		pShader->setMat4("mvp", mvp * m3);
+		pShader->setMat4("uMat4Model", m3);
+		pShader->setMat3("uNormalMatrix", normalMatrix(m3));
+		renderCube(); // cube 4
+
 		// ====================================================
 
 		glm::vec3 vT0 = glm::vec3(0);

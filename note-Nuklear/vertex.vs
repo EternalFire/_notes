@@ -12,6 +12,7 @@ out vec3 vsFragPos;
 
 uniform mat4 mvp;
 uniform mat4 uMat4Model;
+uniform mat3 uNormalMatrix;
 
 void main()
 {
@@ -19,6 +20,6 @@ void main()
     gl_Position = mvp * p;
     vertexColor = aColor;
     texCoord = aTexCoord;
-    vsNormal = aNormal;
+    vsNormal = uNormalMatrix * aNormal;
     vsFragPos = vec3(uMat4Model * p);
 }

@@ -241,6 +241,8 @@ lightColor * objectColor
 
 [Normal Matrix](http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/)
 
+法线矩阵, 模型矩阵左上角的逆矩阵的转置矩阵
+
 高光的反光度(Shininess), 一个物体的反光度越高，反射光的能力越强，散射得越少，高光点就会越小。
 
 GLSL 内置函数 reflect(), 计算反射向量.
