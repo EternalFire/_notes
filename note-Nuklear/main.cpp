@@ -53,9 +53,12 @@ using namespace std;
 #include "nuklear.h"
 #include "nuklear_glfw_gl3.h"
 
+#define GLM_FORCE_SWIZZLE
+#include "glm/glm.hpp"
+
 #include "shader.h"
 #include "camera.h"
-#include "glm/glm.hpp"
+
 
 // window size
 #define WINDOW_WIDTH  1280
@@ -143,11 +146,15 @@ using namespace std;
  * Position = (7.640, 6.438, 11.394)
  * WorldUp = (0.000, 1.000, 0.000)
  * Pitch = -24.300  Yaw = -124.900
+ *
+ * Position = (0.667, 8.979, 19.392)
+ * WorldUp = (0.000, 1.000, 0.000)
+ * Pitch = -24.400  Yaw = -110.500
  */
-const glm::vec3 cameraPosition = glm::vec3(7.640, 6.438, 11.394);
+const glm::vec3 cameraPosition = glm::vec3(0.667, 8.979, 19.392);
 const glm::vec3 cameraUp = glm::vec3(0, 1.0, 0);
-const float cameraYaw = -124.9f;  // around y axis
-const float cameraPitch = -24.3f; // around x axis
+const float cameraYaw = -110.5f;  // around y axis
+const float cameraPitch = -24.4f; // around x axis
 
 glm::vec3 cameraPositionNew = cameraPosition;
 glm::vec3 cameraUpNew = cameraUp;
@@ -163,6 +170,9 @@ bool firstMouse = true;
  * transform
  **/
 glm::mat4 mvp(1.0f);
+glm::mat4 projectionMatrix(1.0f);
+glm::mat4 viewMatrix(1.0f);
+
 const glm::mat4 IMatrix4(1.0f); // identty matrix
 const glm::vec3 xAxis(1.0f, 0.0f, 0.0f);
 const glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
@@ -214,6 +224,10 @@ struct StState {
 	Camera* camera;
 	int lockCamera;
 	int isLockingCamera;
+	int isRotatingCameraY;
+
+	// point light movement
+	int isPointLightMove;
 
 	// shader
 	StCommonShader stCommonShader;
@@ -221,7 +235,6 @@ struct StState {
 	Shader* colorShader = NULL;
 
 	struct nk_color bgColor; //
-
 
 	StCache cache;
 };
@@ -267,6 +280,11 @@ glm::mat4 scale(float s, const glm::mat4& model = IMatrix4)
 glm::mat3 normalMatrix(const glm::mat4& model)
 {
 	return glm::transpose(glm::inverse(glm::mat3(model)));
+}
+
+glm::mat4 perspectiveMatrix()
+{
+	return glm::perspective(glm::radians(camera.Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 }
 
 glm::vec3 convertCFToVec3(nk_colorf* col)
@@ -315,6 +333,16 @@ void setCamera()
 	cameraUpNew = camera.WorldUp;
 	cameraYawNew = camera.Yaw;
 	cameraPitchNew = camera.Pitch;
+}
+
+void rotateCameraY(float sinValue, float cosValue)
+{
+	float radius = glm::length(glm::vec2(G.camera->Position.xz));
+	glm::vec3 p = glm::vec3(cosValue * radius, G.camera->Position.y, sinValue * radius);
+	G.camera->Position = p;
+	G.camera->Front = glm::normalize(-p);
+	G.camera->Right = glm::normalize(glm::cross(G.camera->Front, G.camera->WorldUp));
+	G.camera->Up = glm::normalize(glm::cross(G.camera->Right, G.camera->Front));
 }
 
 unsigned int loadTexture(char const * path)
@@ -396,7 +424,10 @@ int initState() {
 	G.camera = &camera;
 	G.lockCamera = 1;
 	G.isLockingCamera = 0;
+	G.isRotatingCameraY = 0;
 	camera.MovementSpeed *= 1.75;
+
+	G.isPointLightMove = 0;
 
 	// common shader
 	initStCommonShader(&G.stCommonShader);
@@ -774,11 +805,7 @@ void renderStatus(struct nk_context* ctx)
 			);
 
 			// col 1
-			// if (nk_group_begin(ctx, "#Camera_col_1", NULL)) {
-			// 	nk_layout_row_dynamic(ctx, rowHeight, 1);
-				propertyString(ctx, "camera setting", G.panelStatusBuffer);
-			// 	nk_group_end(ctx);
-			// }
+			propertyString(ctx, "camera setting", G.panelStatusBuffer);
 
 			// col 2
 			if (nk_group_begin(ctx, "#Camera_col_2", NULL)) {
@@ -791,6 +818,8 @@ void renderStatus(struct nk_context* ctx)
 				if (nk_button_label(ctx, "set")) {
 					setCamera();
 				}
+
+				nk_selectable_label(ctx, "rotate", NK_TEXT_LEFT, &G.isRotatingCameraY);
 
 				memset(G.panelStatusBuffer, 0, sizeof(G.panelStatusBuffer));
 				sprintf(G.panelStatusBuffer, "lock camera(Space)");
@@ -832,7 +861,11 @@ void renderMain(struct nk_context *ctx)
 		propertyColorB(ctx, "#bgColor", &G.bgColor, PROPERTY_COLOR_SIZE);
 
 		// light color
+		nk_layout_row_dynamic(ctx, 1, 1);
 		propertyColor(ctx, "lightColor", &G.stColorShader.uColor, PROPERTY_COLOR_SIZE);
+
+		nk_layout_row_dynamic(ctx, 25, 1);
+		nk_selectable_label(ctx, "point light action", NK_TEXT_LEFT, &G.isPointLightMove);
 
 		///////////////////////////////////////////////////////////////////////
 		// static struct nk_color rgba;
@@ -1060,7 +1093,7 @@ void renderCoordinateSystem()
 	if (coordVAO == 0)
 	{
 		float x, y, z;
-		x = y = z = 10000.0;
+		x = y = z = 100000000.0f;
 
 		float vertices[] = {
 			// position          color
@@ -1112,17 +1145,35 @@ void renderScene()
 	glBindTexture(GL_TEXTURE_2D, texture0);
 
 	glm::vec3 lightPos;
-	float cosValue = cos(G.currentTime);
 
-	static int direction = 1;
-	if (fuzzyEquals(cosValue, 1.0)) {
-		direction = direction == 1 ? -1 : 1;
+	if (G.isPointLightMove)
+	{
+		static int direction = 1;
+		float cosValue = cos(G.currentTime);
+		if (fuzzyEquals(cosValue, 1.0)) {
+			direction = direction == 1 ? -1 : 1;
+		}
+
+		float theta = direction * G.currentTime;
+		float cosTheta = cos(theta);
+		float sinTheta = sin(theta);
+		lightPos = glm::vec3(3.0 * cosTheta, 3.0 * sinTheta, 3.0 * cosTheta * sinTheta);
+	}
+	else
+	{
+		lightPos = glm::vec3(3.0, 3.0, 3.0);
 	}
 
-	float theta = direction * G.currentTime;
-	float cosTheta = cos(theta);
-	float sinTheta = sin(theta);
-	lightPos = glm::vec3(3.0 * cosTheta, 3.0 * sinTheta, 3.0 * cosTheta * sinTheta);
+	if (G.isRotatingCameraY)
+	{
+		// rotate camera
+		rotateCameraY(sin(G.currentTime), cos(G.currentTime));
+
+		// update mvp
+		projectionMatrix = perspectiveMatrix();
+		viewMatrix = camera.GetViewMatrix();
+		mvp = projectionMatrix * viewMatrix;
+	}
 
 	// use common shader
 	if (pShader != NULL)
@@ -1159,6 +1210,7 @@ void renderScene()
 		pShader->setMat4("mvp", mvp * m1);
 		pShader->setMat4("uMat4Model", m1);
 		pShader->setMat3("uNormalMatrix", normalMatrix(m1));
+		// pShader->setMat3("uNormalMatrix", glm::mat3(m1));
 		renderCube(); // cube 2
 
 		glm::mat4 m2 = translate(glm::vec3(2.0, 0.0, 6.0));
@@ -1166,13 +1218,16 @@ void renderScene()
 		pShader->setMat4("mvp", mvp * m2);
 		pShader->setMat4("uMat4Model", m2);
 		pShader->setMat3("uNormalMatrix", normalMatrix(m2));
+		// pShader->setMat3("uNormalMatrix", glm::mat3(m2));
 		renderCube(); // cube 3
 
-		glm::mat4 m3 = translate(glm::vec3(4.0, 0.0, -2.0));
-		m3 = scale(glm::vec3(2.0, 0.5, 0.5), m3);
+		glm::mat4 m3 = translate(glm::vec3(-10.0, -5.0, -10.0));
+		m3 = scale(glm::vec3(8.0, 3.0, 8.0), m3);
+		m3 = rotateByY(45.0f, m3);
 		pShader->setMat4("mvp", mvp * m3);
 		pShader->setMat4("uMat4Model", m3);
 		pShader->setMat3("uNormalMatrix", normalMatrix(m3));
+		// pShader->setMat3("uNormalMatrix", glm::mat3(m3));
 		renderCube(); // cube 4
 
 		// ====================================================
@@ -1199,7 +1254,6 @@ void renderScene()
 		shader->setMat4("mvp", mvp * m2);
 		shader->setVec4("uColor", convertCFToVec4(&G.stColorShader.uColor));
 
-		// renderCube();
 		renderSphere();
 	}
 	// ====================================================
@@ -1305,9 +1359,9 @@ int main(void)
 		}
 
 		/* update camera */
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
-		mvp = projection * view;
+		projectionMatrix = perspectiveMatrix();
+		viewMatrix = camera.GetViewMatrix();
+		mvp = projectionMatrix * viewMatrix;
 
 		processInput(win, (float)deltaFrame);
 

@@ -241,7 +241,7 @@ lightColor * objectColor
 
 [Normal Matrix](http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/)
 
-法线矩阵, 模型矩阵左上角的逆矩阵的转置矩阵
+法线矩阵, 模型矩阵左上角的逆矩阵的转置矩阵. 修复不等比缩放对法向量的影响.
 
 高光的反光度(Shininess), 一个物体的反光度越高，反射光的能力越强，散射得越少，高光点就会越小。
 
@@ -755,6 +755,9 @@ glm::mat4 view = glm::lookAt(Position, Position + Front, Up);
 
 // MVP 矩阵
 glm::mat4 mvp = projection * view * model;
+
+// 重组 xz 向量, 求这个向量的长度
+float radius = glm::length(glm::vec2(position.xz));
 
 ```
 
