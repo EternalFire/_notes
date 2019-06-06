@@ -416,7 +416,7 @@ void setCamera()
 // rotate camera around y axis
 void rotateCameraY(float sinValue, float cosValue)
 {
-	float radius = glm::length(glm::vec2(G.camera->Position.xz));
+	float radius = glm::length(glm::vec2(G.camera->Position.xz()));
 	glm::vec3 p = glm::vec3(cosValue * radius, G.camera->Position.y, sinValue * radius);
 	G.camera->Position = p;
 	G.camera->Front = glm::normalize(-p);

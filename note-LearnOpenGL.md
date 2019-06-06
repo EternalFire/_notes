@@ -758,6 +758,8 @@ glm::mat4 mvp = projection * view * model;
 
 // 重组 xz 向量, 求这个向量的长度
 float radius = glm::length(glm::vec2(position.xz));
+// or
+// float radius = glm::length(glm::vec2(position.xz()));
 
 ```
 
