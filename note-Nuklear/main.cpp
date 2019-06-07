@@ -14,7 +14,7 @@
 - [ ] change texture
 - [x] render sphere
 - [ ] dynamic create property widget
-- [ ] fixed window size
+- [x] fixed window size
 - [ ] other OpenGL case
 */
 #include <stdio.h>
@@ -349,7 +349,7 @@ void clearShaderArray()
 
 bool fuzzyEquals(float a, float b)
 {
-	const float epsilon = 0.001;
+	const float epsilon = 0.001f;
 	const float difference = a - b;
 	if (difference >= -epsilon && difference <= epsilon) {
 		return true;
@@ -629,16 +629,16 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 	if (firstMouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
+		lastX = (float)xpos;
+		lastY = (float)ypos;
 		firstMouse = false;
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float xoffset = (float)(xpos - lastX);
+	float yoffset = (float)(lastY - ypos); // reversed since y-coordinates go from bottom to top
 
-	lastX = xpos;
-	lastY = ypos;
+	lastX = (float)xpos;
+	lastY = (float)ypos;
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
@@ -648,7 +648,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	if (G.lockCamera) return;
-	camera.ProcessMouseScroll(yoffset);
+	camera.ProcessMouseScroll((float)yoffset);
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -754,10 +754,10 @@ void propertyVec3(struct nk_context* ctx, const char* key, float* x, float* y, f
 	sprintf(buffer, "%.2f, %.2f, %.2f", *x, *y, *z);
 
 	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 2);
-	nk_layout_row_push(ctx, 0.30);
+	nk_layout_row_push(ctx, 0.30f);
 	nk_label(ctx, key, NK_TEXT_CENTERED);
 
-	nk_layout_row_push(ctx, 0.70);
+	nk_layout_row_push(ctx, 0.70f);
 	if (nk_combo_begin_label(ctx, buffer, size)) {
 		nk_layout_row_dynamic(ctx, 25, 1);
 		nk_property_float(ctx, "#X:", -1024.0f, x, 1024.0f, 1, 0.5f);
@@ -823,7 +823,7 @@ void propertyColor(struct nk_context *ctx, const char* key, struct nk_colorf *co
 	nk_edit_string_zero_terminated(ctx, NK_EDIT_BOX | NK_EDIT_AUTO_SELECT, buffer, len + 1, nk_filter_default);
 
 	nk_layout_row_begin(ctx, NK_DYNAMIC, PROPERTY_LINE_NORMAL_HEIGHT, 2);
-	nk_layout_row_push(ctx, 0.35);
+	nk_layout_row_push(ctx, 0.35f);
 
 	// static struct nk_text_edit stTextEdit;
 	// static int isInitTextEdit = 0;
@@ -838,7 +838,7 @@ void propertyColor(struct nk_context *ctx, const char* key, struct nk_colorf *co
 		nk_textedit_text(&stTextEdit, bufferA, (int)(strlen(bufferA)));
 	}
 
-	nk_layout_row_push(ctx, 0.65);
+	nk_layout_row_push(ctx, 0.65f);
 	if (nk_combo_begin_color(ctx, nk_rgb_cf(*colorf), size)) {
 		// enum color_mode { COL_RGB, COL_HSV };
 		// static int col_mode = COL_RGB;
@@ -941,7 +941,7 @@ void renderCommonShaderPanel(struct nk_context* ctx)
 void renderStatus(struct nk_context* ctx)
 {
 	if (nk_begin(ctx, PANEL_STATUS, G.panelStatusRect, NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_BORDER)) {
-		float h = PANEL_STATUS_HEIGHT / 3.0;
+		float h = PANEL_STATUS_HEIGHT / 3.0f;
 		nk_layout_row_dynamic(ctx, PANEL_STATUS_HEIGHT, 2);
 
 		// column 1
@@ -955,7 +955,7 @@ void renderStatus(struct nk_context* ctx)
 			glm::vec3* up = &(G.camera->WorldUp);
 
 			// 2 cols
-			float rowHeight = h * 2.33;
+			float rowHeight = h * 2.33f;
 			nk_layout_row_dynamic(ctx, rowHeight, 2);
 			sprintf(G.panelStatusBuffer,
 				"Position = (%.3f, %.3f, %.3f)\n"\
@@ -1115,7 +1115,7 @@ void renderSphere()
 
         const unsigned int X_SEGMENTS = 64;
         const unsigned int Y_SEGMENTS = 64;
-        const float PI = 3.14159265359;
+        const float PI = 3.14159265359f;
         for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
         {
             for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
@@ -1156,7 +1156,7 @@ void renderSphere()
         indexCount = indices.size();
 
         std::vector<float> data;
-        for (int i = 0; i < positions.size(); ++i)
+        for (size_t i = 0; i < positions.size(); ++i)
         {
             data.push_back(positions[i].x);
             data.push_back(positions[i].y);
@@ -1179,7 +1179,7 @@ void renderSphere()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-        float stride = (3 + 2 + 3) * sizeof(float);
+        int stride = (3 + 2 + 3) * sizeof(float);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
@@ -1331,12 +1331,12 @@ void renderScene()
 	if (G.isPointLightMove)
 	{
 		static int direction = 1;
-		float cosValue = cos(G.currentTime);
+		float cosValue = (float)cos(G.currentTime);
 		if (fuzzyEquals(cosValue, 1.0)) {
 			direction = direction == 1 ? -1 : 1;
 		}
 
-		float theta = direction * G.currentTime;
+		float theta = direction * (float)G.currentTime;
 		float cosTheta = cos(theta);
 		float sinTheta = sin(theta);
 		lightPos = glm::vec3(3.0 * cosTheta, 3.0 * sinTheta, 3.0 * cosTheta * sinTheta);
@@ -1349,7 +1349,7 @@ void renderScene()
 	if (G.isRotatingCameraY)
 	{
 		// rotate camera
-		rotateCameraY(sin(G.currentTime), cos(G.currentTime));
+		rotateCameraY((float)sin(G.currentTime), (float)cos(G.currentTime));
 		// rotateCameraByYaw(10);
 
 		// update mvp
@@ -1362,7 +1362,7 @@ void renderScene()
 	if (pShader != NULL)
 	{
 		pShader->use();
-		pShader->setFloat("uTime", G.currentTime);
+		pShader->setFloat("uTime", (float)G.currentTime);
 		pShader->setInt("uUsePointLight", G.stCommonShader.uUsePointLight);
 		// pShader->setInt("uSwitchEffectInvert", G.stCommonShader.uSwitchEffectInvert);
 		pShader->setInt("uSwitchEffectGray", G.stCommonShader.uSwitchEffectGray);
@@ -1397,7 +1397,7 @@ void renderScene()
 		renderCube(); // cube 2
 
 		glm::mat4 m2 = translate(glm::vec3(2.0, 0.0, 6.0));
-		m2 = rotateByY(25 * G.currentTime, m2);
+		m2 = rotateByY(25 * (float)G.currentTime, m2);
 		pShader->setMat4("mvp", mvp * m2);
 		pShader->setMat4("uMat4Model", m2);
 		pShader->setMat3("uNormalMatrix", normalMatrix(m2));
@@ -1482,10 +1482,11 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+	#ifdef __APPLE__
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif
 
 	win = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Nuklear&OpenGL", NULL, NULL);
 
