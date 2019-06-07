@@ -305,12 +305,14 @@ struct StState {
 	// point light movement
 	int isPointLightMove;
 
-	// shader
+	// shader struct data
 	StCommonShader stCommonShader;
 	StColorShader stColorShader;
-	Shader* colorShader = NULL;
-
 	map<string, StShaderPanel> stShaderPanelMap;
+
+	// shader object
+	Shader* colorShader = NULL;
+	vector<Shader*> shaderArray;
 
 	struct nk_color bgColor; //
 
@@ -321,6 +323,30 @@ static StState G;
 
 
 //====================================
+Shader* createShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
+{
+	Shader* shader = new Shader(vertexPath, fragmentPath, geometryPath);
+	if (shader != NULL) {
+		cout << "create shader ID = " << shader->ID << endl;
+		G.shaderArray.push_back(shader);
+	}
+	return shader;
+}
+void clearShaderArray()
+{
+	auto& vector = G.shaderArray;
+	for(auto it = vector.begin(); it != vector.end(); it++)
+	{
+		auto shader = *it;
+		if (shader) {
+			cout << "delete shader ID = " << shader->ID << endl;
+			delete shader;
+		}
+	}
+
+	vector.clear();
+}
+
 bool fuzzyEquals(float a, float b)
 {
 	const float epsilon = 0.001;
@@ -558,12 +584,10 @@ void initGLSetting()
 	// shader
 	std::string vertexShaderPath = "vertex.vs";
 	std::string fragmentShaderPath = "fragment.fs";
-	pShader = new Shader(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
-	if (!pShader) {
-		std::cout << "pShader is NULL." << std::endl;
-	}
+	std::string colorFragmentPath = "colorFragment.fs";
 
-	G.colorShader = new Shader("vertex.vs", "colorFragment.fs");
+	pShader = createShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
+	G.colorShader = createShader(vertexShaderPath.c_str(), colorFragmentPath.c_str());
 
 	G.stShaderPanelMap[PANEL_SHADER_1].shader = pShader;
 
@@ -580,13 +604,14 @@ void initGLSetting()
 
 void clear()
 {
-	if (pShader) {
-		delete pShader; pShader = NULL;
-	}
+	clearShaderArray();
+	// if (pShader) {
+	// 	delete pShader; pShader = NULL;
+	// }
 
-	if (G.colorShader) {
-		delete G.colorShader; G.colorShader = NULL;
-	}
+	// if (G.colorShader) {
+	// 	delete G.colorShader; G.colorShader = NULL;
+	// }
 }
 //====================================
 
