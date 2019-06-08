@@ -1,4 +1,6 @@
-
+-- cc.FileUtils:getInstance():addSearchPath("Resources")
+-- cc.FileUtils:getInstance():addSearchPath("Resources/res")
+-- cc.FileUtils:getInstance():addSearchPath("Resources/src")
 cc.FileUtils:getInstance():setPopupNotify(false)
 
 require "config"
@@ -19,14 +21,14 @@ require "cocos.init"
 		#include "imgui/CCImGuiLayer.h"
 		#include "imgui/CCIMGUI.h"
 		#include "imgui/imgui_lua.hpp"
-		
+
 		bool AppDelegate::applicationDidFinishLaunching()
 		{
 			// ...
 
 			// register api to lua
 			luaopen_imgui(L);
-			
+
 			// add imgui layer
 			Director::getInstance()->getScheduler()->schedule([=](float dt)
 			{
@@ -38,7 +40,7 @@ require "cocos.init"
 			}, this, 0, false, "checkIMGUI");
 		}
 --]]
-function case_imgui()	
+function case_imgui()
     print("case_imgui......")
     print (imgui.version)
     print (imgui.ImGuiWindowFlags_NoTitleBar)
