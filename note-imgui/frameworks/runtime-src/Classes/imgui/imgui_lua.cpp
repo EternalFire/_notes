@@ -186,12 +186,12 @@ static int imgui_smallButton(lua_State *L) {
     lua_pushboolean(L, ImGui::SmallButton(luaL_checkstring(L, 1)));
     return 1;
 }
-static int imgui_arrowButton(lua_State *L) {
-	lua_pushboolean(L, ImGui::ArrowButton(luaL_checkstring(L, 1), luaL_checkint(L, 2)));
-	return 1;
-}
+//static int imgui_arrowButton(lua_State *L) {
+//    lua_pushboolean(L, ImGui::ArrowButton(luaL_checkstring(L, 1), luaL_checkinteger(L, 2)));
+//    return 1;
+//}
 static int imgui_pushButtonRepeat(lua_State *L) {
-	ImGui::PushButtonRepeat((bool)luaL_checkint(L, 1));
+	ImGui::PushButtonRepeat(lua_toboolean(L, 1));
 	return 0;
 }
 static int imgui_popButtonRepeat(lua_State *L) {
@@ -702,7 +702,7 @@ static const luaL_Reg imgui_methods[] = {
     M(bulletText),
     M(button),
     M(smallButton),
-	M(arrowButton),
+//    M(arrowButton),
 	M(pushButtonRepeat),
 	M(popButtonRepeat),
     M(image),

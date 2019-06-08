@@ -114,50 +114,38 @@ function case_imgui()
 		if isControlPanelOpened then
 			local ret
 			ret, isControlPanelOpened = imgui.begin("Control", isControlPanelOpened, {imgui.ImGuiWindowFlags_AlwaysAutoResize})
-			if not ret then
-				print("collapse...", os.time())
-				imgui.endToLua()
-			end
+            if not ret then
+                print("collapse...", os.time())
+                imgui.endToLua()
+            end
 
+            imgui.pushButtonRepeat(true);
             imgui.beginGroup()
                 imgui.dummy(50, 20); imgui.sameLine(); if imgui.button("Up") then
-                    print ("click [button up panel]")
+                    -- print ("click [button up panel]")
                     if State.processUp then State.processUp() end
                 end
             imgui.endGroup()
 
             if imgui.button("Left") then
-                print ("click [button left panel]")
+                -- print ("click [button left panel]")
                 if State.processLeft then State.processLeft() end
             end
 
             imgui.sameLine()
             if imgui.button("Down") then
-                print ("click [button down panel]")
+                -- print ("click [button down panel]")
                 if State.processDown then State.processDown() end
             end
 
             imgui.sameLine()
             if imgui.button("Right") then
-                print ("click [button right panel]")
+                -- print ("click [button right panel]")
                 if State.processRight then State.processRight() end
-			end
+            end
+            imgui.popButtonRepeat();
 
-
-            imgui.beginGroup()
-                counter = counter or 0
-                counter = imgui.text(tostring(counter))
-
-                -- imgui.pushButtonRepeat(true);
-
-                if (imgui.arrowButton("##left", 0)) then counter = counter - 1 end
-
-                imgui.sameLine(0, 20);
-                if (imgui.arrowButton("##right", 1)) then counter = counter + 1 end
-                -- imgui.popButtonRepeat();
-            imgui.endGroup()
-
-			imgui.endToLua()
+            imgui.endToLua()
 		end
     end
 
@@ -191,7 +179,7 @@ function case_imgui()
             imgui.sameLine() if imgui.imageButton("#CoinSpin01.png") then print("CoinSpin01 2") end
             imgui.sameLine() if imgui.imageButton("#AddCoinButton.png", 30, 30) then print("AddCoinButton") end
 
-        imgui.endToLua()
+        imgui.endToLua() -- end of imgui.begin
 
         imgui.setNextWindowPosCenter()
         showControlPanel()
