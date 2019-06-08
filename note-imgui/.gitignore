@@ -1,0 +1,12 @@
+# ignore all files
+/*
+
+# do not ignore .gitignore
+!.gitignore
+
+# do not ignore these files
+!res
+!src
+!work
+!imgui
+!frameworks

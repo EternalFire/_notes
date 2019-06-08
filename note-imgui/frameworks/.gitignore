@@ -1,0 +1,11 @@
+cocos2d-x/
+proj.android/
+proj.linux/
+proj.win32/
+proj.ios_mac/
+
+*/*/AppDelegate.h
+*/*/lua_module_register.h
+
+!.gitignore
+!proj.ios_mac/mac/SimulatorApp.mm
