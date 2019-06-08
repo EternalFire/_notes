@@ -186,6 +186,18 @@ static int imgui_smallButton(lua_State *L) {
     lua_pushboolean(L, ImGui::SmallButton(luaL_checkstring(L, 1)));
     return 1;
 }
+static int imgui_arrowButton(lua_State *L) {
+	lua_pushboolean(L, ImGui::ArrowButton(luaL_checkstring(L, 1), luaL_checkint(L, 2)));
+	return 1;
+}
+static int imgui_pushButtonRepeat(lua_State *L) {
+	ImGui::PushButtonRepeat((bool)luaL_checkint(L, 1));
+	return 0;
+}
+static int imgui_popButtonRepeat(lua_State *L) {
+	ImGui::PopButtonRepeat();
+	return 0;
+}
 static int imgui_image(lua_State *L) {
 #ifdef COCOS2D_VERSION
     int args = lua_gettop(L);
@@ -690,6 +702,9 @@ static const luaL_Reg imgui_methods[] = {
     M(bulletText),
     M(button),
     M(smallButton),
+	M(arrowButton),
+	M(pushButtonRepeat),
+	M(popButtonRepeat),
     M(image),
     M(imageButton),
     M(collapsingHeader),

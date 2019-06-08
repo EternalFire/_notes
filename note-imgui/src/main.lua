@@ -6,6 +6,21 @@ cc.FileUtils:getInstance():setPopupNotify(false)
 require "config"
 require "cocos.init"
 
+local State = {
+    scene = nil,
+    layer = nil,
+    emitter = nil,
+
+    processUp = nil,
+    processDown = nil,
+    processLeft = nil,
+    processRight = nil,
+
+    moveStep = 10,
+}
+
+
+
 --[[
     set environment:
 
@@ -50,6 +65,7 @@ function case_imgui()
     local float = 3
     -- local isToolbarOpened = true
     local isPanelOpened = 1
+    local isControlPanelOpened = 1
 
     cc.SpriteFrameCache:getInstance():addSpriteFrames("res/AllSprites.plist")
 
@@ -94,6 +110,57 @@ function case_imgui()
 		end
     end
 
+    local function showControlPanel()
+		if isControlPanelOpened then
+			local ret
+			ret, isControlPanelOpened = imgui.begin("Control", isControlPanelOpened, {imgui.ImGuiWindowFlags_AlwaysAutoResize})
+			if not ret then
+				print("collapse...", os.time())
+				imgui.endToLua()
+			end
+
+            imgui.beginGroup()
+                imgui.dummy(50, 20); imgui.sameLine(); if imgui.button("Up") then
+                    print ("click [button up panel]")
+                    if State.processUp then State.processUp() end
+                end
+            imgui.endGroup()
+
+            if imgui.button("Left") then
+                print ("click [button left panel]")
+                if State.processLeft then State.processLeft() end
+            end
+
+            imgui.sameLine()
+            if imgui.button("Down") then
+                print ("click [button down panel]")
+                if State.processDown then State.processDown() end
+            end
+
+            imgui.sameLine()
+            if imgui.button("Right") then
+                print ("click [button right panel]")
+                if State.processRight then State.processRight() end
+			end
+
+
+            imgui.beginGroup()
+                counter = counter or 0
+                counter = imgui.text(tostring(counter))
+
+                -- imgui.pushButtonRepeat(true);
+
+                if (imgui.arrowButton("##left", 0)) then counter = counter - 1 end
+
+                imgui.sameLine(0, 20);
+                if (imgui.arrowButton("##right", 1)) then counter = counter + 1 end
+                -- imgui.popButtonRepeat();
+            imgui.endGroup()
+
+			imgui.endToLua()
+		end
+    end
+
     -- draw
     imgui.draw = function ()
         setupMainMenu()
@@ -125,11 +192,50 @@ function case_imgui()
             imgui.sameLine() if imgui.imageButton("#AddCoinButton.png", 30, 30) then print("AddCoinButton") end
 
         imgui.endToLua()
-    end
+
+        imgui.setNextWindowPosCenter()
+        showControlPanel()
+
+    end -- end of imgui.draw
 
     --
     -- when you move panel, imgui will save setting in local disk
     --
+end
+
+function run()
+    local scene = display.getRunningScene()
+    if not scene then
+        print("scene is nil..")
+    end
+
+    local layer = display.newLayer():addTo(scene)
+
+    local emitter = cc.ParticleSystemQuad:create("Particles/LavaFlow.plist")
+    local batch = cc.ParticleBatchNode:createWithTexture(emitter:getTexture())
+    batch:addChild(emitter)
+    layer:addChild(batch)
+
+    State.scene = scene
+    State.layer = layer
+    State.emitter = emitter
+    State.processUp = function()
+        local target = State.emitter
+        target:setPositionY(target:getPositionY() + State.moveStep)
+    end
+    State.processDown = function()
+        local target = State.emitter
+        target:setPositionY(target:getPositionY() - State.moveStep)
+    end
+    State.processLeft = function()
+        local target = State.emitter
+        target:setPositionX(target:getPositionX() - State.moveStep)
+    end
+    State.processRight = function()
+        local target = State.emitter
+        target:setPositionX(target:getPositionX() + State.moveStep)
+    end
+
 end
 
 local function main()
@@ -144,7 +250,32 @@ local function main()
     display.runScene(scene--[[, transition, time, more--]])
 
     case_imgui()
+
+    setTimeout(function() run() end, 0)
 end
+
+
+function setTimeout(callback, sec)
+    local id
+    local function _runSchedule()
+        clearTimer(id)
+        id = nil
+
+        if callback then
+            callback()
+        end
+    end
+
+    sec = sec or 0
+    id = cc.Director:getInstance():getScheduler():scheduleScriptFunc(_runSchedule, sec, false);
+end
+
+function clearTimer(id)
+    if id then
+        cc.Director:getInstance():getScheduler():unscheduleScriptEntry(id)
+    end
+end
+
 
 local status, msg = xpcall(main, __G__TRACKBACK__)
 if not status then
