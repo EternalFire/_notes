@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{53136537-5bb5-4fab-93bd-84da46f277dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui_impl">
+      <UniqueIdentifier>{00ae942a-acd4-400d-ae0a-91f1859b3754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="glad">
+      <UniqueIdentifier>{89c2adb0-51cb-4a5e-981f-436e0325aa0c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_opengl3.cpp">
+      <Filter>imgui_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_glfw.cpp">
+      <Filter>imgui_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\main.cpp" />
+    <ClCompile Include="..\..\..\imguiiugmi\glad\src\glad.c">
+      <Filter>glad</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_opengl3.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_glfw.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\shader.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\camera.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\Fire.h" />
+  </ItemGroup>
+</Project>
