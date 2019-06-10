@@ -121,6 +121,8 @@ int main(int, char**)
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	Fire::Init();
     
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -131,7 +133,7 @@ int main(int, char**)
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
-        
+
         Fire::G.currentFrame = glfwGetTime();
         Fire::BeginTick();
         
@@ -190,20 +192,25 @@ int main(int, char**)
         }
         
         Fire::TickUI();
-        
+
+		//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		//glClear(GL_COLOR_BUFFER_BIT);
+
+		//Fire::TickScene();
+
         // Rendering
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        
-        Fire::TickScene();
-        
-        glfwSwapBuffers(window);
-        
+  //      glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+  //      glClear(GL_COLOR_BUFFER_BIT);
+
+		Fire::TickScene();
+
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());                       
+        glfwSwapBuffers(window);        
+
         Fire::EndTick();
     }
     
