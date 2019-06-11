@@ -98,6 +98,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\imguiiugmi\imguiiugmi\imgui;$(ProjectDir)..\..\..\..\imguiiugmi\imguiiugmi\imgui_impl;$(ProjectDir)..\..\..\..\imguiiugmi\imguiiugmi\stb;$(ProjectDir)..\..\..\..\imguiiugmi\imguiiugmi\glad\include;$(ProjectDir)..\..\..\..\imguiiugmi\imguiiugmi;$(ProjectDir)..\third\glfw-3.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(ProjectDir)..\third\glfw-3.3;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -105,6 +106,13 @@
       <SubSystem>Console</SubSystem>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>MKDIR "$(LocalDebuggerWorkingDirectory)\Resources" &amp; XCOPY /E /I /F /Y "$(ProjectDir)..\..\..\..\imguiiugmi\imguiiugmi\resources" "$(LocalDebuggerWorkingDirectory)\Resources"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
