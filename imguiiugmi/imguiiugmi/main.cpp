@@ -45,6 +45,7 @@ int main(int, char**)
 {
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
+
     if (!glfwInit())
         return 1;
     
@@ -64,7 +65,9 @@ int main(int, char**)
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
-    
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
     // Create window with graphics context
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
@@ -72,6 +75,9 @@ int main(int, char**)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
     
+	glfwSetCursorPosCallback(window, Fire::mouse_callback);
+	glfwSetScrollCallback(window, Fire::scroll_callback);
+
     // Initialize OpenGL loader
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
     bool err = gl3wInit() != 0;
@@ -134,8 +140,8 @@ int main(int, char**)
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-        Fire::G.currentFrame = glfwGetTime();
-        Fire::BeginTick();
+		Fire::processInput(window, Fire::G.deltaTime);
+        Fire::BeginTick(glfwGetTime());
         
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -203,7 +209,7 @@ int main(int, char**)
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-  //      glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
   //      glClear(GL_COLOR_BUFFER_BIT);
 
 		Fire::TickScene();

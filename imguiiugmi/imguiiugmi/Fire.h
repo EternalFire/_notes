@@ -40,6 +40,29 @@ NS_FIRE_BEGIN
 static const float Float_Min = -10000000000.0f;
 static const float Float_Max = +10000000000.0f;
 static const char* Name = NS_FIRE_NAME;
+static const char* ResPath = "resources/";
+static const char* ResShaderPath = "resources/shaders/";
+
+/**
+* Camera setting
+*
+* Position = (7.640, 6.438, 11.394)
+* WorldUp = (0.000, 1.000, 0.000)
+* Pitch = -24.300  Yaw = -124.900
+*
+* Position = (0.667, 8.979, 19.392)
+* WorldUp = (0.000, 1.000, 0.000)
+* Pitch = -24.400  Yaw = -110.500
+*/
+const glm::vec3 cameraPosition = glm::vec3(0.667, 8.979, 19.392);
+const glm::vec3 cameraUp = glm::vec3(0, 1.0, 0);
+const float cameraYaw = -110.5f;  // around y axis
+const float cameraPitch = -24.4f; // around x axis
+
+const glm::mat4 IMatrix4(1.0f); // identty matrix
+const glm::vec3 xAxis(1.0f, 0.0f, 0.0f);
+const glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
+const glm::vec3 zAxis(0.0f, 0.0f, 1.0f);
 
 typedef struct Vec2  { float x; float y; } Vec2;
 typedef struct IVec2 { int x; int y; } IVec2;
@@ -89,6 +112,94 @@ float clamp(float value, float minVal, float maxVal) {
 	return fmax(minVal, (fmin(value, maxVal)));
 }
 
+glm::vec3 convertColorToVec3(Color* col)
+{
+	return col ? glm::vec3((*col).r, (*col).g, (*col).b) : glm::vec3(1.0);
+}
+glm::vec3 convertIColorToVec3(IColor* col)
+{
+	const float c = 255.0;
+	return col ? glm::vec3((*col).r / c, (*col).g / c, (*col).b / c) : glm::vec3(1.0);
+}
+glm::vec4 convertColorToVec4(Color* col)
+{
+	if (col) return glm::vec4(convertColorToVec3(col), col->a);
+	return glm::vec4(1.0);
+}
+glm::vec4 convertIColorToVec4(IColor* col)
+{
+	if (col) return glm::vec4(convertIColorToVec3(col), col->a);
+	return glm::vec4(1.0);
+}
+
+glm::mat4 translate(const glm::vec3& v3, const glm::mat4& model = IMatrix4)
+{
+	return glm::translate(model, v3);
+}
+glm::mat4 rotateByX(float degree, const glm::mat4& model = IMatrix4)
+{
+	return glm::rotate(model, glm::radians(degree), xAxis);
+}
+glm::mat4 rotateByY(float degree, const glm::mat4& model = IMatrix4)
+{
+	return glm::rotate(model, glm::radians(degree), yAxis);
+}
+glm::mat4 rotateByZ(float degree, const glm::mat4& model = IMatrix4)
+{
+	return glm::rotate(model, glm::radians(degree), zAxis);
+}
+glm::mat4 scale(const glm::vec3& v3, const glm::mat4& model = IMatrix4)
+{
+	return glm::scale(model, v3);
+}
+glm::mat4 scale(float s, const glm::mat4& model = IMatrix4)
+{
+	return glm::scale(model, glm::vec3(s));
+}
+glm::mat3 normalMatrix(const glm::mat4& model)
+{
+	return glm::transpose(glm::inverse(glm::mat3(model)));
+}
+
+unsigned int loadTexture(char const * path)
+{
+	string texturePath = ResPath;
+	texturePath += path;
+
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	stbi_set_flip_vertically_on_load(true);
+
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format = GL_RGB;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+	}
+
+	stbi_image_free(data);
+	return textureID;
+}
 
 struct StProperty {
 	int type;
@@ -210,13 +321,105 @@ struct StShaderPanel {
 */
 
 struct State {
+	double lastFrame;
     double currentFrame;
+	double deltaTime;
+	float windowWidth;
+	float windowHeight;
+
 	vector<Shader*> shaderArray;
 	map<string, struct StShaderPanel> stShaderPanelMap;
-	//Camera camera;
+
+	Camera camera;
+	glm::vec3 cameraPositionNew;
+	glm::vec3 cameraUpNew;
+	float cameraYawNew;
+	float cameraPitchNew;
+
+	float lastX;
+	float lastY;
+	bool firstMouse;
+	bool lockCamera;
+	bool isLockingCamera;
+
+	/**
+	 * transform
+	 **/
+	glm::mat4 mvp;
+	glm::mat4 projectionMatrix;
+	glm::mat4 viewMatrix;
+
+	unsigned texture0;
 
 	State() {
-		currentFrame = 0;
+		deltaTime = lastFrame = currentFrame = 0;
+	}
+
+	void init(float w, float h) {
+		windowWidth = w;
+		windowHeight = h;
+
+		camera = Camera(cameraPosition, cameraUp, cameraYaw, cameraPitch);
+		cameraPositionNew = cameraPosition;
+		cameraUpNew = cameraUp;
+		cameraYawNew = cameraYaw;
+		cameraPitchNew = cameraPitch;
+		firstMouse = true;
+		lockCamera = true;
+		isLockingCamera = false;
+		lastX = windowWidth / 2.0f;
+		lastY = windowHeight / 2.0f;
+
+		mvp = glm::mat4(1.0f);
+		projectionMatrix = glm::mat4(1.0f);
+		viewMatrix = glm::mat4(1.0f);
+	}
+
+	glm::mat4 perspectiveMatrix()
+	{
+		return glm::perspective(glm::radians(camera.Zoom), windowWidth / windowHeight, 0.1f, 100.0f);
+	}
+
+	void updateMVP()
+	{
+		projectionMatrix = perspectiveMatrix();
+		viewMatrix = camera.GetViewMatrix();
+		mvp = projectionMatrix * viewMatrix;
+	}
+
+	void resetFirstMouse()
+	{
+		firstMouse = true;
+	}
+
+	void resetCamera()
+	{
+		camera.init(cameraPositionNew, cameraUpNew, cameraYawNew, cameraPitchNew);
+		resetFirstMouse();
+	}
+
+	void setCamera()
+	{
+		cameraPositionNew = camera.Position;
+		cameraUpNew = camera.WorldUp;
+		cameraYawNew = camera.Yaw;
+		cameraPitchNew = camera.Pitch;
+	}
+
+	// rotate camera around y axis
+	void rotateCameraY(float sinValue, float cosValue)
+	{
+		float radius = glm::length(glm::vec2(camera.Position.xz()));
+		glm::vec3 p = glm::vec3(cosValue * radius, camera.Position.y, sinValue * radius);
+		camera.Position = p;
+		camera.Front = glm::normalize(-p);
+		camera.Right = glm::normalize(glm::cross(camera.Front, camera.WorldUp));
+		camera.Up = glm::normalize(glm::cross(camera.Right, camera.Front));
+	}
+
+	void rotateCameraByYaw(float degree)
+	{
+		camera.ProcessMouseMovement(degree, 0);
 	}
 };
 
@@ -275,7 +478,7 @@ public:
 
 		ImGui::Separator();
 		ImGui::TextColored(ImVec4(1.0f, 0, 0, 0.8f), "Num = %d", (int)stShaderPanel.propertyArray.size());
-//        ImGui::SameLine(0, ImGui::GetFontSize() * 3);
+		//        ImGui::SameLine(0, ImGui::GetFontSize() * 3);
         ImGui::SameLine(180);
 		if (ImGui::Button("Create"))
 		{
@@ -291,12 +494,12 @@ public:
 
 			stShaderPanel.propertyArray.push_back(prop);
 		}
-        
+
         ImGui::Separator();
-        
+
 		ImGui::LabelText("", "List:");
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-//        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 10));
+		//        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 10));
 		ImGui::Columns(2);
 		ImGui::Separator();
 		// ImGui::SetColumnWidth(0, ImGui::GetFontSize() * 12.0f);
@@ -342,20 +545,16 @@ public:
                     ImGui::PushID("InputFloat_Float");
                     ImGui::InputFloat("", &prop.fVal, 0.01f, 0.1f);
                     ImGui::PopID();
-                    
+
                     prop.fVal = clamp(prop.fVal, prop.fMin, prop.fMax);
-                    
+
                     ImGui::SetNextItemWidth(ImGui::GetFontSize() * 6.0f);
                     ImGui::SliderFloat("", &prop.fVal, prop.fMin, prop.fMax);
-                    
+
                     ImGui::SameLine();
                     ImGui::SetNextItemWidth(-1);
                     ImGui::DragFloatRange2("", &prop.fMin, &prop.fMax, 0.0001f, Float_Min, Float_Max, "min:%.04f", "max:%.04f");
 
-//
-//                    ImGui::SliderFloat("", &prop.fVal, prop.fMin, prop.fMax);
-//                    ImGui::SameLine();
-//                    ImGui::DragFloat("", &prop.fVal, 0.0001f, prop.fMin, prop.fMax, "%.06f");
 					break;
 				}
 				case Type_Color: {
@@ -367,7 +566,7 @@ public:
 				case Type_String: {
 					char buffer[2048] = { 0 };
                     strcpy(buffer, prop.sVal.c_str());
-//                    strcpy_s(buffer, prop.sVal.c_str());
+					// strcpy_s(buffer, prop.sVal.c_str());
 					if (ImGui::InputText("", buffer, sizeof(buffer))) {
 						prop.sVal = buffer;
 					}
@@ -384,7 +583,7 @@ public:
 				it++;
 			}
 		}
-        
+
 		ImGui::PopStyleVar();
 
 		ImGui::End();
@@ -399,16 +598,16 @@ static UI ui;
 
 Shader* createShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
 {
-    string path = "resources/shaders/";
+    string path = ResShaderPath;
     string vPath = path + vertexPath;
     string fPath = path + fragmentPath;
-    
+
     const char* _geometryPath = nullptr;
     if (geometryPath) {
         string gPath = path + geometryPath;
         _geometryPath = gPath.c_str();
     }
-    
+
 	Shader* shader = new Shader(vPath.c_str(), fPath.c_str(), _geometryPath);
 	if (shader != NULL) {
 		cout << "create shader ID = " << shader->ID << endl;
@@ -431,6 +630,178 @@ void clearShaderArray()
 	vector.clear();
 }
 
+unsigned int sphereVAO = 0;
+unsigned int indexCount;
+void renderSphere()
+{
+    if (sphereVAO == 0)
+    {
+        glGenVertexArrays(1, &sphereVAO);
+
+        unsigned int vbo, ebo;
+        glGenBuffers(1, &vbo);
+        glGenBuffers(1, &ebo);
+
+        std::vector<glm::vec3> positions;
+        std::vector<glm::vec2> uv;
+        std::vector<glm::vec3> normals;
+        std::vector<unsigned int> indices;
+
+        const unsigned int X_SEGMENTS = 64;
+        const unsigned int Y_SEGMENTS = 64;
+        const float PI = 3.14159265359f;
+        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        {
+            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            {
+                float xSegment = (float)x / (float)X_SEGMENTS;
+                float ySegment = (float)y / (float)Y_SEGMENTS;
+                float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+                float yPos = std::cos(ySegment * PI);
+                float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+                positions.push_back(glm::vec3(xPos, yPos, zPos));
+                uv.push_back(glm::vec2(xSegment, ySegment));
+                normals.push_back(glm::vec3(xPos, yPos, zPos));
+            }
+        }
+
+        bool oddRow = false;
+        for (int y = 0; y < Y_SEGMENTS; ++y)
+        {
+            if (!oddRow) // even rows: y == 0, y == 2; and so on
+            {
+                for (int x = 0; x <= X_SEGMENTS; ++x)
+                {
+                    indices.push_back(y       * (X_SEGMENTS + 1) + x);
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                }
+            }
+            else
+            {
+                for (int x = X_SEGMENTS; x >= 0; --x)
+                {
+                    indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                    indices.push_back(y       * (X_SEGMENTS + 1) + x);
+                }
+            }
+            oddRow = !oddRow;
+        }
+        indexCount = indices.size();
+
+        std::vector<float> data;
+        for (size_t i = 0; i < positions.size(); ++i)
+        {
+            data.push_back(positions[i].x);
+            data.push_back(positions[i].y);
+            data.push_back(positions[i].z);
+            if (uv.size() > 0)
+            {
+                data.push_back(uv[i].x);
+                data.push_back(uv[i].y);
+            }
+            if (normals.size() > 0)
+            {
+                data.push_back(normals[i].x);
+                data.push_back(normals[i].y);
+                data.push_back(normals[i].z);
+            }
+        }
+        glBindVertexArray(sphereVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+        int stride = (3 + 2 + 3) * sizeof(float);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+
+		glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+
+		glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
+    }
+
+    glBindVertexArray(sphereVAO);
+    glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
+}
+
+unsigned int cubeVAO = 0;
+unsigned int cubeVBO = 0;
+void renderCube()
+{
+	// initialize (if necessary)
+	if (cubeVAO == 0)
+	{
+		float vertices[] = {
+			// back face
+			-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,   // top-right
+			1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,  // bottom-right
+			1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,   // top-right
+			-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			-1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,  // top-left
+			// front face
+			-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+			1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // bottom-right
+			1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,   // top-right
+			1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,   // top-right
+			-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,  // top-left
+			-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom-left
+			// left face
+			-1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   // top-right
+			-1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // top-left
+			-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  // bottom-right
+			-1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   // top-right
+			// right face
+			1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   // top-left
+			1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-right
+			1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // top-right
+			1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-right
+			1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   // top-left
+			1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  // bottom-left
+			// bottom face
+			-1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, // top-right
+			1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,  // top-left
+			1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,   // bottom-left
+			1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,   // bottom-left
+			-1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // bottom-right
+			-1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, // top-right
+			// top face
+			-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top-left
+			1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom-right
+			1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,  // top-right
+			1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom-right
+			-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top-left
+			-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f   // bottom-left
+		};
+		glGenVertexArrays(1, &cubeVAO);
+		glGenBuffers(1, &cubeVBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(cubeVAO);
+		glEnableVertexAttribArray(0);// aPos
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(3);// aNormal
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);// aTexCoord
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(cubeVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
 unsigned int coordVAO = 0;
 unsigned int coordVBO = 0;
 void renderCoordinateSystem()
@@ -439,7 +810,7 @@ void renderCoordinateSystem()
 	{
 		float x, y, z;
 		x = y = z = 100000000.0f;
-		x = y = z = 1.0f;
+		//x = y = z = 1.0f;
 
 		float vertices[] = {
 			// position          color
@@ -479,22 +850,34 @@ void renderCoordinateSystem()
 }
 
 
+
 void Init()
 {
-	struct StShaderPanel st;
+	float w = 1280, h = 720;
+	G.init(w, h);
 
+
+	struct StShaderPanel st;
 	st.name = "Shader Panel";
 	st.vertexShaderPath = "vertex.vs";
 	st.fragmentShaderPath = "fragment.fs";
 	st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
-
 	G.stShaderPanelMap[st.name] = st;
 
+	G.texture0 = loadTexture("container.jpg");
+	st.shader->use();
+	st.shader->setInt("texture0", 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, G.texture0);
 }
 
-void BeginTick()
+void BeginTick(float currentTime)
 {
     //printf("BeginTick\n");
+	G.lastFrame = G.currentFrame;
+	G.currentFrame = currentTime;
+	G.deltaTime = G.currentFrame - G.lastFrame;
 }
 
 void EndTick()
@@ -511,6 +894,8 @@ void TickUI()
 /// apply shader program
 void TickScene()
 {
+	G.updateMVP();
+
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -522,7 +907,8 @@ void TickScene()
 		{
 			auto pShader = shader;
 			pShader->use();
-			pShader->setMat4("mvp", glm::mat4(1.0f));
+			pShader->setMat4("mvp", G.mvp);
+
 			pShader->setFloat("uRatioMixTex2Color", 1.0);
 			pShader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
 			pShader->setInt("uUsePointLight", 0);
@@ -533,8 +919,8 @@ void TickScene()
 			{
 				auto& stProperty = *ite;
 				if (stProperty.type == Type_Color) {
-					//shader->setInt(stProperty.name.c_str(), stProperty.iVal);
-					glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
+					//glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
+					shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
 				}
 
 				// todo
@@ -542,8 +928,17 @@ void TickScene()
 			}
 
 			renderCoordinateSystem();
-		}
-		// shader->
+
+			glm::vec3 position = glm::vec3(5.0f, 0, 0);
+			glm::mat4 m1 = IMatrix4;
+			m1 = glm::translate(m1, position);
+
+			pShader->setMat4("mvp", G.mvp * m1);
+			pShader->setMat4("uMat4Model", m1);
+			pShader->setFloat("uRatioMixTex2Color", 0.0);
+			pShader->setFloat("uRatioMixAColor2UColor", 0.0);
+			renderCube();
+		} // end if
 	}
 }
 
@@ -552,7 +947,101 @@ void Clear()
     //printf("Clear\n");
 	clearShaderArray();
 }
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (G.lockCamera) return;
+
+	if (G.firstMouse)
+	{
+		G.lastX = (float)xpos;
+		G.lastY = (float)ypos;
+		G.firstMouse = false;
+	}
+
+	float xoffset = (float)(xpos - G.lastX);
+	float yoffset = (float)(G.lastY - ypos); // reversed since y-coordinates go from bottom to top
+
+	G.lastX = (float)xpos;
+	G.lastY = (float)ypos;
+
+	G.camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (G.lockCamera) return;
+	G.camera.ProcessMouseScroll((float)yoffset);
+}
+
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow* window, float deltaTime)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		if (!G.isLockingCamera) {
+			G.isLockingCamera = 1;
+
+			G.lockCamera = !G.lockCamera;
+			//printf("%.2f%s\n", glfwGetTime(), G.lockCamera ? "lock" : "unlock");
+		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+		if (G.isLockingCamera) {
+			G.isLockingCamera = 0;
+			G.resetFirstMouse();
+		}
+	}
+
+	if (G.lockCamera) return;
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		G.camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		G.camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		G.camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		G.camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
 NS_FIRE_END__
 ///
+
+/***
+ *
+	data structure
+	{
+		object type ---- object model
+		material    ---- color model
+	}
+
+	property data {
+		property type ---- render widget
+	}
+
+	effect(shader), model with effect
+
+	draw model with different shader
+
+	render scene by data
+
+
+	transformData:
+	position, rotation, scale
+
+	materialData:
+	diffuse texture
+
+ */
+
 
 #endif
