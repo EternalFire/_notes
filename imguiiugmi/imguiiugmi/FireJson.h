@@ -1,0 +1,262 @@
+
+#ifndef FireJson_h
+#define FireJson_h
+
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+
+#include <FireDefinition.h>
+#include <FireProperty.h>
+#include <FireStShaderPanel.h>
+#include <FireUtility.h>
+
+#include <string>
+
+using namespace std;
+
+NS_FIRE_BEGIN
+
+string toJSON(const StShaderPanel& stShaderPanel)
+{
+    string data = "";
+    rapidjson::StringBuffer strBuf;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(strBuf);
+    
+    writer.StartObject();
+    writer.Key("PanelName");   writer.String(stShaderPanel.name.c_str());
+    writer.Key("Description"); writer.String(stShaderPanel.name.c_str());
+    writer.Key("IsShow");      writer.String(toString(stShaderPanel.isShow).c_str());
+    writer.Key("VS");          writer.String(stShaderPanel.vertexShaderPath.c_str());
+    writer.Key("FS");          writer.String(stShaderPanel.fragmentShaderPath.c_str());
+    writer.Key("Properties");  writer.StartArray();
+    {
+        const auto& propertyArray = stShaderPanel.propertyArray;
+        for (auto it = propertyArray.begin(); it != propertyArray.end(); it++)
+        {
+            writer.StartObject();
+            {
+                const auto& prop = *it;
+                switch (prop.type)
+                {
+                    case Type_Int:
+                    {
+                        writer.Key("Type"); writer.String(TypeNames[prop.type]);
+                        writer.Key("Name"); writer.String(prop.name.c_str());
+                        writer.Key("Value"); writer.String(toString(prop.iVal).c_str());
+                        writer.Key("Min"); writer.String(toString(prop.iMin).c_str());
+                        writer.Key("Max"); writer.String(toString(prop.iMax).c_str());
+                        break;
+                    }
+                    case Type_Float:
+                    {
+                        writer.Key("Type"); writer.String(TypeNames[prop.type]);
+                        writer.Key("Name"); writer.String(prop.name.c_str());
+                        writer.Key("Value"); writer.String(toString(prop.fVal).c_str());
+                        writer.Key("Min"); writer.String(toString(prop.fMin).c_str());
+                        writer.Key("Max"); writer.String(toString(prop.fMax).c_str());
+                        break;
+                    }
+                    case Type_Color:
+                    {
+                        writer.Key("Type"); writer.String(TypeNames[prop.type]);
+                        writer.Key("Name"); writer.String(prop.name.c_str());
+                        writer.Key("Value"); writer.StartObject();
+                        {
+                            writer.Key("r"); writer.String(toString(prop.cfVal.r).c_str());
+                            writer.Key("g"); writer.String(toString(prop.cfVal.g).c_str());
+                            writer.Key("b"); writer.String(toString(prop.cfVal.b).c_str());
+                            writer.Key("a"); writer.String(toString(prop.cfVal.a).c_str());
+                        }
+                        writer.EndObject();
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+            writer.EndObject();
+        }
+    }
+    writer.EndArray();
+    
+    writer.EndObject();
+    data = strBuf.GetString();
+    return data;
+}
+
+void parseJSON(const string& jsonStr, StShaderPanel& stShaderPanel)
+{
+    rapidjson::Document doc;
+    if (!doc.Parse(jsonStr.c_str()).HasParseError())
+    {
+        //PanelName
+        {
+            const char* PanelName = "PanelName";
+            if (doc.HasMember(PanelName) && doc[PanelName].IsString())
+            {
+                stShaderPanel.name = doc[PanelName].GetString();
+            }
+        }
+        
+        //Description
+        {
+            const char* Description = "Description";
+            if (doc.HasMember(Description) && doc[Description].IsString())
+            {
+                // stShaderPanel.name = doc[Description].GetString();
+            }
+        }
+        
+        //IsShow
+        {
+            const char* IsShow = "IsShow";
+            if (doc.HasMember(IsShow) && doc[IsShow].IsString())
+            {
+                // stShaderPanel.name = doc[Description].GetString();
+                stShaderPanel.isShow = parseString<bool>(doc[IsShow].GetString());
+            }
+        }
+        
+        // VS
+        {
+            const char* VS = "VS";
+            if (doc.HasMember(VS) && doc[VS].IsString())
+            {
+                stShaderPanel.vertexShaderPath = doc[VS].GetString();
+            }
+        }
+        
+        // FS
+        {
+            const char* FS = "FS";
+            if (doc.HasMember(FS) && doc[FS].IsString())
+            {
+                stShaderPanel.fragmentShaderPath = doc[FS].GetString();
+            }
+        }
+        
+        // Properties
+        {
+            const char* Properties = "Properties";
+            if (doc.HasMember(Properties) && doc[Properties].IsArray())
+            {
+                const rapidjson::Value& array = doc[Properties];
+                size_t len = array.Size();
+                for (size_t i = 0; i < len; i++)
+                {
+                    auto& object = array[i];
+                    if (object.IsObject())
+                    {
+                        // Type
+                        const char* Type = "Type";
+                        int type = 0;
+                        
+                        if (object.HasMember(Type) && object[Type].IsString())
+                        {
+                            type = getTypeByName(object[Type].GetString());
+                        }
+                        
+                        struct StProperty prop = StProperty(type);
+                        
+                        // Name
+                        const char* Name = "Name";
+                        if (object.HasMember(Name) && object[Name].IsString())
+                        {
+                            prop.name = object[Name].GetString();
+                        }
+                        
+                        // Value
+                        switch (prop.type)
+                        {
+                            case Type_Int:
+                            {
+                                const char* Value = "Value";
+                                if (object.HasMember(Value) && object[Value].IsString()) {
+                                    prop.iVal = parseString<int>(object[Value].GetString());
+                                }
+                                
+                                const char* Min = "Min";
+                                if (object.HasMember(Min) && object[Min].IsString()) {
+                                    prop.iMin = parseString<int>(object[Min].GetString());
+                                }
+                                
+                                const char* Max = "Max";
+                                if (object.HasMember(Max) && object[Max].IsString()) {
+                                    prop.iMax = parseString<int>(object[Max].GetString());
+                                }
+                                
+                                break;
+                            }
+                            case Type_Float:
+                            {
+                                const char* Value = "Value";
+                                if (object.HasMember(Value) && object[Value].IsString()) {
+                                    prop.fVal = parseString<float>(object[Value].GetString());
+                                }
+                                
+                                const char* Min = "Min";
+                                if (object.HasMember(Min) && object[Min].IsString()) {
+                                    prop.fMin = parseString<float>(object[Min].GetString());
+                                }
+                                
+                                const char* Max = "Max";
+                                if (object.HasMember(Max) && object[Max].IsString()) {
+                                    prop.fMax = parseString<float>(object[Max].GetString());
+                                }
+                                break;
+                            }
+                            case Type_Color:
+                            {
+                                const char* Value = "Value";
+                                if (object.HasMember(Value) && object[Value].IsObject())
+                                {
+                                    auto& vObject = object[Value];
+                                    
+                                    const char* r = "r";
+                                    if (vObject.HasMember(r) && vObject[r].IsString())
+                                    {
+                                        prop.cfVal.r = parseString<float>(vObject[r].GetString());
+                                    }
+                                    
+                                    const char* g = "g";
+                                    if (vObject.HasMember(g) && vObject[g].IsString())
+                                    {
+                                        prop.cfVal.g = parseString<float>(vObject[g].GetString());
+                                    }
+                                    
+                                    const char* b = "b";
+                                    if (vObject.HasMember(b) && vObject[b].IsString())
+                                    {
+                                        prop.cfVal.b = parseString<float>(vObject[b].GetString());
+                                    }
+                                    
+                                    const char* a = "a";
+                                    if (vObject.HasMember(a) && vObject[a].IsString())
+                                    {
+                                        prop.cfVal.a = parseString<float>(vObject[a].GetString());
+                                    }
+                                }
+                                
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                        
+                        stShaderPanel.propertyArray.push_back(prop);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        cout << "parse json error" << endl;
+    }
+}
+
+
+NS_FIRE_END__
+
+#endif
