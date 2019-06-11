@@ -17,6 +17,8 @@
 
 using namespace std;
 
+
+
 #define NS_FIRE Fire
 #define NS_FIRE_BEGIN namespace NS_FIRE {
 #define NS_FIRE_END__ }
@@ -27,10 +29,17 @@ using namespace std;
 
 #define ARRAY_LENGTH(_ARR)          ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
+// convert rgba color component to [0,1] by divided by 255
+#define CNTo1(component) (component/255.0f)
+
 #define FIRE_API
 
 ///
 NS_FIRE_BEGIN
+
+static const float Float_Min = -10000000000.0f;
+static const float Float_Max = +10000000000.0f;
+static const char* Name = NS_FIRE_NAME;
 
 typedef struct Vec2  { float x; float y; } Vec2;
 typedef struct IVec2 { int x; int y; } IVec2;
@@ -80,8 +89,6 @@ float clamp(float value, float minVal, float maxVal) {
 	return fmax(minVal, (fmin(value, maxVal)));
 }
 
-const float Float_Min = -10000000000.0f;
-const float Float_Max = +10000000000.0f;
 
 struct StProperty {
 	int type;
@@ -206,10 +213,14 @@ struct State {
     double currentFrame;
 	vector<Shader*> shaderArray;
 	map<string, struct StShaderPanel> stShaderPanelMap;
+	//Camera camera;
+
+	State() {
+		currentFrame = 0;
+	}
 };
 
-static const char* Name = NS_FIRE_NAME;
-static State G;
+static struct State G;
 
 class UI {
 public:
@@ -478,6 +489,7 @@ void Init()
 	st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
 
 	G.stShaderPanelMap[st.name] = st;
+
 }
 
 void BeginTick()
