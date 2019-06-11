@@ -140,8 +140,8 @@ int main(int, char**)
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-		Fire::processInput(window, Fire::G.deltaTime);
-        Fire::BeginTick(glfwGetTime());
+		Fire::processInput(window, (float)Fire::G.deltaTime);
+        Fire::BeginTick((float)glfwGetTime());
         
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
