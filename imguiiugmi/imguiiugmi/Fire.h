@@ -10,6 +10,7 @@
 #include <shader.h>
 #include <camera.h>
 
+#include <string.h>
 #include <math.h>
 #include <iostream>
 #include <map>
@@ -79,6 +80,9 @@ float clamp(float value, float minVal, float maxVal) {
 	return fmax(minVal, (fmin(value, maxVal)));
 }
 
+const float Float_Min = -10000000000.0f;
+const float Float_Max = +10000000000.0f;
+
 struct StProperty {
 	int type;
 	string name;
@@ -139,7 +143,7 @@ struct StProperty {
 		sVal = "";
 		name = "";
 		if (type == Type_Int) { iVal = 0; iMin = INT_MIN / 2; iMax = INT_MAX / 2; }
-		if (type == Type_Float) { fVal = 0; fMin = -10000000000.0f; fMax = +10000000000.0f; }
+		if (type == Type_Float) { fVal = 0; fMin = Float_Min; fMax = Float_Max; }
 		if (type == Type_Vec2) { v2Val = { 0, 0 }; }
 		if (type == Type_Vec3) { v3Val = { 0, 0, 0 }; }
 		if (type == Type_Color) { cfVal = { 0, 0, 0, 1.0 }; }
@@ -259,9 +263,10 @@ public:
 		}
 
 		ImGui::Separator();
-		ImGui::TextColored(ImVec4(1.0f, 0, 0, 0.8f), "Add property | num = %d", stShaderPanel.propertyArray.size());
-		ImGui::SameLine(0, 10.0f);
-		if (ImGui::Button("+"))
+		ImGui::TextColored(ImVec4(1.0f, 0, 0, 0.8f), "Num = %d", (int)stShaderPanel.propertyArray.size());
+//        ImGui::SameLine(0, ImGui::GetFontSize() * 3);
+        ImGui::SameLine(180);
+		if (ImGui::Button("Create"))
 		{
 			// create property data
 			int type = item_current;
@@ -275,9 +280,12 @@ public:
 
 			stShaderPanel.propertyArray.push_back(prop);
 		}
-
+        
+        ImGui::Separator();
+        
 		ImGui::LabelText("", "List:");
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+//        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 10));
 		ImGui::Columns(2);
 		ImGui::Separator();
 		// ImGui::SetColumnWidth(0, ImGui::GetFontSize() * 12.0f);
@@ -292,7 +300,7 @@ public:
 			ImGui::PushID(id++);
 
 			ImGui::AlignTextToFramePadding();
-			bool isClick = ImGui::Button("-"); // remove
+			bool isClick = ImGui::Button(" - "); // remove
 			ImGui::SameLine();
 			ImGui::Text(prop.name.c_str());
 
@@ -320,9 +328,23 @@ public:
 					break;
 				}
 				case Type_Float: {
-					ImGui::SliderFloat("", &prop.fVal, prop.fMin, prop.fMax);
-					ImGui::SameLine();
-					ImGui::DragFloat("", &prop.fVal, 0.0001f, prop.fMin, prop.fMax, "%.06f");
+                    ImGui::PushID("InputFloat_Float");
+                    ImGui::InputFloat("", &prop.fVal, 0.01f, 0.1f);
+                    ImGui::PopID();
+                    
+                    prop.fVal = clamp(prop.fVal, prop.fMin, prop.fMax);
+                    
+                    ImGui::SetNextItemWidth(ImGui::GetFontSize() * 6.0f);
+                    ImGui::SliderFloat("", &prop.fVal, prop.fMin, prop.fMax);
+                    
+                    ImGui::SameLine();
+                    ImGui::SetNextItemWidth(-1);
+                    ImGui::DragFloatRange2("", &prop.fMin, &prop.fMax, 0.0001f, Float_Min, Float_Max, "min:%.04f", "max:%.04f");
+
+//
+//                    ImGui::SliderFloat("", &prop.fVal, prop.fMin, prop.fMax);
+//                    ImGui::SameLine();
+//                    ImGui::DragFloat("", &prop.fVal, 0.0001f, prop.fMin, prop.fMax, "%.06f");
 					break;
 				}
 				case Type_Color: {
@@ -333,8 +355,8 @@ public:
 				}
 				case Type_String: {
 					char buffer[2048] = { 0 };
-					//strcpy(buffer, prop.sVal.c_str());
-					strcpy_s(buffer, prop.sVal.c_str());
+                    strcpy(buffer, prop.sVal.c_str());
+//                    strcpy_s(buffer, prop.sVal.c_str());
 					if (ImGui::InputText("", buffer, sizeof(buffer))) {
 						prop.sVal = buffer;
 					}
@@ -351,7 +373,7 @@ public:
 				it++;
 			}
 		}
-
+        
 		ImGui::PopStyleVar();
 
 		ImGui::End();
@@ -366,7 +388,17 @@ static UI ui;
 
 Shader* createShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
 {
-	Shader* shader = new Shader(vertexPath, fragmentPath, geometryPath);
+    string path = "resources/shaders/";
+    string vPath = path + vertexPath;
+    string fPath = path + fragmentPath;
+    
+    const char* _geometryPath = nullptr;
+    if (geometryPath) {
+        string gPath = path + geometryPath;
+        _geometryPath = gPath.c_str();
+    }
+    
+	Shader* shader = new Shader(vPath.c_str(), fPath.c_str(), _geometryPath);
 	if (shader != NULL) {
 		cout << "create shader ID = " << shader->ID << endl;
 		G.shaderArray.push_back(shader);
