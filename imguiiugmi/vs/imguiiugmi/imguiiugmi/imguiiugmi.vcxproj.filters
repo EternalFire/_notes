@@ -22,6 +22,9 @@
     <Filter Include="rapidjson\msinttypes">
       <UniqueIdentifier>{068e8f36-dc33-43ba-9854-2f96486159e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fire">
+      <UniqueIdentifier>{98de538f-8ef6-47a2-87a5-f4ce34d8e259}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui.cpp">
@@ -74,7 +77,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\imguiiugmi\shader.h" />
     <ClInclude Include="..\..\..\imguiiugmi\camera.h" />
-    <ClInclude Include="..\..\..\imguiiugmi\Fire.h" />
     <ClInclude Include="..\..\..\imguiiugmi\rapidjson\encodings.h">
       <Filter>rapidjson</Filter>
     </ClInclude>
@@ -182,6 +184,36 @@
     </ClInclude>
     <ClInclude Include="..\..\..\imguiiugmi\rapidjson\msinttypes\stdint.h">
       <Filter>rapidjson\msinttypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\Fire.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FirePainter.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireProperty.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireState.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireStShaderPanel.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUI.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUtility.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireConfig.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireDefinition.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireJson.h">
+      <Filter>Fire</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

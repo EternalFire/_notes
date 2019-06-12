@@ -48,6 +48,7 @@ void Init()
 	float w = config.width, h = config.height;
 	G.init(w, h);
 
+	// create StShaderPanel
 	struct StShaderPanel st;
 	// default value
 	st.name = "Shader Panel";
@@ -65,6 +66,7 @@ void Init()
 	st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
 	G.stShaderPanelMap[st.name] = st;
 
+	// texture
 	G.texture0 = loadTexture("container.jpg");
 	st.shader->use();
 	st.shader->setInt("texture0", 0);
@@ -147,7 +149,7 @@ void Clear()
 {
     //printf("Clear\n");
 	clearShaderArray();
-    
+
     painter.clear();
 }
 

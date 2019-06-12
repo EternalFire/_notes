@@ -31,6 +31,15 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\imguiiugmi\camera.h" />
     <ClInclude Include="..\..\..\imguiiugmi\Fire.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireConfig.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireDefinition.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireJson.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FirePainter.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireProperty.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireState.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireStShaderPanel.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireUI.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireUtility.h" />
     <ClInclude Include="..\..\..\imguiiugmi\imgui\imconfig.h" />
     <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui.h" />
     <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui_internal.h" />
