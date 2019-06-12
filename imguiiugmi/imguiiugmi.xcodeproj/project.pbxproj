@@ -92,6 +92,7 @@
 		427A7A6722B023D9007532D8 /* FireUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUI.h; sourceTree = "<group>"; };
 		427A7A6822B02682007532D8 /* FireState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireState.h; sourceTree = "<group>"; };
 		427A7A6922B0286F007532D8 /* FirePainter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirePainter.h; sourceTree = "<group>"; };
+		427A7A6A22B07D88007532D8 /* FireConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireConfig.h; sourceTree = "<group>"; };
 		42E134F522AC04C800E4FA4B /* imguiiugmi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imguiiugmi; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E134F822AC04C800E4FA4B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		42E1350022AC08FD00E4FA4B /* imgui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
@@ -239,7 +240,9 @@
 				427A7A3422AEAD33007532D8 /* resources */,
 				42E134F822AC04C800E4FA4B /* main.cpp */,
 				427A7A3122AD51BE007532D8 /* camera.h */,
+				427A7A3222AD51BE007532D8 /* shader.h */,
 				427A7A3322AD5FDA007532D8 /* Fire.h */,
+				427A7A6A22B07D88007532D8 /* FireConfig.h */,
 				427A7A6222B00F66007532D8 /* FireDefinition.h */,
 				427A7A6622B0229B007532D8 /* FireJson.h */,
 				427A7A6922B0286F007532D8 /* FirePainter.h */,
@@ -248,7 +251,6 @@
 				427A7A6522B01E53007532D8 /* FireStShaderPanel.h */,
 				427A7A6322B01C0D007532D8 /* FireUtility.h */,
 				427A7A6722B023D9007532D8 /* FireUI.h */,
-				427A7A3222AD51BE007532D8 /* shader.h */,
 				42E1352422AC132900E4FA4B /* glad */,
 				42E134FF22AC08FD00E4FA4B /* imgui */,
 				42E1350B22AC08FD00E4FA4B /* imgui_impl */,

@@ -17,7 +17,7 @@ using namespace std;
 
 NS_FIRE_BEGIN
 
-string toJSON(const StShaderPanel& stShaderPanel)
+string toJSON(const struct StShaderPanel& stShaderPanel)
 {
     string data = "";
     rapidjson::StringBuffer strBuf;
@@ -85,7 +85,7 @@ string toJSON(const StShaderPanel& stShaderPanel)
     return data;
 }
 
-void parseJSON(const string& jsonStr, StShaderPanel& stShaderPanel)
+void parseJSON(const string& jsonStr, struct StShaderPanel& stShaderPanel)
 {
     rapidjson::Document doc;
     if (!doc.Parse(jsonStr.c_str()).HasParseError())
@@ -252,10 +252,45 @@ void parseJSON(const string& jsonStr, StShaderPanel& stShaderPanel)
     }
     else
     {
-        cout << "parse json error" << endl;
+        cout << "parse StShaderPanel json error" << endl;
     }
 }
 
+string toJSON(const struct StConfig& config)
+{
+    string data;
+    rapidjson::StringBuffer strBuf;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(strBuf);
+    writer.StartObject();
+    {
+        writer.Key("Width"); writer.String(toString(config.width).c_str());
+        writer.Key("Height"); writer.String(toString(config.height).c_str());
+    }
+    writer.EndObject();
+    data = strBuf.GetString();
+    return data;
+}
+
+void parseJSON(const string& jsonStr, struct StConfig& config)
+{
+    rapidjson::Document doc;
+    if (!doc.Parse(jsonStr.c_str()).HasParseError())
+    {
+        const char* Width = "Width";
+        if (doc.HasMember(Width) && doc[Width].IsString()) {
+            config.width = parseString<float>(doc[Width].GetString());
+        }
+        
+        const char* Height = "Height";
+        if (doc.HasMember(Height) && doc[Height].IsString()) {
+            config.height = parseString<float>(doc[Height].GetString());
+        }
+    }
+    else
+    {
+        cout << "parse StConfig json error" << endl;
+    }
+}
 
 NS_FIRE_END__
 

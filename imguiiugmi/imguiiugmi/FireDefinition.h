@@ -73,6 +73,7 @@ enum Type {
     Type_Color  = 8,
     Type_IColor = 9,
     Type_String = 10,
+    Type_Bool   = 11,
 };
 
 const char * TypeNames[] = {
@@ -87,6 +88,7 @@ const char * TypeNames[] = {
     "Color",
     "IColor",
     "String",
+    "Bool",
 };
 
 int getTypeByName(const string& name) {

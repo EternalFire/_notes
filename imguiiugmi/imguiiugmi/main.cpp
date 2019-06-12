@@ -2,12 +2,10 @@
 // If you are new to dear imgui, see examples/README.txt and documentation at the top of imgui.cpp.
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
 
-
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
-
 
 
 // About OpenGL function loaders: modern OpenGL doesn't have a standard header file and requires individual function pointers to be loaded manually.
@@ -43,6 +41,8 @@ static void glfw_error_callback(int error, const char* description)
 
 int main(int, char**)
 {
+    Fire::InitConfig();
+    
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
 
@@ -69,9 +69,11 @@ int main(int, char**)
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
+    int w = Fire::config.width, h = Fire::config.height;
+    GLFWwindow* window = glfwCreateWindow(w, h, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return 1;
+    
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
     
@@ -88,6 +90,7 @@ int main(int, char**)
 #else
     bool err = false; // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to requires some form of initialization.
 #endif
+    
     if (err)
     {
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
@@ -198,14 +201,8 @@ int main(int, char**)
         }
         
         Fire::TickUI();
-
-		//glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-		//glClear(GL_COLOR_BUFFER_BIT);
-
-		//Fire::TickScene();
-
-        // Rendering
         ImGui::Render();
+        
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);

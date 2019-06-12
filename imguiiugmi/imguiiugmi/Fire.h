@@ -15,6 +15,7 @@
 using namespace std;
 
 #include <FireDefinition.h>
+#include <FireConfig.h>
 #include <FireUtility.h>
 #include <FireProperty.h>
 #include <FireStShaderPanel.h>
@@ -26,10 +27,25 @@ using namespace std;
 ///
 NS_FIRE_BEGIN
 
+void InitConfig()
+{
+    string path = "config.json";
+    bool exist = isFileExist(path.c_str());
+    if (exist)
+    {
+        string data = readFromFile(path.c_str());
+        parseJSON(data, config);
+    }
+    else
+    {
+        const string& str = toJSON(config);
+        writeToFile(path.c_str(), str.c_str());
+    }
+}
 
 void Init()
 {
-	float w = 1280, h = 720;
+	float w = config.width, h = config.height;
 	G.init(w, h);
 
 	struct StShaderPanel st;
