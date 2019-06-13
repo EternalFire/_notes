@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{14a0ba37-9f2f-4e08-bad4-7a96e58d2391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{00d3f2ee-5465-408c-9b51-3f82f663f762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party">
+      <UniqueIdentifier>{2d8c45a1-1c7c-49f9-9c85-ab1a89a55af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party\base">
+      <UniqueIdentifier>{169b7a3d-454d-4bdd-8645-12723fe158a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party\base\anglebase">
+      <UniqueIdentifier>{cde6a477-272d-4c19-b063-06bf04d87c90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party\base\anglebase\containers">
+      <UniqueIdentifier>{48f2afaf-d496-408d-a8b8-4f6c1c84dd6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party\base\anglebase\numerics">
+      <UniqueIdentifier>{8b0af632-54ae-41a1-9202-e07f75edc86b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party\smhasher">
+      <UniqueIdentifier>{22329ac7-3093-4dcc-bbfc-31ef59b7e814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\third_party\smhasher\src">
+      <UniqueIdentifier>{007f3e18-cfe1-44f2-9d2d-0de31e6079d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{6261e5bb-49da-4d26-b47f-21b52774eaa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EGL">
+      <UniqueIdentifier>{27a4ca9e-5d71-4d25-a932-9357439b04cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLES2">
+      <UniqueIdentifier>{93e7721b-f6c9-40c6-9db6-aae9bf5d8a20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLES3">
+      <UniqueIdentifier>{7861b8f4-e09e-467c-bbd3-794edb113a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLSLANG">
+      <UniqueIdentifier>{c1bd9d83-a76f-44f3-bd46-79c0285f51ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\KHR">
+      <UniqueIdentifier>{2bdfc1c2-7af3-4f07-b69f-b198f0beb50b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\common\Color.inc">
+      <Filter>src\common</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\common\debug.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\Float16ToFloat32.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mathutil.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\matrix_utils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\MemoryBuffer.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\PackedEGLEnums_autogen.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\PackedEnums.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\PackedGLEnums_autogen.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\PoolAlloc.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\string_utils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\system_utils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\tls.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\uniform_type_info_autogen.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\utilities.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\aligned_memory.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\angleutils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\system_utils_win.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\third_party\base\anglebase\sha1.cc">
+      <Filter>src\common\third_party\base\anglebase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\third_party\smhasher\src\PMurHash.cpp">
+      <Filter>src\common\third_party\smhasher\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\common\debug.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\FastVector.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\FixedVector.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\hash_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\mathutil.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\matrix_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\MemoryBuffer.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\Optional.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\PackedEGLEnums_autogen.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\PackedEnums.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\PackedGLEnums_autogen.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\platform.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\PoolAlloc.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\string_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\system_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\tls.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\utilities.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\vector_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\aligned_memory.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\angleutils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\bitset_utils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\Color.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\base_export.h">
+      <Filter>src\common\third_party\base\anglebase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\logging.h">
+      <Filter>src\common\third_party\base\anglebase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\macros.h">
+      <Filter>src\common\third_party\base\anglebase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\sha1.h">
+      <Filter>src\common\third_party\base\anglebase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\sys_byteorder.h">
+      <Filter>src\common\third_party\base\anglebase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\containers\mru_cache.h">
+      <Filter>src\common\third_party\base\anglebase\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\numerics\safe_conversions_impl.h">
+      <Filter>src\common\third_party\base\anglebase\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\numerics\safe_math.h">
+      <Filter>src\common\third_party\base\anglebase\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\numerics\safe_math_impl.h">
+      <Filter>src\common\third_party\base\anglebase\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\base\anglebase\numerics\safe_conversions.h">
+      <Filter>src\common\third_party\base\anglebase\numerics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\third_party\smhasher\src\PMurHash.h">
+      <Filter>src\common\third_party\smhasher\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\angle_gl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EGL\eglext.h">
+      <Filter>include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EGL\eglplatform.h">
+      <Filter>include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EGL\egl.h">
+      <Filter>include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES2\gl2ext.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES2\gl2platform.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES2\gl2.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl31.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl32.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl3.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLES3\gl3platform.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLSLANG\ShaderVars.h">
+      <Filter>include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GLSLANG\ShaderLang.h">
+      <Filter>include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\KHR\khrplatform.h">
+      <Filter>include\KHR</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

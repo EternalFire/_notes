@@ -1,0 +1,930 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{835105ba-e27b-4c71-ba31-7d6f6c82d062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{9091ae20-11be-419c-b994-808788b65c13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EGL">
+      <UniqueIdentifier>{35be5469-c7ca-473d-8b31-88575301cf6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLES2">
+      <UniqueIdentifier>{e278192c-8085-4be4-a96f-de537ecabaa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLES3">
+      <UniqueIdentifier>{474065bf-6f90-4000-85c4-3d716a380eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLSLANG">
+      <UniqueIdentifier>{e0fe83a6-ff48-43f9-a7e4-c8f5449af3a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\KHR">
+      <UniqueIdentifier>{68c6054b-0145-4e66-a8b2-d42b8f3e9c71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler">
+      <UniqueIdentifier>{19ea4a95-d5e5-48cf-be04-62a927ce7bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\translator">
+      <UniqueIdentifier>{a20319f0-d40f-4ec9-8082-9efd2c257239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\translator\tree_ops">
+      <UniqueIdentifier>{a89b1d0b-00da-4a0f-9e0f-86f93e01f4f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\translator\tree_util">
+      <UniqueIdentifier>{4bea1661-2d11-4b12-b7d5-028eb41a69dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\third_party">
+      <UniqueIdentifier>{4d6ecd62-1353-482b-916f-2d745008798f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\third_party\compiler">
+      <UniqueIdentifier>{f14b86a7-efc6-4211-9999-e68d9b05338f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\preprocessor">
+      <UniqueIdentifier>{d463c8b4-d776-4c16-92df-839571a27249}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\compiler\translator\tree_ops\ClampFragDepth.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\ClampPointSize.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\DeclareAndInitBuiltinsForInstancedMultiview.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\DeferGlobalInitializers.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\EmulateGLDrawID.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\EmulateGLFragColorBroadcast.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\EmulatePrecision.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\ExpandIntegerPowExpressions.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\FoldExpressions.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\InitializeVariables.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\NameEmbeddedUniformStructs.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\PruneEmptyCases.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\PruneNoOps.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RecordConstantPrecision.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RegenerateStructNames.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RemoveArrayLengthMethod.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RemoveDynamicIndexing.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RemoveInvariantDeclaration.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RemovePow.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RemoveSwitchFallThrough.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RemoveUnreferencedVariables.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteAtomicFunctionExpressions.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteDoWhile.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteElseBlocks.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteExpressionsWithShaderStorageBlock.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteRepeatedAssignToSwizzled.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteStructSamplers.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteTexelFetchOffset.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteUnaryMinusOperatorFloat.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\RewriteUnaryMinusOperatorInt.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\ScalarizeVecAndMatConstructorArgs.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\SeparateArrayConstructorStatements.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\SeparateArrayInitialization.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\SeparateDeclarations.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\SeparateExpressionsReturningArrays.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\SimplifyLoopConditions.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\SplitSequenceOperator.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\UnfoldShortCircuitAST.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\UnfoldShortCircuitToIf.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\UseInterfaceBlockFields.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\VectorizeVectorScalarArithmetic.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\WrapSwitchStatementsInBlocks.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\AddAndTrueToLoopCondition.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\AddDefaultReturnStatements.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\ArrayReturnValueToOutParameter.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_ops\BreakVariableAliasingInInnerLoops.cpp">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\IntermTraverse.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\ReplaceShadowingVariables.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\ReplaceVariable.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\RunAtTheEndOfShader.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\FindMain.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\FindSymbolNode.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\IntermNode_util.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\tree_util\IntermNodePatternMatcher.cpp">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\blocklayoutHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\BuiltInFunctionEmulator.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\BuiltInFunctionEmulatorGLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\BuiltInFunctionEmulatorHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\CallDAG.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\CodeGen.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\CollectVariables.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Compiler.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ConstantUnion.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Declarator.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Diagnostics.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\DirectiveHandler.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\emulated_builtin_functions_hlsl_autogen.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ExtensionBehavior.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ExtensionGLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\FlagStd140Structs.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\FunctionLookup.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\glslang_lex.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\glslang_tab.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\HashNames.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ImageFunctionHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ImmutableString.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ImmutableStringBuilder.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\InfoSink.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Initialize.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\InitializeDll.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\IntermNode.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\IsASTDepthBelowLimit.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Operator.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\OutputESSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\OutputGLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\OutputGLSLBase.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\OutputHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\OutputTree.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\OutputVulkanGLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ParseContext.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\PoolAlloc.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\QualifierTypes.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ResourcesHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ShaderLang.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ShaderStorageBlockFunctionHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ShaderStorageBlockOutputHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ShaderVars.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\StructureHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Symbol.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\SymbolTable.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\SymbolTable_autogen.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\SymbolUniqueId.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\TextureFunctionHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\TranslatorESSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\TranslatorGLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\TranslatorHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\TranslatorVulkan.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\Types.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\util.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\UtilsHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateAST.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateGlobalInitializer.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateLimitations.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateMaxParameters.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateOutputs.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateSwitch.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ValidateVaryingLocations.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\VariablePacker.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\VersionGLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\ASTMetadataHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\AtomicCounterFunctionHLSL.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\translator\blocklayout.cpp">
+      <Filter>src\compiler\translator</Filter>
+    </ClCompile>
+    <ClCompile Include="src\third_party\compiler\ArrayBoundsClamper.cpp">
+      <Filter>src\third_party\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\Macro.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\MacroExpander.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\Preprocessor.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\Token.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\Tokenizer.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\DiagnosticsBase.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\DirectiveHandlerBase.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\DirectiveParser.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\ExpressionParser.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\Input.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\compiler\preprocessor\Lexer.cpp">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\EGL\eglext.h">
+      <Filter>include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EGL\eglplatform.h">
+      <Filter>include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EGL\egl.h">
+      <Filter>include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES2\gl2ext.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES2\gl2platform.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES2\gl2.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES3\gl31.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES3\gl32.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES3\gl3.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLES3\gl3platform.h">
+      <Filter>include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLSLANG\ShaderVars.h">
+      <Filter>include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLSLANG\ShaderLang.h">
+      <Filter>include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="include\KHR\khrplatform.h">
+      <Filter>include\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="include\angle_gl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\ClampFragDepth.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\ClampPointSize.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\DeclareAndInitBuiltinsForInstancedMultiview.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\DeferGlobalInitializers.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\EmulateGLDrawID.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\EmulateGLFragColorBroadcast.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\EmulatePrecision.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\ExpandIntegerPowExpressions.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\FoldExpressions.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\InitializeVariables.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\NameEmbeddedUniformStructs.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\PruneEmptyCases.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\PruneNoOps.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RecordConstantPrecision.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RegenerateStructNames.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RemoveArrayLengthMethod.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RemoveDynamicIndexing.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RemoveInvariantDeclaration.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RemovePow.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RemoveSwitchFallThrough.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RemoveUnreferencedVariables.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteAtomicFunctionExpressions.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteDoWhile.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteElseBlocks.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteExpressionsWithShaderStorageBlock.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteRepeatedAssignToSwizzled.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteStructSamplers.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteTexelFetchOffset.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteUnaryMinusOperatorFloat.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\RewriteUnaryMinusOperatorInt.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\ScalarizeVecAndMatConstructorArgs.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\SeparateArrayConstructorStatements.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\SeparateArrayInitialization.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\SeparateDeclarations.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\SeparateExpressionsReturningArrays.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\SimplifyLoopConditions.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\SplitSequenceOperator.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\UnfoldShortCircuitAST.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\UnfoldShortCircuitToIf.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\UseInterfaceBlockFields.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\VectorizeVectorScalarArithmetic.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\WrapSwitchStatementsInBlocks.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\AddAndTrueToLoopCondition.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\AddDefaultReturnStatements.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\ArrayReturnValueToOutParameter.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_ops\BreakVariableAliasingInInnerLoops.h">
+      <Filter>src\compiler\translator\tree_ops</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\IntermNodePatternMatcher.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\IntermTraverse.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\NodeSearch.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\ReplaceShadowingVariables.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\ReplaceVariable.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\RunAtTheEndOfShader.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\Visit.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\BuiltIn_autogen.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\FindMain.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\FindSymbolNode.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\tree_util\IntermNode_util.h">
+      <Filter>src\compiler\translator\tree_util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\blocklayoutHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\BuiltInFunctionEmulator.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\BuiltInFunctionEmulatorGLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\BuiltInFunctionEmulatorHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\CallDAG.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\CollectVariables.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Common.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Compiler.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ConstantUnion.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Declarator.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Diagnostics.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\DirectiveHandler.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ExtensionBehavior.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ExtensionGLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\FlagStd140Structs.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\FunctionLookup.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\glslang.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\glslang_tab.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\HashNames.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ImageFunctionHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ImmutableString.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ImmutableStringBuilder.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\InfoSink.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Initialize.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\InitializeDll.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\InitializeGlobals.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\IntermNode.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\IsASTDepthBelowLimit.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\length_limits.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Operator.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\OutputESSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\OutputGLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\OutputGLSLBase.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\OutputHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\OutputTree.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\OutputVulkanGLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ParseContext.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ParseContext_autogen.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\PoolAlloc.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Pragma.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\QualifierTypes.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ResourcesHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Severity.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ShaderStorageBlockFunctionHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ShaderStorageBlockOutputHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\StaticType.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\StructureHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Symbol.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\SymbolTable.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\SymbolTable_autogen.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\SymbolUniqueId.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\TextureFunctionHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\TranslatorESSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\TranslatorGLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\TranslatorHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\TranslatorVulkan.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\Types.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\util.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\UtilsHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateAST.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateGlobalInitializer.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateLimitations.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateMaxParameters.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateOutputs.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateSwitch.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ValidateVaryingLocations.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\VariablePacker.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\VersionGLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\ASTMetadataHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\AtomicCounterFunctionHLSL.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\BaseTypes.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\translator\blocklayout.h">
+      <Filter>src\compiler\translator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\third_party\compiler\ArrayBoundsClamper.h">
+      <Filter>src\third_party\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\Macro.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\MacroExpander.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\numeric_lex.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\Preprocessor.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\SourceLocation.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\Token.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\Tokenizer.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\DiagnosticsBase.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\DirectiveHandlerBase.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\DirectiveParser.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\ExpressionParser.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\Input.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\compiler\preprocessor\Lexer.h">
+      <Filter>src\compiler\preprocessor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\compiler\translator\emulated_builtin_function_data_hlsl.json">
+      <Filter>src\compiler\translator</Filter>
+    </None>
+  </ItemGroup>
+</Project>
