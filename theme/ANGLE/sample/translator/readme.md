@@ -52,11 +52,34 @@ ANGLE 目前只能解析 OpenGL ES 3.0 及以下, WebGL 2.0及以下的版本.
 
 这是移植 angle_shader_translator 到 VS 后的项目.
 
-使用 Visual Studio 2019 编译 x64 版本(没有尝试x86版本).
+使用 Visual Studio 2019 编译.
 
 Windows SDK 版本是 "10.0.18362.0".
 
-common 项目先编译, 它生成的 common.lib 是 PlayProject1 需要的静态库.
+<br />
+
+需要修改项目属性:
+
+增加的预处理器定义(C/C++ => 预处理器):
+
+```
+_CRT_SECURE_NO_WARNINGS
+NOMINMAX
+ANGLE_ENABLE_ESSL
+ANGLE_ENABLE_GLSL
+ANGLE_ENABLE_HLSL
+ANGLE_ENABLE_VULKAN
+```
+
+C/C++ => 代码生成 => 启用函数级链接: 选择 是.
+
+C/C++ => 语言 => 符合模式: 选择 否.
+
+<br />
+
+common 项目先编译, 因为它生成的 common.lib 是 PlayProject1 需要的静态库.
+
+`publish/` 有 32位, 64位版本.
 
 PlayProject1.exe 是编译好的release版本. vertex.vert 是用于测试的顶点着色器.
 
