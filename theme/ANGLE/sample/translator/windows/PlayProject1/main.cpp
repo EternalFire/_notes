@@ -1,13 +1,5 @@
-#include "GLSLANG/ShaderLang.h"
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sstream>
-#include <vector>
-#include "angle_gl.h"
 
+#include "Header.h"
 //
 // Return codes from main.
 //
@@ -60,7 +52,7 @@ void GenerateResources(ShBuiltInResources* resources)
 	resources->ANGLE_texture_multisample = 0;
 }
 
-int main(int argc, char* argv[])
+int run(int argc, char* argv[])
 {
 	TFailCode failCode = ESuccess;
 
@@ -351,6 +343,13 @@ int main(int argc, char* argv[])
 
 	return failCode;
 }
+
+#ifndef _LIB
+int main(int argc, char* argv[])
+{
+	return run(argc, argv);
+}
+#endif
 
 //
 //   print usage to stdout

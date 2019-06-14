@@ -1,0 +1,8 @@
+.vs
+x64
+obj
+.db
+Debug
+Release
+common.lib
+PlayProject1.lib

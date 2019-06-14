@@ -921,6 +921,7 @@
     <ClInclude Include="src\compiler\preprocessor\Lexer.h">
       <Filter>src\compiler\preprocessor</Filter>
     </ClInclude>
+    <ClInclude Include="Header.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\compiler\translator\emulated_builtin_function_data_hlsl.json">
