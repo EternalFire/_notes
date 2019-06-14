@@ -345,10 +345,297 @@
 		427A840822B2AC29007532D8 /* ArrayBoundsClamper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A813F22B2A8E2007532D8 /* ArrayBoundsClamper.cpp */; };
 		427A840C22B2B6F5007532D8 /* system_utils_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A840B22B2B6F5007532D8 /* system_utils_posix.cpp */; };
 		427A840D22B2BBDA007532D8 /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 427A80E222B2A866007532D8 /* libcommon.a */; };
+		427A841A22B3F9EE007532D8 /* ShParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A841822B3F9ED007532D8 /* ShParser.cpp */; };
+		427A841B22B3F9EE007532D8 /* ShParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 427A841922B3F9ED007532D8 /* ShParser.h */; };
+		427A841C22B3FB06007532D8 /* libcommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 427A80E222B2A866007532D8 /* libcommon.a */; };
+		427A841D22B3FB36007532D8 /* DeferGlobalInitializers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81AE22B2A8E3007532D8 /* DeferGlobalInitializers.cpp */; };
+		427A841E22B3FB36007532D8 /* RewriteElseBlocks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81AF22B2A8E3007532D8 /* RewriteElseBlocks.cpp */; };
+		427A841F22B3FB36007532D8 /* RemoveDynamicIndexing.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B022B2A8E3007532D8 /* RemoveDynamicIndexing.h */; };
+		427A842022B3FB36007532D8 /* ArrayReturnValueToOutParameter.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B122B2A8E3007532D8 /* ArrayReturnValueToOutParameter.h */; };
+		427A842122B3FB36007532D8 /* EmulateGLDrawID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B222B2A8E3007532D8 /* EmulateGLDrawID.cpp */; };
+		427A842222B3FB36007532D8 /* SplitSequenceOperator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B322B2A8E3007532D8 /* SplitSequenceOperator.cpp */; };
+		427A842322B3FB36007532D8 /* ScalarizeVecAndMatConstructorArgs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B422B2A8E3007532D8 /* ScalarizeVecAndMatConstructorArgs.cpp */; };
+		427A842422B3FB36007532D8 /* AddDefaultReturnStatements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B522B2A8E3007532D8 /* AddDefaultReturnStatements.cpp */; };
+		427A842522B3FB36007532D8 /* RewriteUnaryMinusOperatorFloat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B622B2A8E3007532D8 /* RewriteUnaryMinusOperatorFloat.cpp */; };
+		427A842622B3FB36007532D8 /* RemovePow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B722B2A8E3007532D8 /* RemovePow.cpp */; };
+		427A842722B3FB36007532D8 /* RewriteUnaryMinusOperatorInt.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B822B2A8E3007532D8 /* RewriteUnaryMinusOperatorInt.h */; };
+		427A842822B3FB36007532D8 /* DeclareAndInitBuiltinsForInstancedMultiview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81B922B2A8E3007532D8 /* DeclareAndInitBuiltinsForInstancedMultiview.cpp */; };
+		427A842922B3FB36007532D8 /* UseInterfaceBlockFields.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81BA22B2A8E3007532D8 /* UseInterfaceBlockFields.h */; };
+		427A842A22B3FB36007532D8 /* EmulateGLFragColorBroadcast.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81BB22B2A8E3007532D8 /* EmulateGLFragColorBroadcast.h */; };
+		427A842B22B3FB36007532D8 /* UnfoldShortCircuitAST.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81BC22B2A8E3007532D8 /* UnfoldShortCircuitAST.h */; };
+		427A842C22B3FB36007532D8 /* SimplifyLoopConditions.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81BD22B2A8E3007532D8 /* SimplifyLoopConditions.h */; };
+		427A842D22B3FB36007532D8 /* PruneEmptyCases.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81BE22B2A8E3007532D8 /* PruneEmptyCases.cpp */; };
+		427A842E22B3FB36007532D8 /* ClampFragDepth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81BF22B2A8E3007532D8 /* ClampFragDepth.cpp */; };
+		427A842F22B3FB36007532D8 /* InitializeVariables.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C022B2A8E3007532D8 /* InitializeVariables.h */; };
+		427A843022B3FB36007532D8 /* RemoveDynamicIndexing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C122B2A8E3007532D8 /* RemoveDynamicIndexing.cpp */; };
+		427A843122B3FB36007532D8 /* ArrayReturnValueToOutParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C222B2A8E3007532D8 /* ArrayReturnValueToOutParameter.cpp */; };
+		427A843222B3FB36007532D8 /* UseInterfaceBlockFields.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C322B2A8E3007532D8 /* UseInterfaceBlockFields.cpp */; };
+		427A843322B3FB36007532D8 /* RewriteTexelFetchOffset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C422B2A8E3007532D8 /* RewriteTexelFetchOffset.cpp */; };
+		427A843422B3FB36007532D8 /* RewriteDoWhile.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C522B2A8E3007532D8 /* RewriteDoWhile.h */; };
+		427A843522B3FB36007532D8 /* RemoveInvariantDeclaration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C622B2A8E3007532D8 /* RemoveInvariantDeclaration.cpp */; };
+		427A843622B3FB36007532D8 /* WrapSwitchStatementsInBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C722B2A8E3007532D8 /* WrapSwitchStatementsInBlocks.h */; };
+		427A843722B3FB36007532D8 /* DeferGlobalInitializers.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C822B2A8E3007532D8 /* DeferGlobalInitializers.h */; };
+		427A843822B3FB36007532D8 /* VectorizeVectorScalarArithmetic.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81C922B2A8E3007532D8 /* VectorizeVectorScalarArithmetic.h */; };
+		427A843922B3FB36007532D8 /* SplitSequenceOperator.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81CA22B2A8E3007532D8 /* SplitSequenceOperator.h */; };
+		427A843A22B3FB36007532D8 /* RegenerateStructNames.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81CB22B2A8E3007532D8 /* RegenerateStructNames.h */; };
+		427A843B22B3FB36007532D8 /* InitializeVariables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81CC22B2A8E3007532D8 /* InitializeVariables.cpp */; };
+		427A843C22B3FB36007532D8 /* WrapSwitchStatementsInBlocks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81CD22B2A8E3007532D8 /* WrapSwitchStatementsInBlocks.cpp */; };
+		427A843D22B3FB36007532D8 /* SeparateArrayInitialization.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81CE22B2A8E3007532D8 /* SeparateArrayInitialization.h */; };
+		427A843E22B3FB36007532D8 /* PruneNoOps.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81CF22B2A8E3007532D8 /* PruneNoOps.h */; };
+		427A843F22B3FB36007532D8 /* RemoveUnreferencedVariables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D022B2A8E3007532D8 /* RemoveUnreferencedVariables.cpp */; };
+		427A844022B3FB36007532D8 /* UnfoldShortCircuitToIf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D122B2A8E3007532D8 /* UnfoldShortCircuitToIf.cpp */; };
+		427A844122B3FB36007532D8 /* RewriteStructSamplers.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D222B2A8E3007532D8 /* RewriteStructSamplers.h */; };
+		427A844222B3FB36007532D8 /* RewriteExpressionsWithShaderStorageBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D322B2A8E3007532D8 /* RewriteExpressionsWithShaderStorageBlock.cpp */; };
+		427A844322B3FB36007532D8 /* RewriteTexelFetchOffset.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D422B2A8E3007532D8 /* RewriteTexelFetchOffset.h */; };
+		427A844422B3FB36007532D8 /* ScalarizeVecAndMatConstructorArgs.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D522B2A8E3007532D8 /* ScalarizeVecAndMatConstructorArgs.h */; };
+		427A844522B3FB36007532D8 /* RewriteDoWhile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D622B2A8E3007532D8 /* RewriteDoWhile.cpp */; };
+		427A844622B3FB36007532D8 /* ExpandIntegerPowExpressions.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D722B2A8E3007532D8 /* ExpandIntegerPowExpressions.h */; };
+		427A844722B3FB36007532D8 /* SeparateDeclarations.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D822B2A8E3007532D8 /* SeparateDeclarations.h */; };
+		427A844822B3FB36007532D8 /* ClampFragDepth.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81D922B2A8E3007532D8 /* ClampFragDepth.h */; };
+		427A844922B3FB36007532D8 /* ClampPointSize.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81DA22B2A8E3007532D8 /* ClampPointSize.h */; };
+		427A844A22B3FB36007532D8 /* ClampPointSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81DB22B2A8E3007532D8 /* ClampPointSize.cpp */; };
+		427A844B22B3FB36007532D8 /* SeparateArrayInitialization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81DC22B2A8E3007532D8 /* SeparateArrayInitialization.cpp */; };
+		427A844C22B3FB36007532D8 /* RewriteElseBlocks.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81DD22B2A8E3007532D8 /* RewriteElseBlocks.h */; };
+		427A844D22B3FB36007532D8 /* SeparateExpressionsReturningArrays.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81DE22B2A8E3007532D8 /* SeparateExpressionsReturningArrays.cpp */; };
+		427A844E22B3FB36007532D8 /* RewriteUnaryMinusOperatorInt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81DF22B2A8E3007532D8 /* RewriteUnaryMinusOperatorInt.cpp */; };
+		427A844F22B3FB36007532D8 /* VectorizeVectorScalarArithmetic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E022B2A8E3007532D8 /* VectorizeVectorScalarArithmetic.cpp */; };
+		427A845022B3FB36007532D8 /* RemoveArrayLengthMethod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E122B2A8E3007532D8 /* RemoveArrayLengthMethod.cpp */; };
+		427A845122B3FB36007532D8 /* EmulateGLDrawID.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E222B2A8E3007532D8 /* EmulateGLDrawID.h */; };
+		427A845222B3FB36007532D8 /* RecordConstantPrecision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E322B2A8E3007532D8 /* RecordConstantPrecision.cpp */; };
+		427A845322B3FB36007532D8 /* SimplifyLoopConditions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E422B2A8E3007532D8 /* SimplifyLoopConditions.cpp */; };
+		427A845422B3FB36007532D8 /* RemoveArrayLengthMethod.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E522B2A8E3007532D8 /* RemoveArrayLengthMethod.h */; };
+		427A845522B3FB36007532D8 /* ExpandIntegerPowExpressions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E622B2A8E3007532D8 /* ExpandIntegerPowExpressions.cpp */; };
+		427A845622B3FB36007532D8 /* NameEmbeddedUniformStructs.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E722B2A8E3007532D8 /* NameEmbeddedUniformStructs.h */; };
+		427A845722B3FB36007532D8 /* RemoveSwitchFallThrough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E822B2A8E3007532D8 /* RemoveSwitchFallThrough.cpp */; };
+		427A845822B3FB36007532D8 /* RecordConstantPrecision.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81E922B2A8E3007532D8 /* RecordConstantPrecision.h */; };
+		427A845922B3FB36007532D8 /* NameEmbeddedUniformStructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81EA22B2A8E3007532D8 /* NameEmbeddedUniformStructs.cpp */; };
+		427A845A22B3FB36007532D8 /* RegenerateStructNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81EB22B2A8E3007532D8 /* RegenerateStructNames.cpp */; };
+		427A845B22B3FB36007532D8 /* AddAndTrueToLoopCondition.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81EC22B2A8E3007532D8 /* AddAndTrueToLoopCondition.h */; };
+		427A845C22B3FB36007532D8 /* RewriteAtomicFunctionExpressions.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81ED22B2A8E3007532D8 /* RewriteAtomicFunctionExpressions.h */; };
+		427A845D22B3FB36007532D8 /* PruneNoOps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81EE22B2A8E3007532D8 /* PruneNoOps.cpp */; };
+		427A845E22B3FB36007532D8 /* RemovePow.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81EF22B2A8E3007532D8 /* RemovePow.h */; };
+		427A845F22B3FB36007532D8 /* SeparateArrayConstructorStatements.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F022B2A8E3007532D8 /* SeparateArrayConstructorStatements.h */; };
+		427A846022B3FB36007532D8 /* BreakVariableAliasingInInnerLoops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F122B2A8E3007532D8 /* BreakVariableAliasingInInnerLoops.cpp */; };
+		427A846122B3FB36007532D8 /* RemoveInvariantDeclaration.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F222B2A8E3007532D8 /* RemoveInvariantDeclaration.h */; };
+		427A846222B3FB36007532D8 /* UnfoldShortCircuitToIf.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F322B2A8E3007532D8 /* UnfoldShortCircuitToIf.h */; };
+		427A846322B3FB36007532D8 /* RewriteStructSamplers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F422B2A8E3007532D8 /* RewriteStructSamplers.cpp */; };
+		427A846422B3FB36007532D8 /* AddDefaultReturnStatements.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F522B2A8E3007532D8 /* AddDefaultReturnStatements.h */; };
+		427A846522B3FB36007532D8 /* EmulateGLFragColorBroadcast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F622B2A8E3007532D8 /* EmulateGLFragColorBroadcast.cpp */; };
+		427A846622B3FB36007532D8 /* RemoveSwitchFallThrough.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F722B2A8E3007532D8 /* RemoveSwitchFallThrough.h */; };
+		427A846722B3FB36007532D8 /* SeparateDeclarations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F822B2A8E3007532D8 /* SeparateDeclarations.cpp */; };
+		427A846822B3FB36007532D8 /* SeparateArrayConstructorStatements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81F922B2A8E3007532D8 /* SeparateArrayConstructorStatements.cpp */; };
+		427A846922B3FB36007532D8 /* DeclareAndInitBuiltinsForInstancedMultiview.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81FA22B2A8E3007532D8 /* DeclareAndInitBuiltinsForInstancedMultiview.h */; };
+		427A846A22B3FB36007532D8 /* EmulatePrecision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81FB22B2A8E3007532D8 /* EmulatePrecision.cpp */; };
+		427A846B22B3FB36007532D8 /* BreakVariableAliasingInInnerLoops.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81FC22B2A8E3007532D8 /* BreakVariableAliasingInInnerLoops.h */; };
+		427A846C22B3FB36007532D8 /* PruneEmptyCases.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81FD22B2A8E3007532D8 /* PruneEmptyCases.h */; };
+		427A846D22B3FB36007532D8 /* RewriteRepeatedAssignToSwizzled.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81FE22B2A8E3007532D8 /* RewriteRepeatedAssignToSwizzled.cpp */; };
+		427A846E22B3FB36007532D8 /* RewriteUnaryMinusOperatorFloat.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81FF22B2A8E3007532D8 /* RewriteUnaryMinusOperatorFloat.h */; };
+		427A846F22B3FB36007532D8 /* RewriteExpressionsWithShaderStorageBlock.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820022B2A8E3007532D8 /* RewriteExpressionsWithShaderStorageBlock.h */; };
+		427A847022B3FB36007532D8 /* FoldExpressions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A820122B2A8E3007532D8 /* FoldExpressions.cpp */; };
+		427A847122B3FB36007532D8 /* RemoveUnreferencedVariables.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820222B2A8E3007532D8 /* RemoveUnreferencedVariables.h */; };
+		427A847222B3FB36007532D8 /* FoldExpressions.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820322B2A8E3007532D8 /* FoldExpressions.h */; };
+		427A847322B3FB36007532D8 /* AddAndTrueToLoopCondition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A820422B2A8E3007532D8 /* AddAndTrueToLoopCondition.cpp */; };
+		427A847422B3FB36007532D8 /* SeparateExpressionsReturningArrays.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820522B2A8E3007532D8 /* SeparateExpressionsReturningArrays.h */; };
+		427A847522B3FB36007532D8 /* UnfoldShortCircuitAST.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A820622B2A8E3007532D8 /* UnfoldShortCircuitAST.cpp */; };
+		427A847622B3FB36007532D8 /* RewriteRepeatedAssignToSwizzled.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820722B2A8E3007532D8 /* RewriteRepeatedAssignToSwizzled.h */; };
+		427A847722B3FB36007532D8 /* RewriteAtomicFunctionExpressions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A820822B2A8E3007532D8 /* RewriteAtomicFunctionExpressions.cpp */; };
+		427A847822B3FB36007532D8 /* EmulatePrecision.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820922B2A8E3007532D8 /* EmulatePrecision.h */; };
+		427A847922B3FB36007532D8 /* IntermNodePatternMatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815422B2A8E2007532D8 /* IntermNodePatternMatcher.cpp */; };
+		427A847A22B3FB36007532D8 /* IntermNode_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815522B2A8E2007532D8 /* IntermNode_util.cpp */; };
+		427A847B22B3FB36007532D8 /* ReplaceShadowingVariables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815622B2A8E2007532D8 /* ReplaceShadowingVariables.cpp */; };
+		427A847C22B3FB36007532D8 /* RunAtTheEndOfShader.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815722B2A8E2007532D8 /* RunAtTheEndOfShader.h */; };
+		427A847D22B3FB36007532D8 /* IntermNode_util.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815822B2A8E2007532D8 /* IntermNode_util.h */; };
+		427A847E22B3FB36007532D8 /* Visit.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815922B2A8E2007532D8 /* Visit.h */; };
+		427A847F22B3FB36007532D8 /* ReplaceVariable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815A22B2A8E2007532D8 /* ReplaceVariable.cpp */; };
+		427A848022B3FB36007532D8 /* FindSymbolNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815B22B2A8E2007532D8 /* FindSymbolNode.h */; };
+		427A848122B3FB36007532D8 /* IntermTraverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815C22B2A8E2007532D8 /* IntermTraverse.cpp */; };
+		427A848222B3FB36007532D8 /* FindSymbolNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815D22B2A8E2007532D8 /* FindSymbolNode.cpp */; };
+		427A848322B3FB36007532D8 /* NodeSearch.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815E22B2A8E2007532D8 /* NodeSearch.h */; };
+		427A848422B3FB36007532D8 /* BuiltIn_autogen.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815F22B2A8E2007532D8 /* BuiltIn_autogen.h */; };
+		427A848522B3FB36007532D8 /* FindMain.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816022B2A8E2007532D8 /* FindMain.h */; };
+		427A848622B3FB36007532D8 /* FindMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A816122B2A8E2007532D8 /* FindMain.cpp */; };
+		427A848722B3FB36007532D8 /* IntermNodePatternMatcher.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816222B2A8E2007532D8 /* IntermNodePatternMatcher.h */; };
+		427A848822B3FB36007532D8 /* RunAtTheEndOfShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A816322B2A8E2007532D8 /* RunAtTheEndOfShader.cpp */; };
+		427A848922B3FB36007532D8 /* ReplaceVariable.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816422B2A8E2007532D8 /* ReplaceVariable.h */; };
+		427A848A22B3FB36007532D8 /* ReplaceShadowingVariables.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816522B2A8E2007532D8 /* ReplaceShadowingVariables.h */; };
+		427A848B22B3FB36007532D8 /* IntermTraverse.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816622B2A8E2007532D8 /* IntermTraverse.h */; };
+		427A848C22B3FB36007532D8 /* ASTMetadataHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822F22B2A8E3007532D8 /* ASTMetadataHLSL.cpp */; };
+		427A848D22B3FB36007532D8 /* ASTMetadataHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821722B2A8E3007532D8 /* ASTMetadataHLSL.h */; };
+		427A848E22B3FB36007532D8 /* AtomicCounterFunctionHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822E22B2A8E3007532D8 /* AtomicCounterFunctionHLSL.cpp */; };
+		427A848F22B3FB36007532D8 /* AtomicCounterFunctionHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821622B2A8E3007532D8 /* AtomicCounterFunctionHLSL.h */; };
+		427A849022B3FB36007532D8 /* BaseTypes.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818F22B2A8E3007532D8 /* BaseTypes.h */; };
+		427A849122B3FB36007532D8 /* blocklayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A722B2A8E3007532D8 /* blocklayout.cpp */; };
+		427A849222B3FB36007532D8 /* blocklayout.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A819B22B2A8E3007532D8 /* blocklayout.h */; };
+		427A849322B3FB36007532D8 /* blocklayoutHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822322B2A8E3007532D8 /* blocklayoutHLSL.cpp */; };
+		427A849422B3FB36007532D8 /* blocklayoutHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816E22B2A8E2007532D8 /* blocklayoutHLSL.h */; };
+		427A849522B3FB36007532D8 /* BuiltInFunctionEmulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A823122B2A8E3007532D8 /* BuiltInFunctionEmulator.cpp */; };
+		427A849622B3FB36007532D8 /* BuiltInFunctionEmulator.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820A22B2A8E3007532D8 /* BuiltInFunctionEmulator.h */; };
+		427A849722B3FB36007532D8 /* BuiltInFunctionEmulatorGLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821C22B2A8E3007532D8 /* BuiltInFunctionEmulatorGLSL.cpp */; };
+		427A849822B3FB36007532D8 /* BuiltInFunctionEmulatorGLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821922B2A8E3007532D8 /* BuiltInFunctionEmulatorGLSL.h */; };
+		427A849922B3FB36007532D8 /* BuiltInFunctionEmulatorHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814222B2A8E2007532D8 /* BuiltInFunctionEmulatorHLSL.cpp */; };
+		427A849A22B3FB36007532D8 /* BuiltInFunctionEmulatorHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818322B2A8E3007532D8 /* BuiltInFunctionEmulatorHLSL.h */; };
+		427A849B22B3FB36007532D8 /* CallDAG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81AC22B2A8E3007532D8 /* CallDAG.cpp */; };
+		427A849C22B3FB36007532D8 /* CallDAG.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81AB22B2A8E3007532D8 /* CallDAG.h */; };
+		427A849D22B3FB36007532D8 /* CodeGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A820D22B2A8E3007532D8 /* CodeGen.cpp */; };
+		427A849E22B3FB36007532D8 /* CollectVariables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A820C22B2A8E3007532D8 /* CollectVariables.cpp */; };
+		427A849F22B3FB36007532D8 /* CollectVariables.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822A22B2A8E3007532D8 /* CollectVariables.h */; };
+		427A84A022B3FB36007532D8 /* Common.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820E22B2A8E3007532D8 /* Common.h */; };
+		427A84A122B3FB36007532D8 /* Compiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817422B2A8E2007532D8 /* Compiler.cpp */; };
+		427A84A222B3FB36007532D8 /* Compiler.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816F22B2A8E2007532D8 /* Compiler.h */; };
+		427A84A322B3FB36007532D8 /* ConstantUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819722B2A8E3007532D8 /* ConstantUnion.cpp */; };
+		427A84A422B3FB36007532D8 /* ConstantUnion.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822422B2A8E3007532D8 /* ConstantUnion.h */; };
+		427A84A522B3FB36007532D8 /* Declarator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819022B2A8E3007532D8 /* Declarator.cpp */; };
+		427A84A622B3FB36007532D8 /* Declarator.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818722B2A8E3007532D8 /* Declarator.h */; };
+		427A84A722B3FB36007532D8 /* Diagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819822B2A8E3007532D8 /* Diagnostics.cpp */; };
+		427A84A822B3FB36007532D8 /* Diagnostics.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822D22B2A8E3007532D8 /* Diagnostics.h */; };
+		427A84A922B3FB36007532D8 /* DirectiveHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817122B2A8E2007532D8 /* DirectiveHandler.cpp */; };
+		427A84AA22B3FB36007532D8 /* DirectiveHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A322B2A8E3007532D8 /* DirectiveHandler.h */; };
+		427A84AB22B3FB36007532D8 /* emulated_builtin_functions_hlsl_autogen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817322B2A8E2007532D8 /* emulated_builtin_functions_hlsl_autogen.cpp */; };
+		427A84AC22B3FB36007532D8 /* ExtensionBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819122B2A8E3007532D8 /* ExtensionBehavior.cpp */; };
+		427A84AD22B3FB36007532D8 /* ExtensionBehavior.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824522B2A8E3007532D8 /* ExtensionBehavior.h */; };
+		427A84AE22B3FB36007532D8 /* ExtensionGLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815122B2A8E2007532D8 /* ExtensionGLSL.cpp */; };
+		427A84AF22B3FB36007532D8 /* ExtensionGLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A814522B2A8E2007532D8 /* ExtensionGLSL.h */; };
+		427A84B022B3FB36007532D8 /* FlagStd140Structs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A823E22B2A8E3007532D8 /* FlagStd140Structs.cpp */; };
+		427A84B122B3FB36007532D8 /* FlagStd140Structs.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A122B2A8E3007532D8 /* FlagStd140Structs.h */; };
+		427A84B222B3FB36007532D8 /* FunctionLookup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A422B2A8E3007532D8 /* FunctionLookup.cpp */; };
+		427A84B322B3FB36007532D8 /* FunctionLookup.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A814422B2A8E2007532D8 /* FunctionLookup.h */; };
+		427A84B422B3FB36007532D8 /* glslang_lex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814B22B2A8E2007532D8 /* glslang_lex.cpp */; };
+		427A84B522B3FB36007532D8 /* glslang_tab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A818222B2A8E3007532D8 /* glslang_tab.cpp */; };
+		427A84B622B3FB36007532D8 /* glslang_tab.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821322B2A8E3007532D8 /* glslang_tab.h */; };
+		427A84B722B3FB36007532D8 /* glslang.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822722B2A8E3007532D8 /* glslang.h */; };
+		427A84B822B3FB36007532D8 /* HashNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814322B2A8E2007532D8 /* HashNames.cpp */; };
+		427A84B922B3FB36007532D8 /* HashNames.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A814F22B2A8E2007532D8 /* HashNames.h */; };
+		427A84BA22B3FB36007532D8 /* ImageFunctionHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821A22B2A8E3007532D8 /* ImageFunctionHLSL.cpp */; };
+		427A84BB22B3FB36007532D8 /* ImageFunctionHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824822B2A8E3007532D8 /* ImageFunctionHLSL.h */; };
+		427A84BC22B3FB36007532D8 /* ImmutableString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822622B2A8E3007532D8 /* ImmutableString.cpp */; };
+		427A84BD22B3FB36007532D8 /* ImmutableString.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817722B2A8E3007532D8 /* ImmutableString.h */; };
+		427A84BE22B3FB36007532D8 /* ImmutableStringBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817E22B2A8E3007532D8 /* ImmutableStringBuilder.cpp */; };
+		427A84BF22B3FB36007532D8 /* ImmutableStringBuilder.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816D22B2A8E2007532D8 /* ImmutableStringBuilder.h */; };
+		427A84C022B3FB36007532D8 /* InfoSink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A922B2A8E3007532D8 /* InfoSink.cpp */; };
+		427A84C122B3FB36007532D8 /* InfoSink.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822522B2A8E3007532D8 /* InfoSink.h */; };
+		427A84C222B3FB36007532D8 /* Initialize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817A22B2A8E3007532D8 /* Initialize.cpp */; };
+		427A84C322B3FB36007532D8 /* Initialize.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822222B2A8E3007532D8 /* Initialize.h */; };
+		427A84C422B3FB36007532D8 /* InitializeDll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819A22B2A8E3007532D8 /* InitializeDll.cpp */; };
+		427A84C522B3FB36007532D8 /* InitializeDll.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818B22B2A8E3007532D8 /* InitializeDll.h */; };
+		427A84C622B3FB36007532D8 /* InitializeGlobals.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820B22B2A8E3007532D8 /* InitializeGlobals.h */; };
+		427A84C722B3FB36007532D8 /* IntermNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814A22B2A8E2007532D8 /* IntermNode.cpp */; };
+		427A84C822B3FB36007532D8 /* IntermNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A522B2A8E3007532D8 /* IntermNode.h */; };
+		427A84C922B3FB36007532D8 /* IsASTDepthBelowLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A823022B2A8E3007532D8 /* IsASTDepthBelowLimit.cpp */; };
+		427A84CA22B3FB36007532D8 /* IsASTDepthBelowLimit.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824322B2A8E3007532D8 /* IsASTDepthBelowLimit.h */; };
+		427A84CB22B3FB36007532D8 /* length_limits.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817022B2A8E2007532D8 /* length_limits.h */; };
+		427A84CC22B3FB36007532D8 /* Operator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A818A22B2A8E3007532D8 /* Operator.cpp */; };
+		427A84CD22B3FB36007532D8 /* Operator.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818422B2A8E3007532D8 /* Operator.h */; };
+		427A84CE22B3FB36007532D8 /* OutputESSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A822B2A8E3007532D8 /* OutputESSL.cpp */; };
+		427A84CF22B3FB36007532D8 /* OutputESSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823822B2A8E3007532D8 /* OutputESSL.h */; };
+		427A84D022B3FB36007532D8 /* OutputGLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A222B2A8E3007532D8 /* OutputGLSL.cpp */; };
+		427A84D122B3FB36007532D8 /* OutputGLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823922B2A8E3007532D8 /* OutputGLSL.h */; };
+		427A84D222B3FB36007532D8 /* OutputGLSLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817D22B2A8E3007532D8 /* OutputGLSLBase.cpp */; };
+		427A84D322B3FB36007532D8 /* OutputGLSLBase.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822122B2A8E3007532D8 /* OutputGLSLBase.h */; };
+		427A84D422B3FB36007532D8 /* OutputHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A816C22B2A8E2007532D8 /* OutputHLSL.cpp */; };
+		427A84D522B3FB36007532D8 /* OutputHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817C22B2A8E3007532D8 /* OutputHLSL.h */; };
+		427A84D622B3FB36007532D8 /* OutputTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814E22B2A8E2007532D8 /* OutputTree.cpp */; };
+		427A84D722B3FB36007532D8 /* OutputTree.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818922B2A8E3007532D8 /* OutputTree.h */; };
+		427A84D822B3FB36007532D8 /* OutputVulkanGLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821022B2A8E3007532D8 /* OutputVulkanGLSL.cpp */; };
+		427A84D922B3FB36007532D8 /* OutputVulkanGLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823422B2A8E3007532D8 /* OutputVulkanGLSL.h */; };
+		427A84DA22B3FB36007532D8 /* ParseContext_autogen.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821122B2A8E3007532D8 /* ParseContext_autogen.h */; };
+		427A84DB22B3FB36007532D8 /* ParseContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A818622B2A8E3007532D8 /* ParseContext.cpp */; };
+		427A84DC22B3FB36007532D8 /* ParseContext.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824422B2A8E3007532D8 /* ParseContext.h */; };
+		427A84DD22B3FB36007532D8 /* PoolAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819C22B2A8E3007532D8 /* PoolAlloc.cpp */; };
+		427A84DE22B3FB36007532D8 /* PoolAlloc.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823222B2A8E3007532D8 /* PoolAlloc.h */; };
+		427A84DF22B3FB36007532D8 /* Pragma.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822922B2A8E3007532D8 /* Pragma.h */; };
+		427A84E022B3FB36007532D8 /* QualifierTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821F22B2A8E3007532D8 /* QualifierTypes.cpp */; };
+		427A84E122B3FB36007532D8 /* QualifierTypes.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821222B2A8E3007532D8 /* QualifierTypes.h */; };
+		427A84E222B3FB36007532D8 /* ResourcesHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821522B2A8E3007532D8 /* ResourcesHLSL.cpp */; };
+		427A84E322B3FB36007532D8 /* ResourcesHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821D22B2A8E3007532D8 /* ResourcesHLSL.h */; };
+		427A84E422B3FB36007532D8 /* Severity.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818D22B2A8E3007532D8 /* Severity.h */; };
+		427A84E522B3FB36007532D8 /* ShaderLang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819E22B2A8E3007532D8 /* ShaderLang.cpp */; };
+		427A84E622B3FB36007532D8 /* ShaderStorageBlockFunctionHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A622B2A8E3007532D8 /* ShaderStorageBlockFunctionHLSL.cpp */; };
+		427A84E722B3FB36007532D8 /* ShaderStorageBlockFunctionHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A819622B2A8E3007532D8 /* ShaderStorageBlockFunctionHLSL.h */; };
+		427A84E822B3FB36007532D8 /* ShaderStorageBlockOutputHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824722B2A8E3007532D8 /* ShaderStorageBlockOutputHLSL.cpp */; };
+		427A84E922B3FB36007532D8 /* ShaderStorageBlockOutputHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A814622B2A8E2007532D8 /* ShaderStorageBlockOutputHLSL.h */; };
+		427A84EA22B3FB36007532D8 /* ShaderVars.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824122B2A8E3007532D8 /* ShaderVars.cpp */; };
+		427A84EB22B3FB36007532D8 /* StaticType.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818822B2A8E3007532D8 /* StaticType.h */; };
+		427A84EC22B3FB37007532D8 /* StructureHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822C22B2A8E3007532D8 /* StructureHLSL.cpp */; };
+		427A84ED22B3FB37007532D8 /* StructureHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817822B2A8E3007532D8 /* StructureHLSL.h */; };
+		427A84EE22B3FB37007532D8 /* Symbol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814922B2A8E2007532D8 /* Symbol.cpp */; };
+		427A84EF22B3FB37007532D8 /* Symbol.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817622B2A8E2007532D8 /* Symbol.h */; };
+		427A84F022B3FB37007532D8 /* SymbolTable_autogen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814822B2A8E2007532D8 /* SymbolTable_autogen.cpp */; };
+		427A84F122B3FB37007532D8 /* SymbolTable_autogen.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816922B2A8E2007532D8 /* SymbolTable_autogen.h */; };
+		427A84F222B3FB37007532D8 /* SymbolTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821B22B2A8E3007532D8 /* SymbolTable.cpp */; };
+		427A84F322B3FB37007532D8 /* SymbolTable.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A81A022B2A8E3007532D8 /* SymbolTable.h */; };
+		427A84F422B3FB37007532D8 /* SymbolUniqueId.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819F22B2A8E3007532D8 /* SymbolUniqueId.cpp */; };
+		427A84F522B3FB37007532D8 /* SymbolUniqueId.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A815222B2A8E2007532D8 /* SymbolUniqueId.h */; };
+		427A84F622B3FB37007532D8 /* TextureFunctionHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822B22B2A8E3007532D8 /* TextureFunctionHLSL.cpp */; };
+		427A84F722B3FB37007532D8 /* TextureFunctionHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A819D22B2A8E3007532D8 /* TextureFunctionHLSL.h */; };
+		427A84F822B3FB37007532D8 /* TranslatorESSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814722B2A8E2007532D8 /* TranslatorESSL.cpp */; };
+		427A84F922B3FB37007532D8 /* TranslatorESSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823D22B2A8E3007532D8 /* TranslatorESSL.h */; };
+		427A84FA22B3FB37007532D8 /* TranslatorGLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A815022B2A8E2007532D8 /* TranslatorGLSL.cpp */; };
+		427A84FB22B3FB37007532D8 /* TranslatorGLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823B22B2A8E3007532D8 /* TranslatorGLSL.h */; };
+		427A84FC22B3FB37007532D8 /* TranslatorHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A822822B2A8E3007532D8 /* TranslatorHLSL.cpp */; };
+		427A84FD22B3FB37007532D8 /* TranslatorHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818122B2A8E3007532D8 /* TranslatorHLSL.h */; };
+		427A84FE22B3FB37007532D8 /* TranslatorVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A823322B2A8E3007532D8 /* TranslatorVulkan.cpp */; };
+		427A84FF22B3FB37007532D8 /* TranslatorVulkan.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823F22B2A8E3007532D8 /* TranslatorVulkan.h */; };
+		427A850022B3FB37007532D8 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814C22B2A8E2007532D8 /* Types.cpp */; };
+		427A850122B3FB37007532D8 /* Types.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817F22B2A8E3007532D8 /* Types.h */; };
+		427A850222B3FB37007532D8 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A814D22B2A8E2007532D8 /* util.cpp */; };
+		427A850322B3FB37007532D8 /* util.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A822022B2A8E3007532D8 /* util.h */; };
+		427A850422B3FB37007532D8 /* UtilsHLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824622B2A8E3007532D8 /* UtilsHLSL.cpp */; };
+		427A850522B3FB37007532D8 /* UtilsHLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A821822B2A8E3007532D8 /* UtilsHLSL.h */; };
+		427A850622B3FB37007532D8 /* ValidateAST.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A816B22B2A8E2007532D8 /* ValidateAST.cpp */; };
+		427A850722B3FB37007532D8 /* ValidateAST.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A817522B2A8E2007532D8 /* ValidateAST.h */; };
+		427A850822B3FB37007532D8 /* ValidateGlobalInitializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A823522B2A8E3007532D8 /* ValidateGlobalInitializer.cpp */; };
+		427A850922B3FB37007532D8 /* ValidateGlobalInitializer.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A820F22B2A8E3007532D8 /* ValidateGlobalInitializer.h */; };
+		427A850A22B3FB37007532D8 /* ValidateLimitations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819322B2A8E3007532D8 /* ValidateLimitations.cpp */; };
+		427A850B22B3FB37007532D8 /* ValidateLimitations.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816A22B2A8E2007532D8 /* ValidateLimitations.h */; };
+		427A850C22B3FB37007532D8 /* ValidateMaxParameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A821422B2A8E3007532D8 /* ValidateMaxParameters.cpp */; };
+		427A850D22B3FB37007532D8 /* ValidateMaxParameters.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824022B2A8E3007532D8 /* ValidateMaxParameters.h */; };
+		427A850E22B3FB37007532D8 /* ValidateOutputs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A817922B2A8E3007532D8 /* ValidateOutputs.cpp */; };
+		427A850F22B3FB37007532D8 /* ValidateOutputs.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824222B2A8E3007532D8 /* ValidateOutputs.h */; };
+		427A851022B3FB37007532D8 /* ValidateSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A819222B2A8E3007532D8 /* ValidateSwitch.cpp */; };
+		427A851122B3FB37007532D8 /* ValidateSwitch.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816722B2A8E2007532D8 /* ValidateSwitch.h */; };
+		427A851222B3FB37007532D8 /* ValidateVaryingLocations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A818E22B2A8E3007532D8 /* ValidateVaryingLocations.cpp */; };
+		427A851322B3FB37007532D8 /* ValidateVaryingLocations.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A816822B2A8E2007532D8 /* ValidateVaryingLocations.h */; };
+		427A851422B3FB37007532D8 /* VariablePacker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A81AA22B2A8E3007532D8 /* VariablePacker.cpp */; };
+		427A851522B3FB37007532D8 /* VariablePacker.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A818C22B2A8E3007532D8 /* VariablePacker.h */; };
+		427A851622B3FB37007532D8 /* VersionGLSL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A823C22B2A8E3007532D8 /* VersionGLSL.cpp */; };
+		427A851722B3FB37007532D8 /* VersionGLSL.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A823A22B2A8E3007532D8 /* VersionGLSL.h */; };
+		427A851822B3FB37007532D8 /* DiagnosticsBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824E22B2A8E3007532D8 /* DiagnosticsBase.cpp */; };
+		427A851922B3FB37007532D8 /* DiagnosticsBase.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825B22B2A8E3007532D8 /* DiagnosticsBase.h */; };
+		427A851A22B3FB37007532D8 /* DirectiveHandlerBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A825A22B2A8E3007532D8 /* DirectiveHandlerBase.cpp */; };
+		427A851B22B3FB37007532D8 /* DirectiveHandlerBase.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825122B2A8E3007532D8 /* DirectiveHandlerBase.h */; };
+		427A851C22B3FB37007532D8 /* DirectiveParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A825522B2A8E3007532D8 /* DirectiveParser.cpp */; };
+		427A851D22B3FB37007532D8 /* DirectiveParser.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825222B2A8E3007532D8 /* DirectiveParser.h */; };
+		427A851E22B3FB37007532D8 /* ExpressionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A826222B2A8E3007532D8 /* ExpressionParser.cpp */; };
+		427A851F22B3FB37007532D8 /* ExpressionParser.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824A22B2A8E3007532D8 /* ExpressionParser.h */; };
+		427A852022B3FB37007532D8 /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824C22B2A8E3007532D8 /* Input.cpp */; };
+		427A852122B3FB37007532D8 /* Input.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A824B22B2A8E3007532D8 /* Input.h */; };
+		427A852222B3FB37007532D8 /* Lexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A825922B2A8E3007532D8 /* Lexer.cpp */; };
+		427A852322B3FB37007532D8 /* Lexer.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825E22B2A8E3007532D8 /* Lexer.h */; };
+		427A852422B3FB37007532D8 /* Macro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824F22B2A8E3007532D8 /* Macro.cpp */; };
+		427A852522B3FB37007532D8 /* Macro.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825422B2A8E3007532D8 /* Macro.h */; };
+		427A852622B3FB37007532D8 /* MacroExpander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A825322B2A8E3007532D8 /* MacroExpander.cpp */; };
+		427A852722B3FB37007532D8 /* MacroExpander.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825022B2A8E3007532D8 /* MacroExpander.h */; };
+		427A852822B3FB37007532D8 /* numeric_lex.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825722B2A8E3007532D8 /* numeric_lex.h */; };
+		427A852922B3FB37007532D8 /* Preprocessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A824D22B2A8E3007532D8 /* Preprocessor.cpp */; };
+		427A852A22B3FB37007532D8 /* Preprocessor.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A826422B2A8E3007532D8 /* Preprocessor.h */; };
+		427A852B22B3FB37007532D8 /* SourceLocation.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825F22B2A8E3007532D8 /* SourceLocation.h */; };
+		427A852C22B3FB37007532D8 /* Token.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A826322B2A8E3007532D8 /* Token.cpp */; };
+		427A852D22B3FB37007532D8 /* Token.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A826022B2A8E3007532D8 /* Token.h */; };
+		427A852E22B3FB37007532D8 /* Tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A825C22B2A8E3007532D8 /* Tokenizer.cpp */; };
+		427A852F22B3FB37007532D8 /* Tokenizer.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825822B2A8E3007532D8 /* Tokenizer.h */; };
+		427A853022B3FB37007532D8 /* ArrayBoundsClamper.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A813E22B2A8E2007532D8 /* ArrayBoundsClamper.h */; };
+		427A853122B3FB37007532D8 /* ArrayBoundsClamper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A813F22B2A8E2007532D8 /* ArrayBoundsClamper.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		427A80E622B2A8C3007532D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 427A809B22B2A5C7007532D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 427A80E122B2A866007532D8;
+			remoteInfo = common;
+		};
+		427A841622B3F9A7007532D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 427A809B22B2A5C7007532D8 /* Project object */;
 			proxyType = 1;
@@ -723,6 +1010,9 @@
 		427A82B422B2A9F5007532D8 /* angleutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = angleutils.cpp; sourceTree = "<group>"; };
 		427A82B722B2AAAA007532D8 /* system_utils_mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = system_utils_mac.cpp; sourceTree = "<group>"; };
 		427A840B22B2B6F5007532D8 /* system_utils_posix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = system_utils_posix.cpp; sourceTree = "<group>"; };
+		427A841222B3F996007532D8 /* libShParser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libShParser.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		427A841822B3F9ED007532D8 /* ShParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShParser.cpp; sourceTree = "<group>"; };
+		427A841922B3F9ED007532D8 /* ShParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShParser.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -738,6 +1028,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		427A841022B3F996007532D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427A841C22B3FB06007532D8 /* libcommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,6 +1056,7 @@
 			children = (
 				427A80A322B2A5C7007532D8 /* ShaderParser */,
 				427A80E222B2A866007532D8 /* libcommon.a */,
+				427A841222B3F996007532D8 /* libShParser.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -768,6 +1067,8 @@
 				427A80AD22B2A713007532D8 /* include */,
 				427A80E822B2A8E2007532D8 /* src */,
 				427A80A622B2A5C7007532D8 /* main.cpp */,
+				427A841822B3F9ED007532D8 /* ShParser.cpp */,
+				427A841922B3F9ED007532D8 /* ShParser.h */,
 			);
 			path = ShaderParser;
 			sourceTree = "<group>";
@@ -1321,6 +1622,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		427A840E22B3F996007532D8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427A841B22B3F9EE007532D8 /* ShParser.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -1359,6 +1668,24 @@
 			productReference = 427A80E222B2A866007532D8 /* libcommon.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		427A841122B3F996007532D8 /* ShParser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 427A841522B3F997007532D8 /* Build configuration list for PBXNativeTarget "ShParser" */;
+			buildPhases = (
+				427A840E22B3F996007532D8 /* Headers */,
+				427A840F22B3F996007532D8 /* Sources */,
+				427A841022B3F996007532D8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				427A841722B3F9A7007532D8 /* PBXTargetDependency */,
+			);
+			name = ShParser;
+			productName = ShParser;
+			productReference = 427A841222B3F996007532D8 /* libShParser.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1371,6 +1698,9 @@
 						CreatedOnToolsVersion = 10.2.1;
 					};
 					427A80E122B2A866007532D8 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+					427A841122B3F996007532D8 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
 				};
@@ -1389,6 +1719,7 @@
 			targets = (
 				427A80A222B2A5C7007532D8 /* ShaderParser */,
 				427A80E122B2A866007532D8 /* common */,
+				427A841122B3F996007532D8 /* ShParser */,
 			);
 		};
 /* End PBXProject section */
@@ -1745,6 +2076,291 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		427A840F22B3F996007532D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427A841D22B3FB36007532D8 /* DeferGlobalInitializers.cpp in Sources */,
+				427A841E22B3FB36007532D8 /* RewriteElseBlocks.cpp in Sources */,
+				427A841F22B3FB36007532D8 /* RemoveDynamicIndexing.h in Sources */,
+				427A842022B3FB36007532D8 /* ArrayReturnValueToOutParameter.h in Sources */,
+				427A842122B3FB36007532D8 /* EmulateGLDrawID.cpp in Sources */,
+				427A842222B3FB36007532D8 /* SplitSequenceOperator.cpp in Sources */,
+				427A842322B3FB36007532D8 /* ScalarizeVecAndMatConstructorArgs.cpp in Sources */,
+				427A842422B3FB36007532D8 /* AddDefaultReturnStatements.cpp in Sources */,
+				427A842522B3FB36007532D8 /* RewriteUnaryMinusOperatorFloat.cpp in Sources */,
+				427A842622B3FB36007532D8 /* RemovePow.cpp in Sources */,
+				427A842722B3FB36007532D8 /* RewriteUnaryMinusOperatorInt.h in Sources */,
+				427A842822B3FB36007532D8 /* DeclareAndInitBuiltinsForInstancedMultiview.cpp in Sources */,
+				427A842922B3FB36007532D8 /* UseInterfaceBlockFields.h in Sources */,
+				427A842A22B3FB36007532D8 /* EmulateGLFragColorBroadcast.h in Sources */,
+				427A842B22B3FB36007532D8 /* UnfoldShortCircuitAST.h in Sources */,
+				427A842C22B3FB36007532D8 /* SimplifyLoopConditions.h in Sources */,
+				427A842D22B3FB36007532D8 /* PruneEmptyCases.cpp in Sources */,
+				427A842E22B3FB36007532D8 /* ClampFragDepth.cpp in Sources */,
+				427A842F22B3FB36007532D8 /* InitializeVariables.h in Sources */,
+				427A843022B3FB36007532D8 /* RemoveDynamicIndexing.cpp in Sources */,
+				427A843122B3FB36007532D8 /* ArrayReturnValueToOutParameter.cpp in Sources */,
+				427A843222B3FB36007532D8 /* UseInterfaceBlockFields.cpp in Sources */,
+				427A843322B3FB36007532D8 /* RewriteTexelFetchOffset.cpp in Sources */,
+				427A843422B3FB36007532D8 /* RewriteDoWhile.h in Sources */,
+				427A843522B3FB36007532D8 /* RemoveInvariantDeclaration.cpp in Sources */,
+				427A843622B3FB36007532D8 /* WrapSwitchStatementsInBlocks.h in Sources */,
+				427A843722B3FB36007532D8 /* DeferGlobalInitializers.h in Sources */,
+				427A843822B3FB36007532D8 /* VectorizeVectorScalarArithmetic.h in Sources */,
+				427A843922B3FB36007532D8 /* SplitSequenceOperator.h in Sources */,
+				427A843A22B3FB36007532D8 /* RegenerateStructNames.h in Sources */,
+				427A843B22B3FB36007532D8 /* InitializeVariables.cpp in Sources */,
+				427A843C22B3FB36007532D8 /* WrapSwitchStatementsInBlocks.cpp in Sources */,
+				427A843D22B3FB36007532D8 /* SeparateArrayInitialization.h in Sources */,
+				427A843E22B3FB36007532D8 /* PruneNoOps.h in Sources */,
+				427A843F22B3FB36007532D8 /* RemoveUnreferencedVariables.cpp in Sources */,
+				427A844022B3FB36007532D8 /* UnfoldShortCircuitToIf.cpp in Sources */,
+				427A844122B3FB36007532D8 /* RewriteStructSamplers.h in Sources */,
+				427A844222B3FB36007532D8 /* RewriteExpressionsWithShaderStorageBlock.cpp in Sources */,
+				427A844322B3FB36007532D8 /* RewriteTexelFetchOffset.h in Sources */,
+				427A844422B3FB36007532D8 /* ScalarizeVecAndMatConstructorArgs.h in Sources */,
+				427A844522B3FB36007532D8 /* RewriteDoWhile.cpp in Sources */,
+				427A844622B3FB36007532D8 /* ExpandIntegerPowExpressions.h in Sources */,
+				427A844722B3FB36007532D8 /* SeparateDeclarations.h in Sources */,
+				427A844822B3FB36007532D8 /* ClampFragDepth.h in Sources */,
+				427A844922B3FB36007532D8 /* ClampPointSize.h in Sources */,
+				427A844A22B3FB36007532D8 /* ClampPointSize.cpp in Sources */,
+				427A844B22B3FB36007532D8 /* SeparateArrayInitialization.cpp in Sources */,
+				427A844C22B3FB36007532D8 /* RewriteElseBlocks.h in Sources */,
+				427A844D22B3FB36007532D8 /* SeparateExpressionsReturningArrays.cpp in Sources */,
+				427A844E22B3FB36007532D8 /* RewriteUnaryMinusOperatorInt.cpp in Sources */,
+				427A844F22B3FB36007532D8 /* VectorizeVectorScalarArithmetic.cpp in Sources */,
+				427A845022B3FB36007532D8 /* RemoveArrayLengthMethod.cpp in Sources */,
+				427A845122B3FB36007532D8 /* EmulateGLDrawID.h in Sources */,
+				427A845222B3FB36007532D8 /* RecordConstantPrecision.cpp in Sources */,
+				427A845322B3FB36007532D8 /* SimplifyLoopConditions.cpp in Sources */,
+				427A845422B3FB36007532D8 /* RemoveArrayLengthMethod.h in Sources */,
+				427A845522B3FB36007532D8 /* ExpandIntegerPowExpressions.cpp in Sources */,
+				427A845622B3FB36007532D8 /* NameEmbeddedUniformStructs.h in Sources */,
+				427A845722B3FB36007532D8 /* RemoveSwitchFallThrough.cpp in Sources */,
+				427A845822B3FB36007532D8 /* RecordConstantPrecision.h in Sources */,
+				427A845922B3FB36007532D8 /* NameEmbeddedUniformStructs.cpp in Sources */,
+				427A845A22B3FB36007532D8 /* RegenerateStructNames.cpp in Sources */,
+				427A845B22B3FB36007532D8 /* AddAndTrueToLoopCondition.h in Sources */,
+				427A845C22B3FB36007532D8 /* RewriteAtomicFunctionExpressions.h in Sources */,
+				427A845D22B3FB36007532D8 /* PruneNoOps.cpp in Sources */,
+				427A845E22B3FB36007532D8 /* RemovePow.h in Sources */,
+				427A845F22B3FB36007532D8 /* SeparateArrayConstructorStatements.h in Sources */,
+				427A846022B3FB36007532D8 /* BreakVariableAliasingInInnerLoops.cpp in Sources */,
+				427A846122B3FB36007532D8 /* RemoveInvariantDeclaration.h in Sources */,
+				427A846222B3FB36007532D8 /* UnfoldShortCircuitToIf.h in Sources */,
+				427A846322B3FB36007532D8 /* RewriteStructSamplers.cpp in Sources */,
+				427A846422B3FB36007532D8 /* AddDefaultReturnStatements.h in Sources */,
+				427A846522B3FB36007532D8 /* EmulateGLFragColorBroadcast.cpp in Sources */,
+				427A846622B3FB36007532D8 /* RemoveSwitchFallThrough.h in Sources */,
+				427A846722B3FB36007532D8 /* SeparateDeclarations.cpp in Sources */,
+				427A846822B3FB36007532D8 /* SeparateArrayConstructorStatements.cpp in Sources */,
+				427A846922B3FB36007532D8 /* DeclareAndInitBuiltinsForInstancedMultiview.h in Sources */,
+				427A846A22B3FB36007532D8 /* EmulatePrecision.cpp in Sources */,
+				427A846B22B3FB36007532D8 /* BreakVariableAliasingInInnerLoops.h in Sources */,
+				427A846C22B3FB36007532D8 /* PruneEmptyCases.h in Sources */,
+				427A846D22B3FB36007532D8 /* RewriteRepeatedAssignToSwizzled.cpp in Sources */,
+				427A846E22B3FB36007532D8 /* RewriteUnaryMinusOperatorFloat.h in Sources */,
+				427A846F22B3FB36007532D8 /* RewriteExpressionsWithShaderStorageBlock.h in Sources */,
+				427A847022B3FB36007532D8 /* FoldExpressions.cpp in Sources */,
+				427A847122B3FB36007532D8 /* RemoveUnreferencedVariables.h in Sources */,
+				427A847222B3FB36007532D8 /* FoldExpressions.h in Sources */,
+				427A847322B3FB36007532D8 /* AddAndTrueToLoopCondition.cpp in Sources */,
+				427A847422B3FB36007532D8 /* SeparateExpressionsReturningArrays.h in Sources */,
+				427A847522B3FB36007532D8 /* UnfoldShortCircuitAST.cpp in Sources */,
+				427A847622B3FB36007532D8 /* RewriteRepeatedAssignToSwizzled.h in Sources */,
+				427A847722B3FB36007532D8 /* RewriteAtomicFunctionExpressions.cpp in Sources */,
+				427A847822B3FB36007532D8 /* EmulatePrecision.h in Sources */,
+				427A847922B3FB36007532D8 /* IntermNodePatternMatcher.cpp in Sources */,
+				427A847A22B3FB36007532D8 /* IntermNode_util.cpp in Sources */,
+				427A847B22B3FB36007532D8 /* ReplaceShadowingVariables.cpp in Sources */,
+				427A847C22B3FB36007532D8 /* RunAtTheEndOfShader.h in Sources */,
+				427A847D22B3FB36007532D8 /* IntermNode_util.h in Sources */,
+				427A847E22B3FB36007532D8 /* Visit.h in Sources */,
+				427A847F22B3FB36007532D8 /* ReplaceVariable.cpp in Sources */,
+				427A848022B3FB36007532D8 /* FindSymbolNode.h in Sources */,
+				427A848122B3FB36007532D8 /* IntermTraverse.cpp in Sources */,
+				427A848222B3FB36007532D8 /* FindSymbolNode.cpp in Sources */,
+				427A848322B3FB36007532D8 /* NodeSearch.h in Sources */,
+				427A848422B3FB36007532D8 /* BuiltIn_autogen.h in Sources */,
+				427A848522B3FB36007532D8 /* FindMain.h in Sources */,
+				427A848622B3FB36007532D8 /* FindMain.cpp in Sources */,
+				427A848722B3FB36007532D8 /* IntermNodePatternMatcher.h in Sources */,
+				427A848822B3FB36007532D8 /* RunAtTheEndOfShader.cpp in Sources */,
+				427A848922B3FB36007532D8 /* ReplaceVariable.h in Sources */,
+				427A848A22B3FB36007532D8 /* ReplaceShadowingVariables.h in Sources */,
+				427A848B22B3FB36007532D8 /* IntermTraverse.h in Sources */,
+				427A848C22B3FB36007532D8 /* ASTMetadataHLSL.cpp in Sources */,
+				427A848D22B3FB36007532D8 /* ASTMetadataHLSL.h in Sources */,
+				427A848E22B3FB36007532D8 /* AtomicCounterFunctionHLSL.cpp in Sources */,
+				427A848F22B3FB36007532D8 /* AtomicCounterFunctionHLSL.h in Sources */,
+				427A849022B3FB36007532D8 /* BaseTypes.h in Sources */,
+				427A849122B3FB36007532D8 /* blocklayout.cpp in Sources */,
+				427A849222B3FB36007532D8 /* blocklayout.h in Sources */,
+				427A849322B3FB36007532D8 /* blocklayoutHLSL.cpp in Sources */,
+				427A849422B3FB36007532D8 /* blocklayoutHLSL.h in Sources */,
+				427A849522B3FB36007532D8 /* BuiltInFunctionEmulator.cpp in Sources */,
+				427A849622B3FB36007532D8 /* BuiltInFunctionEmulator.h in Sources */,
+				427A849722B3FB36007532D8 /* BuiltInFunctionEmulatorGLSL.cpp in Sources */,
+				427A849822B3FB36007532D8 /* BuiltInFunctionEmulatorGLSL.h in Sources */,
+				427A849922B3FB36007532D8 /* BuiltInFunctionEmulatorHLSL.cpp in Sources */,
+				427A849A22B3FB36007532D8 /* BuiltInFunctionEmulatorHLSL.h in Sources */,
+				427A849B22B3FB36007532D8 /* CallDAG.cpp in Sources */,
+				427A849C22B3FB36007532D8 /* CallDAG.h in Sources */,
+				427A849D22B3FB36007532D8 /* CodeGen.cpp in Sources */,
+				427A849E22B3FB36007532D8 /* CollectVariables.cpp in Sources */,
+				427A849F22B3FB36007532D8 /* CollectVariables.h in Sources */,
+				427A84A022B3FB36007532D8 /* Common.h in Sources */,
+				427A84A122B3FB36007532D8 /* Compiler.cpp in Sources */,
+				427A84A222B3FB36007532D8 /* Compiler.h in Sources */,
+				427A84A322B3FB36007532D8 /* ConstantUnion.cpp in Sources */,
+				427A84A422B3FB36007532D8 /* ConstantUnion.h in Sources */,
+				427A84A522B3FB36007532D8 /* Declarator.cpp in Sources */,
+				427A84A622B3FB36007532D8 /* Declarator.h in Sources */,
+				427A84A722B3FB36007532D8 /* Diagnostics.cpp in Sources */,
+				427A84A822B3FB36007532D8 /* Diagnostics.h in Sources */,
+				427A84A922B3FB36007532D8 /* DirectiveHandler.cpp in Sources */,
+				427A84AA22B3FB36007532D8 /* DirectiveHandler.h in Sources */,
+				427A84AB22B3FB36007532D8 /* emulated_builtin_functions_hlsl_autogen.cpp in Sources */,
+				427A84AC22B3FB36007532D8 /* ExtensionBehavior.cpp in Sources */,
+				427A84AD22B3FB36007532D8 /* ExtensionBehavior.h in Sources */,
+				427A84AE22B3FB36007532D8 /* ExtensionGLSL.cpp in Sources */,
+				427A84AF22B3FB36007532D8 /* ExtensionGLSL.h in Sources */,
+				427A84B022B3FB36007532D8 /* FlagStd140Structs.cpp in Sources */,
+				427A84B122B3FB36007532D8 /* FlagStd140Structs.h in Sources */,
+				427A84B222B3FB36007532D8 /* FunctionLookup.cpp in Sources */,
+				427A84B322B3FB36007532D8 /* FunctionLookup.h in Sources */,
+				427A84B422B3FB36007532D8 /* glslang_lex.cpp in Sources */,
+				427A84B522B3FB36007532D8 /* glslang_tab.cpp in Sources */,
+				427A84B622B3FB36007532D8 /* glslang_tab.h in Sources */,
+				427A84B722B3FB36007532D8 /* glslang.h in Sources */,
+				427A84B822B3FB36007532D8 /* HashNames.cpp in Sources */,
+				427A84B922B3FB36007532D8 /* HashNames.h in Sources */,
+				427A84BA22B3FB36007532D8 /* ImageFunctionHLSL.cpp in Sources */,
+				427A84BB22B3FB36007532D8 /* ImageFunctionHLSL.h in Sources */,
+				427A84BC22B3FB36007532D8 /* ImmutableString.cpp in Sources */,
+				427A84BD22B3FB36007532D8 /* ImmutableString.h in Sources */,
+				427A84BE22B3FB36007532D8 /* ImmutableStringBuilder.cpp in Sources */,
+				427A84BF22B3FB36007532D8 /* ImmutableStringBuilder.h in Sources */,
+				427A84C022B3FB36007532D8 /* InfoSink.cpp in Sources */,
+				427A84C122B3FB36007532D8 /* InfoSink.h in Sources */,
+				427A84C222B3FB36007532D8 /* Initialize.cpp in Sources */,
+				427A84C322B3FB36007532D8 /* Initialize.h in Sources */,
+				427A84C422B3FB36007532D8 /* InitializeDll.cpp in Sources */,
+				427A84C522B3FB36007532D8 /* InitializeDll.h in Sources */,
+				427A84C622B3FB36007532D8 /* InitializeGlobals.h in Sources */,
+				427A84C722B3FB36007532D8 /* IntermNode.cpp in Sources */,
+				427A84C822B3FB36007532D8 /* IntermNode.h in Sources */,
+				427A84C922B3FB36007532D8 /* IsASTDepthBelowLimit.cpp in Sources */,
+				427A84CA22B3FB36007532D8 /* IsASTDepthBelowLimit.h in Sources */,
+				427A84CB22B3FB36007532D8 /* length_limits.h in Sources */,
+				427A84CC22B3FB36007532D8 /* Operator.cpp in Sources */,
+				427A84CD22B3FB36007532D8 /* Operator.h in Sources */,
+				427A84CE22B3FB36007532D8 /* OutputESSL.cpp in Sources */,
+				427A84CF22B3FB36007532D8 /* OutputESSL.h in Sources */,
+				427A84D022B3FB36007532D8 /* OutputGLSL.cpp in Sources */,
+				427A84D122B3FB36007532D8 /* OutputGLSL.h in Sources */,
+				427A84D222B3FB36007532D8 /* OutputGLSLBase.cpp in Sources */,
+				427A84D322B3FB36007532D8 /* OutputGLSLBase.h in Sources */,
+				427A84D422B3FB36007532D8 /* OutputHLSL.cpp in Sources */,
+				427A84D522B3FB36007532D8 /* OutputHLSL.h in Sources */,
+				427A84D622B3FB36007532D8 /* OutputTree.cpp in Sources */,
+				427A84D722B3FB36007532D8 /* OutputTree.h in Sources */,
+				427A84D822B3FB36007532D8 /* OutputVulkanGLSL.cpp in Sources */,
+				427A84D922B3FB36007532D8 /* OutputVulkanGLSL.h in Sources */,
+				427A84DA22B3FB36007532D8 /* ParseContext_autogen.h in Sources */,
+				427A84DB22B3FB36007532D8 /* ParseContext.cpp in Sources */,
+				427A84DC22B3FB36007532D8 /* ParseContext.h in Sources */,
+				427A84DD22B3FB36007532D8 /* PoolAlloc.cpp in Sources */,
+				427A84DE22B3FB36007532D8 /* PoolAlloc.h in Sources */,
+				427A84DF22B3FB36007532D8 /* Pragma.h in Sources */,
+				427A84E022B3FB36007532D8 /* QualifierTypes.cpp in Sources */,
+				427A84E122B3FB36007532D8 /* QualifierTypes.h in Sources */,
+				427A84E222B3FB36007532D8 /* ResourcesHLSL.cpp in Sources */,
+				427A84E322B3FB36007532D8 /* ResourcesHLSL.h in Sources */,
+				427A84E422B3FB36007532D8 /* Severity.h in Sources */,
+				427A84E522B3FB36007532D8 /* ShaderLang.cpp in Sources */,
+				427A84E622B3FB36007532D8 /* ShaderStorageBlockFunctionHLSL.cpp in Sources */,
+				427A84E722B3FB36007532D8 /* ShaderStorageBlockFunctionHLSL.h in Sources */,
+				427A84E822B3FB36007532D8 /* ShaderStorageBlockOutputHLSL.cpp in Sources */,
+				427A84E922B3FB36007532D8 /* ShaderStorageBlockOutputHLSL.h in Sources */,
+				427A84EA22B3FB36007532D8 /* ShaderVars.cpp in Sources */,
+				427A84EB22B3FB36007532D8 /* StaticType.h in Sources */,
+				427A84EC22B3FB37007532D8 /* StructureHLSL.cpp in Sources */,
+				427A84ED22B3FB37007532D8 /* StructureHLSL.h in Sources */,
+				427A84EE22B3FB37007532D8 /* Symbol.cpp in Sources */,
+				427A84EF22B3FB37007532D8 /* Symbol.h in Sources */,
+				427A84F022B3FB37007532D8 /* SymbolTable_autogen.cpp in Sources */,
+				427A84F122B3FB37007532D8 /* SymbolTable_autogen.h in Sources */,
+				427A84F222B3FB37007532D8 /* SymbolTable.cpp in Sources */,
+				427A84F322B3FB37007532D8 /* SymbolTable.h in Sources */,
+				427A84F422B3FB37007532D8 /* SymbolUniqueId.cpp in Sources */,
+				427A84F522B3FB37007532D8 /* SymbolUniqueId.h in Sources */,
+				427A84F622B3FB37007532D8 /* TextureFunctionHLSL.cpp in Sources */,
+				427A84F722B3FB37007532D8 /* TextureFunctionHLSL.h in Sources */,
+				427A84F822B3FB37007532D8 /* TranslatorESSL.cpp in Sources */,
+				427A84F922B3FB37007532D8 /* TranslatorESSL.h in Sources */,
+				427A84FA22B3FB37007532D8 /* TranslatorGLSL.cpp in Sources */,
+				427A84FB22B3FB37007532D8 /* TranslatorGLSL.h in Sources */,
+				427A84FC22B3FB37007532D8 /* TranslatorHLSL.cpp in Sources */,
+				427A84FD22B3FB37007532D8 /* TranslatorHLSL.h in Sources */,
+				427A84FE22B3FB37007532D8 /* TranslatorVulkan.cpp in Sources */,
+				427A84FF22B3FB37007532D8 /* TranslatorVulkan.h in Sources */,
+				427A850022B3FB37007532D8 /* Types.cpp in Sources */,
+				427A850122B3FB37007532D8 /* Types.h in Sources */,
+				427A850222B3FB37007532D8 /* util.cpp in Sources */,
+				427A850322B3FB37007532D8 /* util.h in Sources */,
+				427A850422B3FB37007532D8 /* UtilsHLSL.cpp in Sources */,
+				427A850522B3FB37007532D8 /* UtilsHLSL.h in Sources */,
+				427A850622B3FB37007532D8 /* ValidateAST.cpp in Sources */,
+				427A850722B3FB37007532D8 /* ValidateAST.h in Sources */,
+				427A850822B3FB37007532D8 /* ValidateGlobalInitializer.cpp in Sources */,
+				427A850922B3FB37007532D8 /* ValidateGlobalInitializer.h in Sources */,
+				427A850A22B3FB37007532D8 /* ValidateLimitations.cpp in Sources */,
+				427A850B22B3FB37007532D8 /* ValidateLimitations.h in Sources */,
+				427A850C22B3FB37007532D8 /* ValidateMaxParameters.cpp in Sources */,
+				427A850D22B3FB37007532D8 /* ValidateMaxParameters.h in Sources */,
+				427A850E22B3FB37007532D8 /* ValidateOutputs.cpp in Sources */,
+				427A850F22B3FB37007532D8 /* ValidateOutputs.h in Sources */,
+				427A851022B3FB37007532D8 /* ValidateSwitch.cpp in Sources */,
+				427A851122B3FB37007532D8 /* ValidateSwitch.h in Sources */,
+				427A851222B3FB37007532D8 /* ValidateVaryingLocations.cpp in Sources */,
+				427A851322B3FB37007532D8 /* ValidateVaryingLocations.h in Sources */,
+				427A851422B3FB37007532D8 /* VariablePacker.cpp in Sources */,
+				427A851522B3FB37007532D8 /* VariablePacker.h in Sources */,
+				427A851622B3FB37007532D8 /* VersionGLSL.cpp in Sources */,
+				427A851722B3FB37007532D8 /* VersionGLSL.h in Sources */,
+				427A851822B3FB37007532D8 /* DiagnosticsBase.cpp in Sources */,
+				427A851922B3FB37007532D8 /* DiagnosticsBase.h in Sources */,
+				427A851A22B3FB37007532D8 /* DirectiveHandlerBase.cpp in Sources */,
+				427A851B22B3FB37007532D8 /* DirectiveHandlerBase.h in Sources */,
+				427A851C22B3FB37007532D8 /* DirectiveParser.cpp in Sources */,
+				427A851D22B3FB37007532D8 /* DirectiveParser.h in Sources */,
+				427A851E22B3FB37007532D8 /* ExpressionParser.cpp in Sources */,
+				427A851F22B3FB37007532D8 /* ExpressionParser.h in Sources */,
+				427A852022B3FB37007532D8 /* Input.cpp in Sources */,
+				427A852122B3FB37007532D8 /* Input.h in Sources */,
+				427A852222B3FB37007532D8 /* Lexer.cpp in Sources */,
+				427A852322B3FB37007532D8 /* Lexer.h in Sources */,
+				427A852422B3FB37007532D8 /* Macro.cpp in Sources */,
+				427A852522B3FB37007532D8 /* Macro.h in Sources */,
+				427A852622B3FB37007532D8 /* MacroExpander.cpp in Sources */,
+				427A852722B3FB37007532D8 /* MacroExpander.h in Sources */,
+				427A852822B3FB37007532D8 /* numeric_lex.h in Sources */,
+				427A852922B3FB37007532D8 /* Preprocessor.cpp in Sources */,
+				427A852A22B3FB37007532D8 /* Preprocessor.h in Sources */,
+				427A852B22B3FB37007532D8 /* SourceLocation.h in Sources */,
+				427A852C22B3FB37007532D8 /* Token.cpp in Sources */,
+				427A852D22B3FB37007532D8 /* Token.h in Sources */,
+				427A852E22B3FB37007532D8 /* Tokenizer.cpp in Sources */,
+				427A852F22B3FB37007532D8 /* Tokenizer.h in Sources */,
+				427A853022B3FB37007532D8 /* ArrayBoundsClamper.h in Sources */,
+				427A853122B3FB37007532D8 /* ArrayBoundsClamper.cpp in Sources */,
+				427A841A22B3F9EE007532D8 /* ShParser.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1752,6 +2368,11 @@
 			isa = PBXTargetDependency;
 			target = 427A80E122B2A866007532D8 /* common */;
 			targetProxy = 427A80E622B2A8C3007532D8 /* PBXContainerItemProxy */;
+		};
+		427A841722B3F9A7007532D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 427A80E122B2A866007532D8 /* common */;
+			targetProxy = 427A841622B3F9A7007532D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1943,6 +2564,50 @@
 			};
 			name = Release;
 		};
+		427A841322B3F997007532D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ANGLE_ENABLE_ESSL,
+					ANGLE_ENABLE_GLSL,
+					ANGLE_ENABLE_HLSL,
+					ANGLE_ENABLE_VULKAN,
+					_LIB,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/$(PROJECT_NAME)/src",
+					"$(SRCROOT)/$(PROJECT_NAME)/src/common/third_party/base",
+					"$(SRCROOT)/$(PROJECT_NAME)/include",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		427A841422B3F997007532D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ANGLE_ENABLE_ESSL,
+					ANGLE_ENABLE_GLSL,
+					ANGLE_ENABLE_HLSL,
+					ANGLE_ENABLE_VULKAN,
+					_LIB,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/$(PROJECT_NAME)/src",
+					"$(SRCROOT)/$(PROJECT_NAME)/src/common/third_party/base",
+					"$(SRCROOT)/$(PROJECT_NAME)/include",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1969,6 +2634,15 @@
 			buildConfigurations = (
 				427A80E422B2A866007532D8 /* Debug */,
 				427A80E522B2A866007532D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		427A841522B3F997007532D8 /* Build configuration list for PBXNativeTarget "ShParser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				427A841322B3F997007532D8 /* Debug */,
+				427A841422B3F997007532D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
