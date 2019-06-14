@@ -33,6 +33,9 @@
 
 #include <Fire.h>
 
+//#include "GLSLANG/ShaderLang.h"
+//#include "angle_gl.h"
+#include "Header.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -197,6 +200,12 @@ int main(int, char**)
             ImGui::Text("Hello from another window!");
             if (ImGui::Button("Close Me"))
                 show_another_window = false;
+
+			if (ImGui::Button("TEST PlayProject1")) {
+				static char* params[] = { "" };
+				run(1, params);
+			}
+
             ImGui::End();
         }
         

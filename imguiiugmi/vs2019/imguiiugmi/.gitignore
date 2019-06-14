@@ -1,0 +1,7 @@
+.vs
+Debug
+*.VC.db
+*.VC.opendb
+/*/Resources
+common.lib
+PlayProject1.lib

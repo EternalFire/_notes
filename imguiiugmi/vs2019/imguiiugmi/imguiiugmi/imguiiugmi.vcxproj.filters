@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{53136537-5bb5-4fab-93bd-84da46f277dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui_impl">
+      <UniqueIdentifier>{00ae942a-acd4-400d-ae0a-91f1859b3754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="glad">
+      <UniqueIdentifier>{89c2adb0-51cb-4a5e-981f-436e0325aa0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rapidjson">
+      <UniqueIdentifier>{e13e6286-67e6-48da-9d76-2e75836abeae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rapidjson\error">
+      <UniqueIdentifier>{bb377893-538c-41c5-a7a7-22bb130153bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rapidjson\internal">
+      <UniqueIdentifier>{af9d475e-3c65-4b95-87eb-fbbc2664fd0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rapidjson\msinttypes">
+      <UniqueIdentifier>{068e8f36-dc33-43ba-9854-2f96486159e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fire">
+      <UniqueIdentifier>{98de538f-8ef6-47a2-87a5-f4ce34d8e259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle">
+      <UniqueIdentifier>{313a1c07-e388-4f62-a470-65799398b3c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\include">
+      <UniqueIdentifier>{c04cdf12-7401-4224-9fb1-4ab01e2eae38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\include\EGL">
+      <UniqueIdentifier>{1bfa5fe7-09a4-48d1-837b-6caae89b49be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\include\GLES2">
+      <UniqueIdentifier>{720e8bcf-35dd-4e31-8692-1bf6987a4483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\include\GLES3">
+      <UniqueIdentifier>{04134b40-3151-4206-b134-eef3b3e5cc6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\include\GLSLANG">
+      <UniqueIdentifier>{0ce742a9-02d3-4b23-a131-1eb3c398b5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="angle\include\KHR">
+      <UniqueIdentifier>{ed97f464-662c-4867-a49c-dafee53018e8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_opengl3.cpp">
+      <Filter>imgui_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_glfw.cpp">
+      <Filter>imgui_impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\main.cpp" />
+    <ClCompile Include="..\..\..\imguiiugmi\glad\src\glad.c">
+      <Filter>glad</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_opengl3.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_glfw.h">
+      <Filter>imgui_impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\shader.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\camera.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\encodings.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\filereadstream.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\filewritestream.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\fwd.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\istreamwrapper.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\memorybuffer.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\memorystream.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\ostreamwrapper.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\pointer.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\prettywriter.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\rapidjson.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\reader.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\schema.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\stream.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\stringbuffer.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\writer.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\allocators.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\document.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\document-wrapper.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\encodedstream.h">
+      <Filter>rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\error\error.h">
+      <Filter>rapidjson\error</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\error\en.h">
+      <Filter>rapidjson\error</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\meta.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\pow10.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\regex.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\stack.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\strfunc.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\strtod.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\swap.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\biginteger.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\diyfp.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\dtoa.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\ieee754.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\internal\itoa.h">
+      <Filter>rapidjson\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\msinttypes\inttypes.h">
+      <Filter>rapidjson\msinttypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\rapidjson\msinttypes\stdint.h">
+      <Filter>rapidjson\msinttypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\Fire.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FirePainter.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireProperty.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireState.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireStShaderPanel.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUI.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUtility.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireConfig.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireDefinition.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireJson.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\angle_gl.h">
+      <Filter>angle\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\EGL\egl.h">
+      <Filter>angle\include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\EGL\eglext.h">
+      <Filter>angle\include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\EGL\eglplatform.h">
+      <Filter>angle\include\EGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES2\gl2.h">
+      <Filter>angle\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES2\gl2ext.h">
+      <Filter>angle\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES2\gl2platform.h">
+      <Filter>angle\include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES3\gl3.h">
+      <Filter>angle\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES3\gl31.h">
+      <Filter>angle\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES3\gl32.h">
+      <Filter>angle\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLES3\gl3platform.h">
+      <Filter>angle\include\GLES3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLSLANG\ShaderLang.h">
+      <Filter>angle\include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\GLSLANG\ShaderVars.h">
+      <Filter>angle\include\GLSLANG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\angle\include\KHR\khrplatform.h">
+      <Filter>angle\include\KHR</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
