@@ -63,6 +63,8 @@ void Init()
 		parseJSON(data, st);
 	}
 
+	// todo: find uniform
+
 	st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
 	G.stShaderPanelMap[st.name] = st;
 
