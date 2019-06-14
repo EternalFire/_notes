@@ -45,10 +45,10 @@
     <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_glfw.cpp">
       <Filter>imgui_impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\imguiiugmi\main.cpp" />
     <ClCompile Include="..\..\..\imguiiugmi\glad\src\glad.c">
       <Filter>glad</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\imguiiugmi\main_vs2015.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\imguiiugmi\imgui\imgui.h">

@@ -26,7 +26,7 @@
     <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\..\..\imguiiugmi\imgui_impl\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\..\..\imguiiugmi\main.cpp" />
+    <ClCompile Include="..\..\..\imguiiugmi\main_vs2015.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\imguiiugmi\camera.h" />
