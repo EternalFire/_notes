@@ -46,6 +46,12 @@
     <Filter Include="angle\include\KHR">
       <UniqueIdentifier>{ed97f464-662c-4867-a49c-dafee53018e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third">
+      <UniqueIdentifier>{76e930a5-5bfa-434b-9f44-29201519154c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third\angle">
+      <UniqueIdentifier>{57927dc3-496b-4852-8a6f-c91ce7dcb58a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui.cpp">
@@ -277,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\imguiiugmi\angle\include\KHR\khrplatform.h">
       <Filter>angle\include\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\third\angle\ShParser.h">
+      <Filter>third\angle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

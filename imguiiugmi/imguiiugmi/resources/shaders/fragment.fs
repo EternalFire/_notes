@@ -1,8 +1,6 @@
-// #version 300 es
 #version 330 core
 precision mediump float;
 precision mediump int;
-// #version 330 core
 
 out vec4 FragColor;
 

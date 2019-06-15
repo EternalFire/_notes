@@ -99,6 +99,7 @@
     <ClInclude Include="..\..\..\imguiiugmi\rapidjson\stringbuffer.h" />
     <ClInclude Include="..\..\..\imguiiugmi\rapidjson\writer.h" />
     <ClInclude Include="..\..\..\imguiiugmi\shader.h" />
+    <ClInclude Include="..\third\angle\ShParser.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{eeb56577-5211-4a03-b12c-950111c84439}</ProjectGuid>

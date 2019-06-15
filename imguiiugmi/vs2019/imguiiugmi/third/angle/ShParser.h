@@ -22,6 +22,9 @@ namespace _Sh_ {
 	typedef std::vector<struct StUniform> UniformArray;
 	typedef std::map<std::string, UniformArray > UniformTable;
 
+	const UniformTable& getVSUniform();
+	const UniformTable& getFSUniform();
+
 	void init();
 
 	void clear();
