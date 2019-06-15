@@ -504,7 +504,14 @@ bool CompileFile(char* fileName, ShHandle compiler, ShCompileOptions compileOpti
 	ShaderSource source;
 	if (!ReadShaderSource(fileName, source))
 		return false;
-
+    
+    std::string content = source[0];
+    const char* version_330_core = "#version 330 core";
+    const char* version_300_es = "#version 300 es";
+    int index = content.find(version_330_core);
+    content.replace(index, strlen(version_330_core), version_300_es);
+    strcpy(source[0], content.c_str());
+    
 	int ret = sh::Compile(compiler, &source[0], source.size(), compileOptions);
 
 	FreeShaderSource(source);

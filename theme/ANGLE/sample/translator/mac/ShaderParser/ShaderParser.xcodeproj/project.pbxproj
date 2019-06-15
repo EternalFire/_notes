@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		427A80A722B2A5C7007532D8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A80A622B2A5C7007532D8 /* main.cpp */; };
 		427A82B822B2AB05007532D8 /* xxhash_fuzzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A828322B2A9F5007532D8 /* xxhash_fuzzer.cpp */; };
 		427A82B922B2AB05007532D8 /* xxhash.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A828422B2A9F5007532D8 /* xxhash.h */; };
 		427A82BA22B2AB05007532D8 /* xxhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 427A828822B2A9F5007532D8 /* xxhash.c */; };
@@ -625,6 +624,7 @@
 		427A852F22B3FB37007532D8 /* Tokenizer.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A825822B2A8E3007532D8 /* Tokenizer.h */; };
 		427A853022B3FB37007532D8 /* ArrayBoundsClamper.h in Sources */ = {isa = PBXBuildFile; fileRef = 427A813E22B2A8E2007532D8 /* ArrayBoundsClamper.h */; };
 		427A853122B3FB37007532D8 /* ArrayBoundsClamper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A813F22B2A8E2007532D8 /* ArrayBoundsClamper.cpp */; };
+		427A856D22B47A58007532D8 /* ShParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427A841822B3F9ED007532D8 /* ShParser.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1837,6 +1837,7 @@
 				427A835D22B2AC28007532D8 /* FindMain.cpp in Sources */,
 				427A835E22B2AC28007532D8 /* IntermNodePatternMatcher.h in Sources */,
 				427A835F22B2AC28007532D8 /* RunAtTheEndOfShader.cpp in Sources */,
+				427A856D22B47A58007532D8 /* ShParser.cpp in Sources */,
 				427A836022B2AC28007532D8 /* ReplaceVariable.h in Sources */,
 				427A836122B2AC28007532D8 /* ReplaceShadowingVariables.h in Sources */,
 				427A836222B2AC28007532D8 /* IntermTraverse.h in Sources */,
@@ -2006,7 +2007,6 @@
 				427A840622B2AC29007532D8 /* Tokenizer.h in Sources */,
 				427A840722B2AC29007532D8 /* ArrayBoundsClamper.h in Sources */,
 				427A840822B2AC29007532D8 /* ArrayBoundsClamper.cpp in Sources */,
-				427A80A722B2A5C7007532D8 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2574,7 +2574,6 @@
 					ANGLE_ENABLE_GLSL,
 					ANGLE_ENABLE_HLSL,
 					ANGLE_ENABLE_VULKAN,
-					_LIB,
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/$(PROJECT_NAME)/src",
@@ -2596,7 +2595,6 @@
 					ANGLE_ENABLE_GLSL,
 					ANGLE_ENABLE_HLSL,
 					ANGLE_ENABLE_VULKAN,
-					_LIB,
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/$(PROJECT_NAME)/src",
