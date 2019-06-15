@@ -10,6 +10,7 @@ local State = {
     scene = nil,
     layer = nil,
     emitter = nil,
+    rt = nil,
 
     processUp = nil,
     processDown = nil,
@@ -96,7 +97,8 @@ function case_imgui()
 			ret, isPanelOpened = imgui.begin("Panel", isPanelOpened, {imgui.ImGuiWindowFlags_None})
 			if not ret then
 				print("collapse...", os.time())
-				imgui.endToLua()
+                imgui.endToLua()
+                return
 			end
 
 			imgui.text("text in panel")
@@ -117,6 +119,7 @@ function case_imgui()
             if not ret then
                 print("collapse...", os.time())
                 imgui.endToLua()
+                return
             end
 
             imgui.pushButtonRepeat(true);
@@ -147,6 +150,20 @@ function case_imgui()
 
             imgui.endToLua()
 		end
+    end
+
+    local function capturePanel()
+        imgui.begin("Capture What?")
+
+            if imgui.button("Scene") then
+                setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 0.02)
+            end
+
+            if imgui.button("Particle") then
+                setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 0.02)
+            end
+
+        imgui.endToLua()
     end
 
     -- draw
@@ -184,6 +201,8 @@ function case_imgui()
         imgui.setNextWindowPosCenter()
         showControlPanel()
 
+        -- imgui.setNextWindowPos(100, 20)
+        capturePanel()
     end -- end of imgui.draw
 
     --
@@ -224,6 +243,10 @@ function run()
         target:setPositionX(target:getPositionX() + State.moveStep)
     end
 
+    local renderTexture = cc.RenderTexture:create(display.width, display.height, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888)
+    renderTexture:setPosition(cc.p(0, -100000))
+    State.layer:addChild(renderTexture)
+    State.rt = renderTexture
 end
 
 local function main()
@@ -240,8 +263,54 @@ local function main()
     case_imgui()
 
     setTimeout(function() run() end, 0)
+
+    -- setTimeout(function()
+    --     if State.rt then
+    --         State.rt:begin()
+
+    --             -- capture layer
+    --             -- State.layer:visit()
+
+    --             -- capture scene
+    --             State.scene:visit()
+
+    --             -- capture particle
+    --             -- State.emitter:getParent():visit()
+
+    --         State.rt:endToLua()
+
+    --         -- save image
+    --         -- local png = string.format("image-%d.png", os.time())
+    --         local jpg = string.format("image-%d.jpg", os.time())
+
+    --         -- State.rt:saveToFile(png, cc.IMAGE_FORMAT_PNG)
+    --         State.rt:saveToFile(jpg, cc.IMAGE_FORMAT_JPEG)
+
+    --         setTimeout(function() State.rt:clear(0,0,0,0) end, 0.02)
+    --     end
+    -- end, 5)
+
+    -- setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 2)
+
+    -- setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 4)
+
+    -- captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false)
+    -- captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true)
 end
 
+function captureNode(renderTexture, node, fileBasename, isRGBA)
+    if renderTexture ~= nil and node ~= nil and fileBasename ~= nil and isRGBA ~= nil then
+        renderTexture:begin()
+        do
+            node:visit()
+        end
+        renderTexture:endToLua()
+
+        local fileName = fileBasename..(isRGBA and ".png" or ".jpg")
+        renderTexture:saveToFile(fileName, (isRGBA and cc.IMAGE_FORMAT_PNG or cc.IMAGE_FORMAT_JPEG), isRGBA)
+        setTimeout(function() renderTexture:clear(0,0,0,0) end, 0.1)
+    end
+end
 
 function setTimeout(callback, sec)
     local id
@@ -262,6 +331,18 @@ function clearTimer(id)
     if id then
         cc.Director:getInstance():getScheduler():unscheduleScriptEntry(id)
     end
+end
+
+function setInterval(callback, sec)
+    local id
+    local function _runSchedule()
+        if callback then
+            callback()
+        end
+    end
+
+    sec = sec or 0
+    id = cc.Director:getInstance():getScheduler():scheduleScriptFunc(_runSchedule, sec, false);
 end
 
 
