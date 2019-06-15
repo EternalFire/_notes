@@ -2,8 +2,11 @@
 #include "ShParser.h"
 
 namespace _Sh_ {
-	UniformTable vsUniformMap;
-	UniformTable fsUniformMap;
+	static UniformTable vsUniformMap;
+	static UniformTable fsUniformMap;
+
+	const UniformTable& getVSUniform() { return vsUniformMap; }
+	const UniformTable& getFSUniform() { return fsUniformMap; }
 
 	void init()
 	{
@@ -341,24 +344,24 @@ int run(int argc, char* argv[])
 				default:
 					break;
 				}
-				
+
 				bool compiled = CompileFile(filename, compiler, compileOptions);
 
 				LogMsg("BEGIN", "COMPILER", numCompiles, "INFO LOG");
-				
+
 				std::string log = sh::GetInfoLog(compiler);
 				puts(log.c_str());
-				
+
 				LogMsg("END", "COMPILER", numCompiles, "INFO LOG");
 				printf("\n\n");
 
 				if (compiled && (compileOptions & SH_OBJECT_CODE))
 				{
 					LogMsg("BEGIN", "COMPILER", numCompiles, "OBJ CODE");
-					
+
 					std::string code = sh::GetObjectCode(compiler);
 					puts(code.c_str());
-					
+
 					LogMsg("END", "COMPILER", numCompiles, "OBJ CODE");
 					printf("\n\n");
 				}
@@ -367,7 +370,7 @@ int run(int argc, char* argv[])
 					LogMsg("BEGIN", "COMPILER", numCompiles, "VARIABLES");
 
 					PrintActiveVariables(compiler, filename, shaderType);
-					
+
 					LogMsg("END", "COMPILER", numCompiles, "VARIABLES");
 					printf("\n\n");
 				}
@@ -404,7 +407,7 @@ int run(int argc, char* argv[])
 
 #ifndef _LIB
 int main(int argc, char* argv[])
-{	
+{
 	//return run(argc, argv);
 
 	int argc_ = 4;
@@ -501,6 +504,13 @@ bool CompileFile(char* fileName, ShHandle compiler, ShCompileOptions compileOpti
 	ShaderSource source;
 	if (!ReadShaderSource(fileName, source))
 		return false;
+
+	std::string content = source[0];
+	const char* version_330_core = "#version 330 core";
+	const char* version_300_es = "#version 300 es";
+	int index = content.find(version_330_core);
+	content.replace(index, strlen(version_330_core), version_300_es);
+	strcpy(source[0], content.c_str());
 
 	int ret = sh::Compile(compiler, &source[0], source.size(), compileOptions);
 
@@ -711,13 +721,13 @@ void PrintVariable(const std::string & prefix, size_t index, const sh::ShaderVar
 	}
 	printf("\n");
 
-	if (prefix.compare("uniform") == 0) 
+	if (prefix.compare("uniform") == 0)
 	{
 		if (shaderType == GL_VERTEX_SHADER)
 		{
 			_Sh_::addVsUniform(filename, var.type, var.name);
 		}
-		else if(shaderType == GL_FRAGMENT_SHADER)
+		else if (shaderType == GL_FRAGMENT_SHADER)
 		{
 			_Sh_::addFsUniform(filename, var.type, var.name);
 		}
@@ -729,9 +739,9 @@ void PrintVariable(const std::string & prefix, size_t index, const sh::ShaderVar
 		for (size_t i = 0; i < prefix.size(); ++i)
 			structPrefix += ' ';
 
-		printf("%s  struct %s\n", structPrefix.c_str(), var.structName.c_str());		
+		printf("%s  struct %s\n", structPrefix.c_str(), var.structName.c_str());
 		structPrefix += "    field";
-		
+
 		for (size_t i = 0; i < var.fields.size(); ++i)
 			PrintVariable(structPrefix, i, var.fields[i], filename, shaderType);
 	}
