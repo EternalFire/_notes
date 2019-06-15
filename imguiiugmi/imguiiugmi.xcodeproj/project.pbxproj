@@ -13,6 +13,7 @@
 		427A7A2722AC1A70007532D8 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427A7A2622AC1A70007532D8 /* IOKit.framework */; };
 		427A7A2922AC1A78007532D8 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 427A7A2822AC1A78007532D8 /* CoreVideo.framework */; };
 		427A7A3822AEADF5007532D8 /* resources in Copy Files */ = {isa = PBXBuildFile; fileRef = 427A7A3422AEAD33007532D8 /* resources */; };
+		427A856C22B411C7007532D8 /* libShParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 427A856B22B411C7007532D8 /* libShParser.a */; };
 		42E134F922AC04C800E4FA4B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42E134F822AC04C800E4FA4B /* main.cpp */; };
 		42E1351022AC0B4900E4FA4B /* imgui_impl_glfw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42E1350F22AC0B4900E4FA4B /* imgui_impl_glfw.cpp */; };
 		42E1351322AC0D2D00E4FA4B /* imgui_impl_opengl3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42E1351122AC0D2C00E4FA4B /* imgui_impl_opengl3.cpp */; };
@@ -93,6 +94,44 @@
 		427A7A6822B02682007532D8 /* FireState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireState.h; sourceTree = "<group>"; };
 		427A7A6922B0286F007532D8 /* FirePainter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirePainter.h; sourceTree = "<group>"; };
 		427A7A6A22B07D88007532D8 /* FireConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireConfig.h; sourceTree = "<group>"; };
+		427A853422B3FCA5007532D8 /* ShParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShParser.h; sourceTree = "<group>"; };
+		427A853B22B3FD34007532D8 /* gl3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl3.h; sourceTree = "<group>"; };
+		427A853C22B3FD34007532D8 /* .clang-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".clang-format"; sourceTree = "<group>"; };
+		427A853D22B3FD34007532D8 /* gl32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl32.h; sourceTree = "<group>"; };
+		427A853E22B3FD34007532D8 /* gl3platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl3platform.h; sourceTree = "<group>"; };
+		427A853F22B3FD34007532D8 /* gl3ext_explicit_context_autogen.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = gl3ext_explicit_context_autogen.inc; sourceTree = "<group>"; };
+		427A854022B3FD34007532D8 /* gl31.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl31.h; sourceTree = "<group>"; };
+		427A854122B3FD34007532D8 /* gl31ext_explicit_context_autogen.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = gl31ext_explicit_context_autogen.inc; sourceTree = "<group>"; };
+		427A854322B3FD34007532D8 /* gl2ext_explicit_context_autogen.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = gl2ext_explicit_context_autogen.inc; sourceTree = "<group>"; };
+		427A854422B3FD34007532D8 /* gl2ext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl2ext.h; sourceTree = "<group>"; };
+		427A854522B3FD34007532D8 /* gl2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl2.h; sourceTree = "<group>"; };
+		427A854622B3FD34007532D8 /* gl2ext_angle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl2ext_angle.h; sourceTree = "<group>"; };
+		427A854722B3FD34007532D8 /* .clang-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".clang-format"; sourceTree = "<group>"; };
+		427A854822B3FD34007532D8 /* gl2platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl2platform.h; sourceTree = "<group>"; };
+		427A854B22B3FD34007532D8 /* egl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = egl.h; sourceTree = "<group>"; };
+		427A854C22B3FD34007532D8 /* glext_explicit_context_autogen.inc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.pascal; path = glext_explicit_context_autogen.inc; sourceTree = "<group>"; };
+		427A854D22B3FD34007532D8 /* glext_angle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = glext_angle.h; sourceTree = "<group>"; };
+		427A854E22B3FD34007532D8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		427A854F22B3FD34007532D8 /* glext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = glext.h; sourceTree = "<group>"; };
+		427A855022B3FD34007532D8 /* .clang-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".clang-format"; sourceTree = "<group>"; };
+		427A855122B3FD34007532D8 /* glplatform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = glplatform.h; sourceTree = "<group>"; };
+		427A855222B3FD34007532D8 /* gl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
+		427A855422B3FD34007532D8 /* WorkaroundsD3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WorkaroundsD3D.h; sourceTree = "<group>"; };
+		427A855522B3FD34007532D8 /* FeaturesVk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FeaturesVk.h; sourceTree = "<group>"; };
+		427A855622B3FD34007532D8 /* Feature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Feature.h; sourceTree = "<group>"; };
+		427A855722B3FD34007532D8 /* Platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		427A855922B3FD34007532D8 /* ShaderVars.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderVars.h; sourceTree = "<group>"; };
+		427A855A22B3FD34007532D8 /* ShaderLang.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderLang.h; sourceTree = "<group>"; };
+		427A855C22B3FD34007532D8 /* .clang-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".clang-format"; sourceTree = "<group>"; };
+		427A855D22B3FD34007532D8 /* khrplatform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = khrplatform.h; sourceTree = "<group>"; };
+		427A855F22B3FD34007532D8 /* egl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = egl.h; sourceTree = "<group>"; };
+		427A856022B3FD34007532D8 /* eglext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eglext.h; sourceTree = "<group>"; };
+		427A856122B3FD34007532D8 /* eglext_angle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eglext_angle.h; sourceTree = "<group>"; };
+		427A856222B3FD34007532D8 /* eglplatform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eglplatform.h; sourceTree = "<group>"; };
+		427A856322B3FD34007532D8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		427A856422B3FD34007532D8 /* .clang-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".clang-format"; sourceTree = "<group>"; };
+		427A856522B3FD34007532D8 /* angle_gl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = angle_gl.h; sourceTree = "<group>"; };
+		427A856B22B411C7007532D8 /* libShParser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libShParser.a; path = imguiiugmi/third/ShParser/libShParser.a; sourceTree = "<group>"; };
 		42E134F522AC04C800E4FA4B /* imguiiugmi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imguiiugmi; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E134F822AC04C800E4FA4B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		42E1350022AC08FD00E4FA4B /* imgui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
@@ -132,6 +171,7 @@
 				427A7A2722AC1A70007532D8 /* IOKit.framework in Frameworks */,
 				427A7A2522AC1A64007532D8 /* OpenGL.framework in Frameworks */,
 				427A7A2322AC1A59007532D8 /* Cocoa.framework in Frameworks */,
+				427A856C22B411C7007532D8 /* libShParser.a in Frameworks */,
 				427A7A2122AC163C007532D8 /* libglfw.3.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,6 +257,146 @@
 			path = rapidjson/internal;
 			sourceTree = "<group>";
 		};
+		427A853222B3FCA5007532D8 /* third */ = {
+			isa = PBXGroup;
+			children = (
+				427A853322B3FCA5007532D8 /* ShParser */,
+			);
+			path = third;
+			sourceTree = "<group>";
+		};
+		427A853322B3FCA5007532D8 /* ShParser */ = {
+			isa = PBXGroup;
+			children = (
+				427A853422B3FCA5007532D8 /* ShParser.h */,
+			);
+			path = ShParser;
+			sourceTree = "<group>";
+		};
+		427A853822B3FD34007532D8 /* angle */ = {
+			isa = PBXGroup;
+			children = (
+				427A853922B3FD34007532D8 /* include */,
+			);
+			path = angle;
+			sourceTree = "<group>";
+		};
+		427A853922B3FD34007532D8 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				427A853A22B3FD34007532D8 /* GLES3 */,
+				427A854222B3FD34007532D8 /* GLES2 */,
+				427A854A22B3FD34007532D8 /* GLES */,
+				427A855322B3FD34007532D8 /* platform */,
+				427A855822B3FD34007532D8 /* GLSLANG */,
+				427A855B22B3FD34007532D8 /* KHR */,
+				427A855E22B3FD34007532D8 /* EGL */,
+				427A856522B3FD34007532D8 /* angle_gl.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		427A853A22B3FD34007532D8 /* GLES3 */ = {
+			isa = PBXGroup;
+			children = (
+				427A853B22B3FD34007532D8 /* gl3.h */,
+				427A853C22B3FD34007532D8 /* .clang-format */,
+				427A853D22B3FD34007532D8 /* gl32.h */,
+				427A853E22B3FD34007532D8 /* gl3platform.h */,
+				427A853F22B3FD34007532D8 /* gl3ext_explicit_context_autogen.inc */,
+				427A854022B3FD34007532D8 /* gl31.h */,
+				427A854122B3FD34007532D8 /* gl31ext_explicit_context_autogen.inc */,
+			);
+			path = GLES3;
+			sourceTree = "<group>";
+		};
+		427A854222B3FD34007532D8 /* GLES2 */ = {
+			isa = PBXGroup;
+			children = (
+				427A854322B3FD34007532D8 /* gl2ext_explicit_context_autogen.inc */,
+				427A854422B3FD34007532D8 /* gl2ext.h */,
+				427A854522B3FD34007532D8 /* gl2.h */,
+				427A854622B3FD34007532D8 /* gl2ext_angle.h */,
+				427A854722B3FD34007532D8 /* .clang-format */,
+				427A854822B3FD34007532D8 /* gl2platform.h */,
+			);
+			path = GLES2;
+			sourceTree = "<group>";
+		};
+		427A854A22B3FD34007532D8 /* GLES */ = {
+			isa = PBXGroup;
+			children = (
+				427A854B22B3FD34007532D8 /* egl.h */,
+				427A854C22B3FD34007532D8 /* glext_explicit_context_autogen.inc */,
+				427A854D22B3FD34007532D8 /* glext_angle.h */,
+				427A854E22B3FD34007532D8 /* README.md */,
+				427A854F22B3FD34007532D8 /* glext.h */,
+				427A855022B3FD34007532D8 /* .clang-format */,
+				427A855122B3FD34007532D8 /* glplatform.h */,
+				427A855222B3FD34007532D8 /* gl.h */,
+			);
+			path = GLES;
+			sourceTree = "<group>";
+		};
+		427A855322B3FD34007532D8 /* platform */ = {
+			isa = PBXGroup;
+			children = (
+				427A855422B3FD34007532D8 /* WorkaroundsD3D.h */,
+				427A855522B3FD34007532D8 /* FeaturesVk.h */,
+				427A855622B3FD34007532D8 /* Feature.h */,
+				427A855722B3FD34007532D8 /* Platform.h */,
+			);
+			path = platform;
+			sourceTree = "<group>";
+		};
+		427A855822B3FD34007532D8 /* GLSLANG */ = {
+			isa = PBXGroup;
+			children = (
+				427A855922B3FD34007532D8 /* ShaderVars.h */,
+				427A855A22B3FD34007532D8 /* ShaderLang.h */,
+			);
+			path = GLSLANG;
+			sourceTree = "<group>";
+		};
+		427A855B22B3FD34007532D8 /* KHR */ = {
+			isa = PBXGroup;
+			children = (
+				427A855C22B3FD34007532D8 /* .clang-format */,
+				427A855D22B3FD34007532D8 /* khrplatform.h */,
+			);
+			path = KHR;
+			sourceTree = "<group>";
+		};
+		427A855E22B3FD34007532D8 /* EGL */ = {
+			isa = PBXGroup;
+			children = (
+				427A855F22B3FD34007532D8 /* egl.h */,
+				427A856022B3FD34007532D8 /* eglext.h */,
+				427A856122B3FD34007532D8 /* eglext_angle.h */,
+				427A856222B3FD34007532D8 /* eglplatform.h */,
+				427A856322B3FD34007532D8 /* README.md */,
+				427A856422B3FD34007532D8 /* .clang-format */,
+			);
+			path = EGL;
+			sourceTree = "<group>";
+		};
+		427A856A22B400E1007532D8 /* Fire */ = {
+			isa = PBXGroup;
+			children = (
+				427A7A3322AD5FDA007532D8 /* Fire.h */,
+				427A7A6A22B07D88007532D8 /* FireConfig.h */,
+				427A7A6222B00F66007532D8 /* FireDefinition.h */,
+				427A7A6622B0229B007532D8 /* FireJson.h */,
+				427A7A6922B0286F007532D8 /* FirePainter.h */,
+				427A7A6422B01D3C007532D8 /* FireProperty.h */,
+				427A7A6822B02682007532D8 /* FireState.h */,
+				427A7A6522B01E53007532D8 /* FireStShaderPanel.h */,
+				427A7A6722B023D9007532D8 /* FireUI.h */,
+				427A7A6322B01C0D007532D8 /* FireUtility.h */,
+			);
+			name = Fire;
+			sourceTree = "<group>";
+		};
 		42E134EC22AC04C800E4FA4B = {
 			isa = PBXGroup;
 			children = (
@@ -241,21 +421,14 @@
 				42E134F822AC04C800E4FA4B /* main.cpp */,
 				427A7A3122AD51BE007532D8 /* camera.h */,
 				427A7A3222AD51BE007532D8 /* shader.h */,
-				427A7A3322AD5FDA007532D8 /* Fire.h */,
-				427A7A6A22B07D88007532D8 /* FireConfig.h */,
-				427A7A6222B00F66007532D8 /* FireDefinition.h */,
-				427A7A6622B0229B007532D8 /* FireJson.h */,
-				427A7A6922B0286F007532D8 /* FirePainter.h */,
-				427A7A6422B01D3C007532D8 /* FireProperty.h */,
-				427A7A6822B02682007532D8 /* FireState.h */,
-				427A7A6522B01E53007532D8 /* FireStShaderPanel.h */,
-				427A7A6322B01C0D007532D8 /* FireUtility.h */,
-				427A7A6722B023D9007532D8 /* FireUI.h */,
+				427A853822B3FD34007532D8 /* angle */,
+				427A856A22B400E1007532D8 /* Fire */,
 				42E1352422AC132900E4FA4B /* glad */,
 				42E134FF22AC08FD00E4FA4B /* imgui */,
 				42E1350B22AC08FD00E4FA4B /* imgui_impl */,
 				427A7A3A22B009FA007532D8 /* rapidjson */,
 				427A7A2F22AD51B0007532D8 /* stb */,
+				427A853222B3FCA5007532D8 /* third */,
 			);
 			path = imguiiugmi;
 			sourceTree = "<group>";
@@ -292,6 +465,7 @@
 		42E1351422AC0E4700E4FA4B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				427A856B22B411C7007532D8 /* libShParser.a */,
 				427A7A2822AC1A78007532D8 /* CoreVideo.framework */,
 				427A7A2622AC1A70007532D8 /* IOKit.framework */,
 				427A7A2422AC1A64007532D8 /* OpenGL.framework */,
@@ -412,9 +586,9 @@
 				42E1352222AC12FC00E4FA4B /* imgui_demo.cpp in Sources */,
 				42E1352322AC12FC00E4FA4B /* imgui_draw.cpp in Sources */,
 				42E1353622AC132900E4FA4B /* glad.c in Sources */,
-				42E134F922AC04C800E4FA4B /* main.cpp in Sources */,
 				42E1351322AC0D2D00E4FA4B /* imgui_impl_opengl3.cpp in Sources */,
 				42E1351022AC0B4900E4FA4B /* imgui_impl_glfw.cpp in Sources */,
+				42E134F922AC04C800E4FA4B /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,10 +727,13 @@
 					"$(SRCROOT)/$(PROJECT_NAME)/imgui_impl",
 					"$(SRCROOT)/$(PROJECT_NAME)/stb",
 					"$(SRCROOT)/$(PROJECT_NAME)",
+					"$(SRCROOT)/$(PROJECT_NAME)/third/ShParser",
+					"$(SRCROOT)/$(PROJECT_NAME)/angle/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/glfw/3.3/lib,
+					"$(PROJECT_DIR)/imguiiugmi/third/ShParser",
 				);
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -582,10 +759,13 @@
 					"$(SRCROOT)/$(PROJECT_NAME)/imgui_impl",
 					"$(SRCROOT)/$(PROJECT_NAME)/stb",
 					"$(SRCROOT)/$(PROJECT_NAME)",
+					"$(SRCROOT)/$(PROJECT_NAME)/third/ShParser",
+					"$(SRCROOT)/$(PROJECT_NAME)/angle/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/glfw/3.3/lib,
+					"$(PROJECT_DIR)/imguiiugmi/third/ShParser",
 				);
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";

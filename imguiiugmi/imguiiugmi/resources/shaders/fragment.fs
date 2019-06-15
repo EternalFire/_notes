@@ -1,4 +1,8 @@
+// #version 300 es
 #version 330 core
+precision mediump float;
+precision mediump int;
+// #version 330 core
 
 out vec4 FragColor;
 
@@ -6,6 +10,14 @@ in vec2 texCoord;
 in vec3 vertexColor;
 in vec3 vsNormal;
 in vec3 vsFragPos;
+
+
+// vec4 FragColor;
+
+// varying vec2 texCoord;
+// varying vec3 vertexColor;
+// varying vec3 vsNormal;
+// varying vec3 vsFragPos;
 
 uniform sampler2D texture0;
 uniform vec3 uColor;
@@ -42,7 +54,7 @@ void main()
         // vec3 lightPos = vec3(3.0 * cos(uTime), 3.0 * sin(uTime), 0.0);
         vec3 lightPos = uLightPos;
         vec3 lightColor = uLightColor;
-        FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20);
+        FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20.0);
     }
 
     if (uSwitchEffectInvert)
@@ -54,6 +66,8 @@ void main()
     {
         FragColor.rgb = grayColor(FragColor.rgb);
     }
+
+    // gl_FragColor = FragColor;
 }
 
 // Phong Lighting
@@ -126,7 +140,7 @@ vec3 kernelEffect(sampler2D tex, vec2 texCoords)
 	// 边缘检测
 	float kernel[9] = float[](
 		1.0, 1.0, 1.0,
-		1.0,  -8, 1.0,
+		1.0,  -8.0, 1.0,
 		1.0, 1.0, 1.0
 	);
 

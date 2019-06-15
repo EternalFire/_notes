@@ -201,15 +201,19 @@ int main(int, char**)
 
 			if (ImGui::Button("TEST PlayProject1")) {
 				int argc_ = 4;
-				char* argv_[4] = { "", "-u", "-s=e3", "vertex.vs" };
+                char* argv_[4] = { "", "-u", "-s=e3", "resources/shaders/vertex.vs" };
 
 				run(argc_, argv_);
 
 				int argc_1 = 4;
-				char* argv_1[4] = { "", "-u", "-s=e3", "fragment.fs" };
+				char* argv_1[4] = { "", "-u", "-s=e3", "resources/shaders/fragment.fs" };
 
 				auto ret = run(argc_1, argv_1);
-				printf("");
+                
+                const auto & vsmap = _Sh_::getVSUniform();
+                const auto & fsmap = _Sh_::getFSUniform();
+                
+				printf("1");
 			}
 
             ImGui::End();
