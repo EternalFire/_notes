@@ -156,11 +156,15 @@ function case_imgui()
         imgui.begin("Capture What?")
 
             if imgui.button("Scene") then
-                setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 0.02)
+                -- setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 0.02)
+                cc.utils:captureScreen(function(succeed, name)
+                    print("captureScreen callback ", succeed, name)
+                end, "scene-"..tostring(os.time())..".jpg")
             end
 
             if imgui.button("Particle") then
-                setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 0.02)
+                setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 0.02)
+                -- setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 0.02)
             end
 
         imgui.endToLua()
@@ -243,7 +247,15 @@ function run()
         target:setPositionX(target:getPositionX() + State.moveStep)
     end
 
-    local renderTexture = cc.RenderTexture:create(display.width, display.height, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888)
+    local s = cc.Director:getInstance():getOpenGLView():getFrameSize()
+    local retinaFactor = cc.Director:getInstance():getOpenGLView():getRetinaFactor()
+    local frameZoomFactor = cc.Director:getInstance():getOpenGLView():getFrameZoomFactor()
+
+    print("s ", s.width, s.height)
+    print("retinaFactor", retinaFactor)
+    print("frameZoomFactor", frameZoomFactor)
+
+    local renderTexture = cc.RenderTexture:create(s.width * frameZoomFactor * retinaFactor, s.height * frameZoomFactor * retinaFactor, cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888)
     renderTexture:setPosition(cc.p(0, -100000))
     State.layer:addChild(renderTexture)
     State.rt = renderTexture
@@ -263,43 +275,11 @@ local function main()
     case_imgui()
 
     setTimeout(function() run() end, 0)
-
-    -- setTimeout(function()
-    --     if State.rt then
-    --         State.rt:begin()
-
-    --             -- capture layer
-    --             -- State.layer:visit()
-
-    --             -- capture scene
-    --             State.scene:visit()
-
-    --             -- capture particle
-    --             -- State.emitter:getParent():visit()
-
-    --         State.rt:endToLua()
-
-    --         -- save image
-    --         -- local png = string.format("image-%d.png", os.time())
-    --         local jpg = string.format("image-%d.jpg", os.time())
-
-    --         -- State.rt:saveToFile(png, cc.IMAGE_FORMAT_PNG)
-    --         State.rt:saveToFile(jpg, cc.IMAGE_FORMAT_JPEG)
-
-    --         setTimeout(function() State.rt:clear(0,0,0,0) end, 0.02)
-    --     end
-    -- end, 5)
-
-    -- setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 2)
-
-    -- setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 4)
-
-    -- captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false)
-    -- captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true)
 end
 
 function captureNode(renderTexture, node, fileBasename, isRGBA)
     if renderTexture ~= nil and node ~= nil and fileBasename ~= nil and isRGBA ~= nil then
+        renderTexture:setKeepMatrix(true)
         renderTexture:begin()
         do
             node:visit()
