@@ -132,6 +132,9 @@
 		427A856422B3FD34007532D8 /* .clang-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".clang-format"; sourceTree = "<group>"; };
 		427A856522B3FD34007532D8 /* angle_gl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = angle_gl.h; sourceTree = "<group>"; };
 		427A856B22B411C7007532D8 /* libShParser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libShParser.a; path = imguiiugmi/third/ShParser/libShParser.a; sourceTree = "<group>"; };
+		427F638622B6036500223235 /* FireUIProperty.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUIProperty.h; sourceTree = "<group>"; };
+		427F638722B6046F00223235 /* FireUIBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUIBase.h; sourceTree = "<group>"; };
+		427F638822B616CB00223235 /* FireUIShaderPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUIShaderPanel.h; sourceTree = "<group>"; };
 		42E134F522AC04C800E4FA4B /* imguiiugmi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imguiiugmi; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E134F822AC04C800E4FA4B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		42E1350022AC08FD00E4FA4B /* imgui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
@@ -383,18 +386,53 @@
 		427A856A22B400E1007532D8 /* Fire */ = {
 			isa = PBXGroup;
 			children = (
+				427A857122B5FC6D007532D8 /* Data */,
+				427F638322B600B900223235 /* IO */,
+				427F638522B6031900223235 /* Scene */,
+				427F638422B600DF00223235 /* View */,
 				427A7A3322AD5FDA007532D8 /* Fire.h */,
-				427A7A6A22B07D88007532D8 /* FireConfig.h */,
-				427A7A6222B00F66007532D8 /* FireDefinition.h */,
-				427A7A6622B0229B007532D8 /* FireJson.h */,
-				427A7A6922B0286F007532D8 /* FirePainter.h */,
-				427A7A6422B01D3C007532D8 /* FireProperty.h */,
 				427A7A6822B02682007532D8 /* FireState.h */,
-				427A7A6522B01E53007532D8 /* FireStShaderPanel.h */,
-				427A7A6722B023D9007532D8 /* FireUI.h */,
 				427A7A6322B01C0D007532D8 /* FireUtility.h */,
 			);
 			name = Fire;
+			sourceTree = "<group>";
+		};
+		427A857122B5FC6D007532D8 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				427A7A6222B00F66007532D8 /* FireDefinition.h */,
+				427A7A6A22B07D88007532D8 /* FireConfig.h */,
+				427A7A6422B01D3C007532D8 /* FireProperty.h */,
+				427A7A6522B01E53007532D8 /* FireStShaderPanel.h */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		427F638322B600B900223235 /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				427A7A6622B0229B007532D8 /* FireJson.h */,
+			);
+			name = IO;
+			sourceTree = "<group>";
+		};
+		427F638422B600DF00223235 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				427A7A6722B023D9007532D8 /* FireUI.h */,
+				427F638722B6046F00223235 /* FireUIBase.h */,
+				427F638822B616CB00223235 /* FireUIShaderPanel.h */,
+				427F638622B6036500223235 /* FireUIProperty.h */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		427F638522B6031900223235 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				427A7A6922B0286F007532D8 /* FirePainter.h */,
+			);
+			name = Scene;
 			sourceTree = "<group>";
 		};
 		42E134EC22AC04C800E4FA4B = {

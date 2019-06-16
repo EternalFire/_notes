@@ -16,7 +16,7 @@ NS_FIRE_BEGIN
 
 struct StShaderPanel {
     string name;
-    vector<struct StProperty> propertyArray;
+    PropertyArray propertyArray;
     Shader* shader;
     bool isShow;
     char nameBuffer[128];
@@ -26,9 +26,14 @@ struct StShaderPanel {
     StShaderPanel():name(""), shader(NULL), isShow(true) {
         memset(nameBuffer, 0, sizeof(nameBuffer));
     }
-    ~StShaderPanel() { name.clear(); shader = NULL; }
+    ~StShaderPanel() {
+        name.clear(); shader = NULL;
+        
+    }
 };
+
+
 
 NS_FIRE_END__
 
-#endif /* FireStShaderPanel_h */
+#endif

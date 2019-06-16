@@ -213,6 +213,8 @@ int main(int, char**)
                 const auto & vsmap = _Sh_::getVSUniform();
                 const auto & fsmap = _Sh_::getFSUniform();
                 
+                _Sh_::clear();
+                
 				printf("1");
 			}
 

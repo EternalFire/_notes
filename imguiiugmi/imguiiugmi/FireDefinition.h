@@ -22,32 +22,16 @@
 ///
 NS_FIRE_BEGIN
 
+const char* Name = NS_FIRE_NAME;
+
 const float Float_Min = -10000000000.0f;
 const float Float_Max = +10000000000.0f;
-const char* Name = NS_FIRE_NAME;
-const char* ResPath = "resources/";
-const char* ResShaderPath = "resources/shaders/";
+const float Float_Min_Normal = -100.0f;
+const float Float_Max_Normal = 100.0f;
 
-/**
- * Camera setting
- *
- * Position = (7.640, 6.438, 11.394)
- * WorldUp = (0.000, 1.000, 0.000)
- * Pitch = -24.300  Yaw = -124.900
- *
- * Position = (0.667, 8.979, 19.392)
- * WorldUp = (0.000, 1.000, 0.000)
- * Pitch = -24.400  Yaw = -110.500
- */
-const glm::vec3 cameraPosition = glm::vec3(0.667, 8.979, 19.392);
-const glm::vec3 cameraUp = glm::vec3(0, 1.0, 0);
-const float cameraYaw = -110.5f;  // around y axis
-const float cameraPitch = -24.4f; // around x axis
+const float Int_Min_Normal = -100;
+const float Int_Max_Normal = 100;
 
-const glm::mat4 IMatrix4(1.0f); // identty matrix
-const glm::vec3 xAxis(1.0f, 0.0f, 0.0f);
-const glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
-const glm::vec3 zAxis(0.0f, 0.0f, 1.0f);
 
 typedef struct Vec2  { float x; float y; } Vec2;
 typedef struct IVec2 { int x; int y; } IVec2;
@@ -74,6 +58,7 @@ enum Type {
     Type_IColor = 9,
     Type_String = 10,
     Type_Bool   = 11,
+    Type_Array  = 12,
 };
 
 const char * TypeNames[] = {
@@ -89,6 +74,7 @@ const char * TypeNames[] = {
     "IColor",
     "String",
     "Bool",
+    "Array",
 };
 
 int getTypeByName(const string& name) {
@@ -101,7 +87,16 @@ int getTypeByName(const string& name) {
     return 0;
 }
 
+
+struct StProperty;
+typedef vector<struct StProperty> PropertyArray;
+struct StShaderPanel;
+
+struct StConfig;
+struct State;
+
 class UI;
+class Painter;
 
 NS_FIRE_END__
 ///

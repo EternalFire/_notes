@@ -47,6 +47,7 @@ void Init()
 {
 	float w = config.width, h = config.height;
 	G.init(w, h);
+    ui.init();
 
 	// create StShaderPanel
 	struct StShaderPanel st;
