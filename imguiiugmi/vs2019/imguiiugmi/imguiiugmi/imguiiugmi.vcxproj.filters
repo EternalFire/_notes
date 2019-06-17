@@ -52,6 +52,18 @@
     <Filter Include="third\angle">
       <UniqueIdentifier>{57927dc3-496b-4852-8a6f-c91ce7dcb58a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fire\Data">
+      <UniqueIdentifier>{07b7c2ca-a509-47e5-bc52-23d8478ad6ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fire\View">
+      <UniqueIdentifier>{6f093b46-2b26-4072-b837-b70c7ac028d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fire\Scene">
+      <UniqueIdentifier>{68d691cc-ff81-4fbc-b773-f825517d02db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fire\IO">
+      <UniqueIdentifier>{f7d42ac2-32aa-48a6-9f3b-6aa9960fd00c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\imguiiugmi\imgui\imgui.cpp">
@@ -212,36 +224,6 @@
     <ClInclude Include="..\..\..\imguiiugmi\rapidjson\msinttypes\stdint.h">
       <Filter>rapidjson\msinttypes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\Fire.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FirePainter.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireProperty.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireState.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireStShaderPanel.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireUI.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireUtility.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireConfig.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireDefinition.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\imguiiugmi\FireJson.h">
-      <Filter>Fire</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\imguiiugmi\angle\include\angle_gl.h">
       <Filter>angle\include</Filter>
     </ClInclude>
@@ -286,6 +268,45 @@
     </ClInclude>
     <ClInclude Include="..\third\angle\ShParser.h">
       <Filter>third\angle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireState.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUtility.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\Fire.h">
+      <Filter>Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireDefinition.h">
+      <Filter>Fire\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireConfig.h">
+      <Filter>Fire\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireProperty.h">
+      <Filter>Fire\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireStShaderPanel.h">
+      <Filter>Fire\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUI.h">
+      <Filter>Fire\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUIBase.h">
+      <Filter>Fire\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUIProperty.h">
+      <Filter>Fire\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUIShaderPanel.h">
+      <Filter>Fire\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FirePainter.h">
+      <Filter>Fire\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireJson.h">
+      <Filter>Fire\IO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
