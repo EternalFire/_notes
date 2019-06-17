@@ -9,8 +9,10 @@ require "cocos.init"
 local State = {
     scene = nil,
     layer = nil,
+    bgLayer = nil,
     emitter = nil,
     rt = nil,
+    clipper = nil,
 
     processUp = nil,
     processDown = nil,
@@ -18,6 +20,10 @@ local State = {
     processRight = nil,
 
     moveStep = 10,
+
+    useClip = false,
+    clipInvert = false,
+    alphaThreshold = 0,
 }
 
 
@@ -59,7 +65,7 @@ local State = {
 function case_imgui()
     print("case_imgui......")
     print (imgui.version)
-    print (imgui.ImGuiWindowFlags_NoTitleBar)
+    -- print (imgui.ImGuiWindowFlags_NoTitleBar)
 
     -- data
     local buf = "Quick brown fox"
@@ -163,19 +169,14 @@ function case_imgui()
             end
 
             if imgui.button("Particle") then
-                setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 0.02)
-                -- setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 0.02)
+                -- setTimeout(function() captureNode(State.rt, State.scene, "scene-"..tostring(os.time()), false) end, 0.02)
+                setTimeout(function() captureNode(State.rt, State.emitter:getParent(), "particleBatch-"..tostring(os.time()), true) end, 0.02)
             end
 
         imgui.endToLua()
     end
 
-    -- draw
-    imgui.draw = function ()
-        setupMainMenu()
-
-        showPanel()
-
+    local function demoPanel()
         -- without close button
         imgui.begin("Toolbar")
             if imgui.beginMenuBar() == true then
@@ -201,12 +202,58 @@ function case_imgui()
             imgui.sameLine() if imgui.imageButton("#AddCoinButton.png", 30, 30) then print("AddCoinButton") end
 
         imgui.endToLua() -- end of imgui.begin
+    end
 
-        imgui.setNextWindowPosCenter()
+    local function clipPanel()
+        imgui.begin("clip setting")
+
+            local ret0
+            ret0, State.useClip = imgui.checkbox("use clip", State.useClip == true and 1 or 0)
+            if ret0 then
+                if State.useClip then
+                    State.bgLayer:retain()
+                    State.bgLayer:removeFromParent(false)
+                    State.clipper:addChild(State.bgLayer)
+                    State.bgLayer:release()
+                else
+                    State.bgLayer:retain()
+                    State.bgLayer:removeFromParent(false)
+                    State.layer:addChild(State.bgLayer)
+                    State.bgLayer:release()
+                end
+            end
+
+            local ret1
+            ret1, State.clipInvert = imgui.checkbox("setInverted", State.clipInvert == true and 1 or 0)
+            if ret1 then
+                State.clipper:setInverted(State.clipInvert)
+            end
+
+            local ret2
+            ret2, State.alphaThreshold = imgui.sliderFloat("AlphaThreshold", State.alphaThreshold, 0, 1)
+            if ret2 then
+                State.clipper:setAlphaThreshold(State.alphaThreshold)
+                print("update AlphaThreshold", State.alphaThreshold)
+            end
+
+        imgui.endToLua()
+    end
+
+    -- draw
+    imgui.draw = function ()
+        setupMainMenu()
+
+        showPanel()
+
+        -- demoPanel()
+
+        -- imgui.setNextWindowPosCenter()
         showControlPanel()
 
         -- imgui.setNextWindowPos(100, 20)
         capturePanel()
+
+        clipPanel()
     end -- end of imgui.draw
 
     --
@@ -222,14 +269,22 @@ function run()
 
     local layer = display.newLayer():addTo(scene)
 
+    local bgLayer = display.newLayer({r=100,g=100,b=100,a=200})
+
     local emitter = cc.ParticleSystemQuad:create("Particles/LavaFlow.plist")
     local batch = cc.ParticleBatchNode:createWithTexture(emitter:getTexture())
     batch:addChild(emitter)
-    layer:addChild(batch)
+    bgLayer:addChild(batch)
+
+    emitter:move(display.center)
+
+    display.newSprite("ball.png", display.center.x, display.center.y):addTo(bgLayer)
 
     State.scene = scene
     State.layer = layer
+    State.bgLayer = bgLayer
     State.emitter = emitter
+
     State.processUp = function()
         local target = State.emitter
         target:setPositionY(target:getPositionY() + State.moveStep)
@@ -259,6 +314,26 @@ function run()
     renderTexture:setPosition(cc.p(0, -100000))
     State.layer:addChild(renderTexture)
     State.rt = renderTexture
+
+    ---------------------------------------------------------
+
+    local clipper = cc.ClippingNode:create()
+    local stencilSprite = display.newSprite("alphamap.png", display.center.x, display.center.y)
+    clipper:setStencil(stencilSprite)
+
+    State.clipper = clipper
+
+    ----------------------------------------
+    -- add bgLayer to clipper, clipper add to linu
+    --
+    -- clipper:addChild(bgLayer) -- clip content
+    layer:addChild(clipper)
+    --------------------
+    layer:addChild(bgLayer)
+    ----------------------------------------
+
+
+    ---------------------------------------------------------
 end
 
 local function main()
