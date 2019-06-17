@@ -289,7 +289,6 @@ struct TestRapidjson {
 	//遍历解析
 	static void parse_1()
 	{
-		// 这个是用于遍历json数组，用于不知道name的前提下
 		string data = "{\"name\":\"qq849635649\",\"age\":20,\"sex\":true}";
 		rapidjson::Document dom;
 		if (!dom.Parse(data.data()).HasParseError())
@@ -314,12 +313,43 @@ struct TestRapidjson {
 		}
 	}
 
+	//遍历解析 Array
+	static void parse_2()
+	{
+		string data = "[\"ABCD\", 90.09, 1000, true]";
+		rapidjson::Document dom;
+		if (!dom.Parse(data.data()).HasParseError())
+		{
+			for (rapidjson::Value::ConstValueIterator iter = dom.Begin(); iter != dom.End(); ++iter)
+			{
+				const rapidjson::Value& value = *iter;
+				if (value.IsString())
+				{
+					cout << value.GetString() << endl;
+				}
+				else if (value.IsInt())
+				{
+					cout << value.GetInt() << endl;
+				}
+				else if (value.IsBool())
+				{
+					cout << value.GetBool() << endl;
+				}
+				else if (value.IsFloat())
+				{
+					cout << value.GetFloat() << endl;
+				}
+			}
+		}
+	}
 	static void runTest()
 	{
 		writeToFile(); cout << "\n";
-		
+
 		readFromFile(); cout << "\n";
-				
+
 		parse_1(); cout << "\n";
+
+		parse_2(); cout << "\n";
 	}
 };
