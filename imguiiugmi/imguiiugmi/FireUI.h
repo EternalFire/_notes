@@ -23,7 +23,7 @@ public:
     
     void render()
     {
-        sp.render();
+        //sp.render();
         pp.render();
     }
     

@@ -308,5 +308,8 @@
     <ClInclude Include="..\..\..\imguiiugmi\FireJson.h">
       <Filter>Fire\IO</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireStPropertyObject.h">
+      <Filter>Fire\Data</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

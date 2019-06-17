@@ -617,6 +617,52 @@ void parseJSON(const string& jsonStr, struct StShaderPanel& stShaderPanel)
     }
 }
 
+// stringify StProperty.children
+string toJSON(const struct StProperty& prop)
+{
+	string data = "";
+	rapidjson::StringBuffer strBuf;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(strBuf);
+
+	writer.StartArray();
+		const auto& propertyArray = prop.children;
+		for (auto it = propertyArray.begin(); it != propertyArray.end(); it++)
+		{
+			const auto& prop = *it;
+			toWriter(prop, writer);
+		}
+	writer.EndArray();
+
+	data = strBuf.GetString();
+	return data;
+}
+
+// parse StProperty.children
+void parseJSON(const string& jsonStr, struct StProperty& prop)
+{
+	rapidjson::Document doc;
+	if (!doc.Parse(jsonStr.c_str()).HasParseError())
+	{		
+		if (doc.IsArray())
+		{
+			for (rapidjson::Value::ConstValueIterator itr = doc.Begin(); itr != doc.End(); ++itr)
+			{				
+				if (itr->IsObject())
+				{					
+					const auto& object = *itr;
+					struct StProperty subProp;
+					toStProperty(object, subProp);
+					prop.children.push_back(subProp);
+				}
+			}
+		}	
+	}
+	else
+	{
+		cout << "parse StProperty json error" << endl;
+	}
+}
+
 string toJSON(const struct StConfig& config)
 {
     string data;

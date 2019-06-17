@@ -19,6 +19,7 @@ using namespace std;
 #include <FireUtility.h>
 #include <FireProperty.h>
 #include <FireStShaderPanel.h>
+#include <FireStPropertyObject.h>
 #include <FireJson.h>
 #include <FireUI.h>
 #include <FireState.h>

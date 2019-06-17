@@ -19,6 +19,8 @@ public:
     }
     
     void render() {
+		UIBase::render();
+
         for (auto it = G.stShaderPanelMap.begin(); it != G.stShaderPanelMap.end(); it++) {
             renderShaderPanel(it->first.c_str());
         }

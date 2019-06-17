@@ -4,6 +4,7 @@
 #include <FireDefinition.h>
 #include <FireUIBase.h>
 #include <FireState.h>
+#include <FireStPropertyObject.h>
 #include "imgui.h"
 
 NS_FIRE_BEGIN
@@ -367,7 +368,92 @@ public:
 //        ImGui::EndChild();
 //        ImGui::PopStyleVar();
     }
-    
+
+	static void RenderPropertyPanel(PropertyObject& propertyObject)
+	{
+		PropertyArray& propertyArray = propertyObject.root.children;
+		// bool& open = stShaderPanel.isShow;
+
+		ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
+		if (!ImGui::Begin("PropertyPanel"/* , &open */))
+		{
+			ImGui::End();
+			return;
+		}
+
+		//        ImGui::LabelText("", "Input: %.2f", ImGui::GetWindowContentRegionWidth());
+		ImGui::LabelText("", "Input:");
+
+		ImGui::SetNextItemWidth(180);
+
+		char nameBuffer[128] = { 0 };
+		string& tempName = propertyObject.get("tempName", Type_String).sVal;
+		strcpy(nameBuffer, tempName.c_str());
+		// input property name
+		if (ImGui::InputText("Name", nameBuffer, sizeof(nameBuffer))) {
+			//printf("%s\n", stShaderPanel.nameBuffer);
+		}
+		tempName = nameBuffer;
+
+		ImGui::SetNextItemWidth(180);
+		// select property type
+		struct FuncHolder { static bool ItemGetter(void* data, int idx, const char** out_str) { *out_str = ((const char**)data)[idx]; return true; } };
+		static int item_current = 0;
+		if (ImGui::Combo("Type", &item_current, &FuncHolder::ItemGetter, TypeNames, ARRAY_LENGTH(TypeNames), ARRAY_LENGTH(TypeNames))) {
+			//printf("select %d \n", item_current);
+		}
+
+		ImGui::Separator();
+		//        ImVec2 size = ImGui::GetItemRectSize();
+		ImGui::NewLine();
+
+		//        ImGui::SameLine(size.x + ImGui::GetStyle().ItemSpacing.x);
+		//        ImGui::SameLine(180)
+		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2.5f);
+		if (ImGui::Button("Create"))
+		{
+			// create property data
+			int type = item_current;
+			struct StProperty prop(type);
+			if (strlen(nameBuffer) == 0) {
+				prop.name = "Prop_";
+				prop.name.append(TypeNames[item_current]);
+			}
+			else {
+				prop.name = nameBuffer;
+			}
+
+			propertyArray.push_back(prop);
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Save"))
+		{
+			const string& str = toJSON(propertyObject.root);
+			string path = "PropertyPanel.json";
+			writeToFile(path.c_str(), str.c_str());
+		}
+
+		// ==============================
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("#PropertyChildWindow", ImVec2(0, 0), true);
+
+		ImGui::Text("Property [");
+		ImGui::SameLine();
+		int num = (int)propertyArray.size();
+		ImGui::TextColored(ImVec4(0, 1.0f, 0, 0.8f), "%d", num);
+		ImGui::SameLine();
+		ImGui::Text("]:");
+
+		UIProperty::RenderPropertyArray(propertyArray);
+
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+
+		ImGui::End();
+	}
+
+public:
     UIProperty() {
         
     }
@@ -375,11 +461,27 @@ public:
     ~UIProperty() {
         
     }
+
+	void init() {
+		UIBase::init();
+
+		string path = "PropertyPanel.json";
+		bool exist = isFileExist(path.c_str());
+		if (exist)
+		{
+			string data = readFromFile(path.c_str());
+			parseJSON(data, propObject.root);
+		}
+	}
     
     void render() {
         UIBase::render();
-        
+		UIProperty::RenderPropertyPanel(propObject);
     }
+
+public:
+	PropertyObject propObject;
+
 };
 
 NS_FIRE_END__
