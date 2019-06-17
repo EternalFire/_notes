@@ -21,6 +21,45 @@ float clamp(float value, float minVal, float maxVal) {
     return fmax(minVal, (fmin(value, maxVal)));
 }
 
+Color convertColorItoF(const IColor& icolor)
+{
+	Color result = { CNTo1(icolor.r), CNTo1(icolor.g), CNTo1(icolor.b), CNTo1(icolor.a) };
+	return result;
+}
+IColor convertColorFtoI(const Color& color)
+{
+	IColor result = { CNTo255(color.r), CNTo255(color.g), CNTo255(color.b), CNTo255(color.a) };
+	return result;
+}
+void convertColorToArray(const IColor& color, float* rgba)
+{
+	rgba[0] = CNTo1(color.r);
+	rgba[1] = CNTo1(color.g);
+	rgba[2] = CNTo1(color.b);
+	rgba[3] = CNTo1(color.a);
+}
+void convertColorToArray(const Color& color, float* rgba)
+{
+	rgba[0] = (color.r);
+	rgba[1] = (color.g);
+	rgba[2] = (color.b);
+	rgba[3] = (color.a);
+}
+void convertArrayToColor(const float* rgba, IColor* outColor)
+{
+	outColor->r = CNTo255(rgba[0]);
+	outColor->g = CNTo255(rgba[1]);
+	outColor->b = CNTo255(rgba[2]);
+	outColor->a = CNTo255(rgba[3]);
+}
+void convertArrayToColor(const float* rgba, Color* outColor)
+{
+	outColor->r = (rgba[0]);
+	outColor->g = (rgba[1]);
+	outColor->b = (rgba[2]);
+	outColor->a = (rgba[3]);
+}
+
 glm::vec3 convertColorToVec3(Color* col)
 {
     return col ? glm::vec3((*col).r, (*col).g, (*col).b) : glm::vec3(1.0);

@@ -70,7 +70,7 @@ int main(int, char**)
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create window with graphics context
-    int w = Fire::config.width, h = Fire::config.height;
+    int w = (int)Fire::config.width, h = (int)Fire::config.height;
     GLFWwindow* window = glfwCreateWindow(w, h, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return 1;

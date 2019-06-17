@@ -24,18 +24,26 @@ public:
             
             /**
              *  [ - ]  name  (next) |  widget  (next)
+			 *         type
+			 *
              *  [ - ]  name  (next) |  widget  (next)
+			 *         type
+			 *
              *  [ - ]  name  (next) |  widget  (next)
+			 *         type
+			 *
              */
             
             // red button
             ImGui::PushID(id++);
-            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.1/7.0f, 0.6f, 0.6f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.1/7.0f, 0.7f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.1/7.0f, 0.8f, 0.8f));
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.1f/7.0f, 0.6f, 0.6f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.1f/7.0f, 0.7f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.1f/7.0f, 0.8f, 0.8f));
             bool isClick = ImGui::Button(" - "); // remove
             ImGui::PopStyleColor(3);
             ImGui::PopID();
+
+			const auto& btnSize = ImGui::GetItemRectSize();
             
             // name text
             ImGui::SameLine();
@@ -48,7 +56,11 @@ public:
                 prop.name = buffer;
             }
             ImGui::PopID();
-            ImGui::NewLine();
+
+            //ImGui::NewLine();
+			// type text
+			ImGui::Dummy(btnSize); ImGui::SameLine();
+			ImGui::LabelText("", "Type = %s", TypeNames[prop.type]);
             
             ImGui::NextColumn();
             
@@ -97,13 +109,169 @@ public:
                     ImGui::NextColumn();
                     break;
                 }
-                case Type_Color: {
-                    float rgba[4] = { prop.cfVal.r, prop.cfVal.g, prop.cfVal.b, prop.cfVal.a };
-                    ImGui::ColorEdit4("", rgba, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel);
-                    prop.cfVal.r = rgba[0]; prop.cfVal.g = rgba[1]; prop.cfVal.b = rgba[2]; prop.cfVal.a = rgba[3];
+				case Type_Vec2: {					
+					//                                           2 column  2 column
+					//float w = ImGui::GetWindowContentRegionWidth() * 0.5f * 0.5f - ImGui::GetStyle().ItemSpacing.x;
+					float w = ImGui::GetColumnWidth() / 2.0f - ImGui::GetStyle().ItemSpacing.x;
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v2_x");
+					ImGui::InputFloat("", &prop.v2Val.x, 0.01f, 0.1f);
+					ImGui::PopID();
+					
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v2_y");
+					ImGui::InputFloat("", &prop.v2Val.y, 0.01f, 0.1f);
+					ImGui::PopID();	
+
+					ImGui::NextColumn();
+					break;
+				}
+				case Type_IVec2: {
+					//                                           2 column  2 column
+					//float w = ImGui::GetWindowContentRegionWidth() * 0.5f * 0.5f - ImGui::GetStyle().ItemSpacing.x;
+					float w = ImGui::GetColumnWidth() / 2.0f - ImGui::GetStyle().ItemSpacing.x;
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v2_x");
+					ImGui::InputInt("", &prop.iv2Val.x);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v2_y");
+					ImGui::InputInt("", &prop.iv2Val.y);
+					ImGui::PopID();
+
+					ImGui::NextColumn();
+					break;
+				}
+				case Type_Vec3: {
+					//                                           2 column  3 column
+					//float w = ImGui::GetWindowContentRegionWidth() * 0.5f / 3.0f - ImGui::GetStyle().ItemSpacing.x;
+					float w = ImGui::GetColumnWidth() / 3.0f - ImGui::GetStyle().ItemSpacing.x;
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v3_x");
+					ImGui::InputFloat("", &prop.v3Val.x, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v3_y");
+					ImGui::InputFloat("", &prop.v3Val.y, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v3_z");
+					ImGui::InputFloat("", &prop.v3Val.z, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::NextColumn();
+					break;
+				}
+				case Type_IVec3: {
+					//                                           2 column  3 column
+					//float w = ImGui::GetWindowContentRegionWidth() * 0.5f / 3.0f - ImGui::GetStyle().ItemSpacing.x;
+					float w = ImGui::GetColumnWidth() / 3.0f - ImGui::GetStyle().ItemSpacing.x;
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v3_x");
+					ImGui::InputInt("", &prop.iv3Val.x);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v3_y");
+					ImGui::InputInt("", &prop.iv3Val.y);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v3_z");
+					ImGui::InputInt("", &prop.iv3Val.z);
+					ImGui::PopID();
+
+					ImGui::NextColumn();
+					break;
+				}
+				case Type_Vec4: {
+					//                                           2 column  4 column
+					//float w = ImGui::GetWindowContentRegionWidth() * 0.5f / 4.0f - ImGui::GetStyle().ItemSpacing.x;
+					float w = ImGui::GetColumnWidth() / 4.0f - ImGui::GetStyle().ItemSpacing.x;
+
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v4_x");
+					ImGui::InputFloat("", &prop.v4Val.x, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v4_y");
+					ImGui::InputFloat("", &prop.v4Val.y, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v4_z");
+					ImGui::InputFloat("", &prop.v4Val.z, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputFloat_Float_v4_w");
+					ImGui::InputFloat("", &prop.v4Val.w, 0.01f, 0.1f);
+					ImGui::PopID();
+
+					ImGui::NextColumn();
+					break;
+				}
+				case Type_IVec4: {
+					//                                           2 column  4 column
+					//float w = ImGui::GetWindowContentRegionWidth() * 0.5f / 4.0f - ImGui::GetStyle().ItemSpacing.x;
+					float w = ImGui::GetColumnWidth() / 4.0f - ImGui::GetStyle().ItemSpacing.x;
+					
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v4_x");
+					ImGui::InputInt("", &prop.iv4Val.x);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v4_y");
+					ImGui::InputInt("", &prop.iv4Val.y);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v4_z");
+					ImGui::InputInt("", &prop.iv4Val.z);
+					ImGui::PopID();
+
+					ImGui::SameLine();
+					ImGui::SetNextItemWidth(w);
+					ImGui::PushID("InputInt_Int_v4_w");
+					ImGui::InputInt("", &prop.iv4Val.w);
+					ImGui::PopID();
+
+					ImGui::NextColumn();
+					break;
+				}
+				case Type_Color: {
+					float rgba[4] = { 0 };
+					convertColorToArray(prop.cfVal, rgba);
+					ImGui::ColorEdit4("", rgba, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel);
+					convertArrayToColor(rgba, &prop.cfVal);
+
                     ImGui::NextColumn();
                     break;
                 }
+				case Type_IColor: {
+					float rgba[4] = { 0 };
+					convertColorToArray(prop.cVal, rgba);
+					ImGui::ColorEdit4("", rgba, ImGuiColorEditFlags_Uint8 | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel);
+					convertArrayToColor(rgba, &prop.cVal);
+					ImGui::NextColumn();
+					break;
+				}
                 case Type_String: {
                     char buffer[1024] = { 0 };
                     strcpy(buffer, prop.sVal.c_str());

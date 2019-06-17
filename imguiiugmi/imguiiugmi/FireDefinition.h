@@ -15,7 +15,9 @@
 #define ARRAY_LENGTH(_ARR)          ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
 // convert rgba color component to [0,1] by divided by 255
-#define CNTo1(component) (component/255.0f)
+#define CNTo1(component) (float)(component/255.0f)
+
+#define CNTo255(component) (int)(component*255.0f)
 
 #define FIRE_API
 
@@ -29,8 +31,8 @@ const float Float_Max = +10000000000.0f;
 const float Float_Min_Normal = -100.0f;
 const float Float_Max_Normal = 100.0f;
 
-const float Int_Min_Normal = -100;
-const float Int_Max_Normal = 100;
+const int Int_Min_Normal = -100;
+const int Int_Max_Normal = 100;
 
 
 typedef struct Vec2  { float x; float y; } Vec2;

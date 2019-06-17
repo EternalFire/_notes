@@ -41,6 +41,84 @@ void toWriter(const StProperty& prop, rapidjson::Writer<rapidjson::StringBuffer>
                 writer.Key("Max"); writer.String(toString(prop.fMax).c_str());
                 break;
             }
+			case Type_Vec2:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("x"); writer.String(toString(prop.v2Val.x).c_str());
+					writer.Key("y"); writer.String(toString(prop.v2Val.y).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
+			case Type_IVec2:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("x"); writer.String(toString(prop.iv2Val.x).c_str());
+					writer.Key("y"); writer.String(toString(prop.iv2Val.y).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
+			case Type_Vec3:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("x"); writer.String(toString(prop.v3Val.x).c_str());
+					writer.Key("y"); writer.String(toString(prop.v3Val.y).c_str());
+					writer.Key("z"); writer.String(toString(prop.v3Val.z).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
+			case Type_IVec3:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("x"); writer.String(toString(prop.iv3Val.x).c_str());
+					writer.Key("y"); writer.String(toString(prop.iv3Val.y).c_str());
+					writer.Key("z"); writer.String(toString(prop.iv3Val.z).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
+			case Type_Vec4:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("x"); writer.String(toString(prop.v4Val.x).c_str());
+					writer.Key("y"); writer.String(toString(prop.v4Val.y).c_str());
+					writer.Key("z"); writer.String(toString(prop.v4Val.z).c_str());
+					writer.Key("w"); writer.String(toString(prop.v4Val.z).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
+			case Type_IVec4:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("x"); writer.String(toString(prop.iv4Val.x).c_str());
+					writer.Key("y"); writer.String(toString(prop.iv4Val.y).c_str());
+					writer.Key("z"); writer.String(toString(prop.iv4Val.z).c_str());
+					writer.Key("w"); writer.String(toString(prop.iv4Val.w).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
             case Type_Color:
             {
                 writer.Key("Type"); writer.String(TypeNames[prop.type]);
@@ -55,6 +133,27 @@ void toWriter(const StProperty& prop, rapidjson::Writer<rapidjson::StringBuffer>
                 writer.EndObject();
                 break;
             }
+			case Type_IColor:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartObject();
+				{
+					writer.Key("r"); writer.String(toString(prop.cVal.r).c_str());
+					writer.Key("g"); writer.String(toString(prop.cVal.g).c_str());
+					writer.Key("b"); writer.String(toString(prop.cVal.b).c_str());
+					writer.Key("a"); writer.String(toString(prop.cVal.a).c_str());
+				}
+				writer.EndObject();
+				break;
+			}
+			case Type_String:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.String(prop.sVal.c_str());
+				break;
+			}
             case Type_Bool:
             {
                 writer.Key("Type"); writer.String(TypeNames[prop.type]);
@@ -62,6 +161,18 @@ void toWriter(const StProperty& prop, rapidjson::Writer<rapidjson::StringBuffer>
                 writer.Key("Value"); writer.String(toString(prop.iVal).c_str());
                 break;
             }
+			case Type_Array:
+			{
+				writer.Key("Type"); writer.String(TypeNames[prop.type]);
+				writer.Key("Name"); writer.String(prop.name.c_str());
+				writer.Key("Value"); writer.StartArray();
+					for (auto it = prop.children.begin(); it < prop.children.end(); it++)
+					{
+						toWriter(*it, writer);
+					}
+				writer.EndArray();
+				break;
+			}
             default:
                 break;
         }
@@ -129,6 +240,168 @@ void toStProperty(const rapidjson::Value& object, StProperty& prop)
             }
             break;
         }
+		case Type_Vec2:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* x = "x";
+				if (vObject.HasMember(x) && vObject[x].IsString())
+				{
+					prop.v2Val.x = parseString<float>(vObject[x].GetString());
+				}
+
+				const char* y = "y";
+				if (vObject.HasMember(y) && vObject[y].IsString())
+				{
+					prop.v2Val.y = parseString<float>(vObject[y].GetString());
+				}
+			}
+			break;
+		}
+		case Type_IVec2:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* x = "x";
+				if (vObject.HasMember(x) && vObject[x].IsString())
+				{
+					prop.iv2Val.x = parseString<int>(vObject[x].GetString());
+				}
+
+				const char* y = "y";
+				if (vObject.HasMember(y) && vObject[y].IsString())
+				{
+					prop.iv2Val.y = parseString<int>(vObject[y].GetString());
+				}
+			}
+			break;
+		}
+		case Type_Vec3:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* x = "x";
+				if (vObject.HasMember(x) && vObject[x].IsString())
+				{
+					prop.v3Val.x = parseString<float>(vObject[x].GetString());
+				}
+
+				const char* y = "y";
+				if (vObject.HasMember(y) && vObject[y].IsString())
+				{
+					prop.v3Val.y = parseString<float>(vObject[y].GetString());
+				}
+
+				const char* z = "z";
+				if (vObject.HasMember(z) && vObject[z].IsString())
+				{
+					prop.v3Val.z = parseString<float>(vObject[z].GetString());
+				}
+			}
+			break;
+		}
+		case Type_IVec3:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* x = "x";
+				if (vObject.HasMember(x) && vObject[x].IsString())
+				{
+					prop.iv3Val.x = parseString<int>(vObject[x].GetString());
+				}
+
+				const char* y = "y";
+				if (vObject.HasMember(y) && vObject[y].IsString())
+				{
+					prop.iv3Val.y = parseString<int>(vObject[y].GetString());
+				}
+
+				const char* z = "z";
+				if (vObject.HasMember(z) && vObject[z].IsString())
+				{
+					prop.iv3Val.z = parseString<int>(vObject[z].GetString());
+				}
+			}
+			break;
+		}
+		case Type_Vec4:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* x = "x";
+				if (vObject.HasMember(x) && vObject[x].IsString())
+				{
+					prop.v4Val.x = parseString<float>(vObject[x].GetString());
+				}
+
+				const char* y = "y";
+				if (vObject.HasMember(y) && vObject[y].IsString())
+				{
+					prop.v4Val.y = parseString<float>(vObject[y].GetString());
+				}
+
+				const char* z = "z";
+				if (vObject.HasMember(z) && vObject[z].IsString())
+				{
+					prop.v4Val.z = parseString<float>(vObject[z].GetString());
+				}
+
+				const char* w = "w";
+				if (vObject.HasMember(w) && vObject[w].IsString())
+				{
+					prop.v4Val.w = parseString<float>(vObject[w].GetString());
+				}
+			}
+			break;
+		}
+		case Type_IVec4:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* x = "x";
+				if (vObject.HasMember(x) && vObject[x].IsString())
+				{
+					prop.iv4Val.x = parseString<int>(vObject[x].GetString());
+				}
+
+				const char* y = "y";
+				if (vObject.HasMember(y) && vObject[y].IsString())
+				{
+					prop.iv4Val.y = parseString<int>(vObject[y].GetString());
+				}
+
+				const char* z = "z";
+				if (vObject.HasMember(z) && vObject[z].IsString())
+				{
+					prop.iv4Val.z = parseString<int>(vObject[z].GetString());
+				}
+
+				const char* w = "w";
+				if (vObject.HasMember(w) && vObject[w].IsString())
+				{
+					prop.iv4Val.w = parseString<int>(vObject[w].GetString());
+				}
+			}
+			break;
+		}
         case Type_Color:
         {
             const char* Value = "Value";
@@ -163,6 +436,48 @@ void toStProperty(const rapidjson::Value& object, StProperty& prop)
             
             break;
         }
+		case Type_IColor:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsObject())
+			{
+				auto& vObject = object[Value];
+
+				const char* r = "r";
+				if (vObject.HasMember(r) && vObject[r].IsString())
+				{
+					prop.cVal.r = parseString<int>(vObject[r].GetString());
+				}
+
+				const char* g = "g";
+				if (vObject.HasMember(g) && vObject[g].IsString())
+				{
+					prop.cVal.g = parseString<int>(vObject[g].GetString());
+				}
+
+				const char* b = "b";
+				if (vObject.HasMember(b) && vObject[b].IsString())
+				{
+					prop.cVal.b = parseString<int>(vObject[b].GetString());
+				}
+
+				const char* a = "a";
+				if (vObject.HasMember(a) && vObject[a].IsString())
+				{
+					prop.cVal.a = parseString<int>(vObject[a].GetString());
+				}
+			}
+
+			break;
+		}
+		case Type_String:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsString()) {
+				prop.sVal = object[Value].GetString();
+			}
+			break;
+		}
         case Type_Bool:
         {
             const char* Value = "Value";
@@ -172,6 +487,26 @@ void toStProperty(const rapidjson::Value& object, StProperty& prop)
             
             break;
         }
+		case Type_Array:
+		{
+			const char* Value = "Value";
+			if (object.HasMember(Value) && object[Value].IsArray()) {
+				const rapidjson::Value& array = object[Value];
+				int len = (int)array.Size();
+				for (int i = 0; i < len; i++)
+				{
+					auto& subObject = array[i];
+					if (subObject.IsObject())
+					{
+						struct StProperty subProp;
+						toStProperty(subObject, subProp);
+
+						prop.children.push_back(subProp);
+					}
+				}
+			}
+			break;
+		}
         default:
             break;
     }
@@ -262,7 +597,7 @@ void parseJSON(const string& jsonStr, struct StShaderPanel& stShaderPanel)
             if (doc.HasMember(Properties) && doc[Properties].IsArray())
             {
                 const rapidjson::Value& array = doc[Properties];
-                size_t len = array.Size();
+                int len = (int)array.Size();
                 for (int i = 0; i < len; i++)
                 {
                     auto& object = array[i];
