@@ -465,18 +465,18 @@ public:
 	void init() {
 		UIBase::init();
 
-		string path = "PropertyPanel.json";
-		bool exist = isFileExist(path.c_str());
-		if (exist)
-		{
-			string data = readFromFile(path.c_str());
-			parseJSON(data, propObject.root);
-		}
+//        string path = "PropertyPanel.json";
+//        bool exist = isFileExist(path.c_str());
+//        if (exist)
+//        {
+//            string data = readFromFile(path.c_str());
+//            parseJSON(data, propObject.root);
+//        }
 	}
     
     void render() {
         UIBase::render();
-		UIProperty::RenderPropertyPanel(propObject);
+//        UIProperty::RenderPropertyPanel(propObject);
     }
 
 public:

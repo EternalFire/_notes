@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include <FireDefinition.h>
+#include <FireProperty.h>
 #include <camera.h>
 #include <shader.h>
 
@@ -18,13 +19,15 @@ using namespace std;
 ///
 NS_FIRE_BEGIN
 
-struct State {
+struct State
+{
     double lastFrame;
     double currentFrame;
     double deltaTime;
     float windowWidth;
     float windowHeight;
     
+    PropertyObject shaderNamesObject;
     vector<Shader*> shaderArray;
     map<string, struct StShaderPanel> stShaderPanelMap;
     
@@ -121,7 +124,9 @@ struct State {
     }
 };
 
-
+/**
+ * Global State
+ */
 struct State G;
 
 

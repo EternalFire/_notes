@@ -28,10 +28,11 @@ public:
     
     void renderShaderPanel(const char* key) {
         auto& stShaderPanel = G.stShaderPanelMap[key];
-        // bool& open = stShaderPanel.isShow;
+        bool& open = stShaderPanel.isShow;
+        if (!open) return;
         
         ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
-        if (!ImGui::Begin(stShaderPanel.name.c_str()/* , &open */))
+        if (!ImGui::Begin(stShaderPanel.name.c_str(), &open, ImGuiWindowFlags_None))
         {
             ImGui::End();
             return;

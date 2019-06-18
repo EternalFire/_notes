@@ -30,18 +30,8 @@ NS_FIRE_BEGIN
 
 void InitConfig()
 {
-    string path = "config.json";
-    bool exist = isFileExist(path.c_str());
-    if (exist)
-    {
-        string data = readFromFile(path.c_str());
-        parseJSON(data, config);
-    }
-    else
-    {
-        const string& str = toJSON(config);
-        writeToFile(path.c_str(), str.c_str());
-    }
+    LoadOrSaveDefault<StConfig>("config.json", config);
+    LoadOrSaveDefault<StProperty>("shaderNames.json", G.shaderNamesObject.root);
 }
 
 void Init()
