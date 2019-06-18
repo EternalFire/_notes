@@ -36,6 +36,7 @@ struct State
     glm::vec3 cameraUpNew;
     float cameraYawNew;
     float cameraPitchNew;
+    float cameraZoomNew;
     
     float lastX;
     float lastY;
@@ -60,11 +61,12 @@ struct State
         windowWidth = w;
         windowHeight = h;
         
-        camera = Camera(cameraPosition, cameraUp, cameraYaw, cameraPitch);
-        cameraPositionNew = cameraPosition;
-        cameraUpNew = cameraUp;
-        cameraYawNew = cameraYaw;
-        cameraPitchNew = cameraPitch;
+        camera = Camera(CameraPosition, CameraUp, CameraYaw, CameraPitch);
+        cameraPositionNew = CameraPosition;
+        cameraUpNew = CameraUp;
+        cameraYawNew = CameraYaw;
+        cameraPitchNew = CameraPitch;
+        cameraZoomNew = camera.Zoom;
         firstMouse = true;
         lockCamera = true;
         isLockingCamera = false;
@@ -95,6 +97,7 @@ struct State
     
     void resetCamera()
     {
+        camera.Zoom = cameraZoomNew;
         camera.init(cameraPositionNew, cameraUpNew, cameraYawNew, cameraPitchNew);
         resetFirstMouse();
     }

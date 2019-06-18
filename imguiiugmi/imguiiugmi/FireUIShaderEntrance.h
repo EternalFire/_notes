@@ -59,7 +59,7 @@ public:
 
 			auto& shaderNamesArray = G.shaderNamesObject.root.children;
 			int i = 0;
-			for (auto it = shaderNamesArray.begin(); it != shaderNamesArray.end(); it++)
+			for (auto it = shaderNamesArray.begin(); it != shaderNamesArray.end(); )
 			{
 				auto& prop = *it;
 				const string& shaderName = prop.sVal;
@@ -79,6 +79,23 @@ public:
 					stShaderPanel.isShow = true;
 				}
 				ImGui::PopID();
+                
+                ImGui::SameLine();
+                
+                ImGui::PushID(i++);
+                ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.1f/7.0f, 0.6f, 0.6f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.1f/7.0f, 0.7f, 0.7f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.1f/7.0f, 0.8f, 0.8f));
+                bool isClick = ImGui::Button(" - "); // remove
+                ImGui::PopStyleColor(3);
+                ImGui::PopID();
+                
+                if (isClick) {
+                    it = shaderNamesArray.erase(it);
+                    NS_FIRE::SaveShaderNames();
+                } else {
+                    it++;
+                }
 			}
 		}
 		ImGui::End();

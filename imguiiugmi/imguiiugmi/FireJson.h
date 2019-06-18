@@ -9,6 +9,7 @@
 #include <FireDefinition.h>
 #include <FireProperty.h>
 #include <FireStShaderPanel.h>
+#include <FireConfig.h>
 #include <FireUtility.h>
 
 #include <string>
@@ -684,6 +685,16 @@ string toJSON(const struct StConfig& config)
     {
         writer.Key("Width"); writer.String(toString(config.width).c_str());
         writer.Key("Height"); writer.String(toString(config.height).c_str());
+        writer.Key(KeyCameraPosition); writer.StartArray();
+        writer.Double(config.cameraPosition[0]);
+        writer.Double(config.cameraPosition[1]);
+        writer.Double(config.cameraPosition[2]);
+        writer.EndArray();
+        writer.Key(KeyCameraYaw); writer.Double(config.cameraYaw);
+        writer.Key(KeyCameraPitch); writer.Double(config.cameraPitch);
+        writer.Key(KeyCameraZoom); writer.Double(config.cameraZoom);
+        writer.Key(KeyCameraSpeed); writer.Double(config.cameraSpeed);
+        writer.Key(KeyCameraSensitivity); writer.Double(config.cameraSensitivity);
     }
     writer.EndObject();
     data = strBuf.GetString();
@@ -703,6 +714,38 @@ void parseJSON(const string& jsonStr, struct StConfig& config)
         const char* Height = "Height";
         if (doc.HasMember(Height) && doc[Height].IsString()) {
             config.height = parseString<float>(doc[Height].GetString());
+        }
+        
+        if (doc.HasMember(KeyCameraPosition) && doc[KeyCameraPosition].IsArray()) {
+            int len = (int)(doc[KeyCameraPosition].Size());
+            int positionLen = ARRAY_LENGTH(config.cameraPosition);
+            len = len < positionLen ? len : positionLen;
+            for (int i = 0; i < len; i++)
+            {
+                if (doc[KeyCameraPosition][i].IsDouble()) {
+                    config.cameraPosition[i] = (float)doc[KeyCameraPosition][i].GetDouble();
+                }
+            }
+        }
+        
+        if (doc.HasMember(KeyCameraYaw) && doc[KeyCameraYaw].IsDouble()) {
+            config.cameraYaw = (float)doc[KeyCameraYaw].GetDouble();
+        }
+        
+        if (doc.HasMember(KeyCameraPitch) && doc[KeyCameraPitch].IsDouble()) {
+            config.cameraPitch = (float)doc[KeyCameraPitch].GetDouble();
+        }
+        
+        if (doc.HasMember(KeyCameraZoom) && doc[KeyCameraZoom].IsDouble()) {
+            config.cameraZoom = (float)doc[KeyCameraZoom].GetDouble();
+        }
+        
+        if (doc.HasMember(KeyCameraSpeed) && doc[KeyCameraSpeed].IsDouble()) {
+            config.cameraSpeed = (float)doc[KeyCameraSpeed].GetDouble();
+        }
+        
+        if (doc.HasMember(KeyCameraSensitivity) && doc[KeyCameraSensitivity].IsDouble()) {
+            config.cameraSensitivity = (float)doc[KeyCameraSensitivity].GetDouble();
         }
     }
     else

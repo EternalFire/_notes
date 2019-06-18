@@ -4,11 +4,12 @@
 #include <FireDefinition.h>
 #include <FireUIBase.h>
 #include <FireState.h>
+#include <FireUtility.h>
 #include "imgui.h"
 #include <FireUIShaderEntrance.h>
 #include <FireUIShaderPanel.h>
 #include <FireUIProperty.h>
-#include <FireUtility.h>
+#include <FireUICameraPanel.h>
 
 NS_FIRE_BEGIN
 
@@ -22,6 +23,7 @@ public:
 		shaderEntrance.init();
 		shaderPanel.init();
 		propertyPanel.init();
+        cameraPanel.init();
     }
 
     void render()
@@ -29,6 +31,7 @@ public:
 		shaderEntrance.render();
         shaderPanel.render();
         //propertyPanel.render();
+        cameraPanel.render();
     }
 
 
@@ -36,6 +39,7 @@ public:
     UIShaderPanel shaderPanel;
     UIProperty propertyPanel;
 	UIShaderEntrance shaderEntrance;
+    UICameraPanel cameraPanel;
 };
 
 UI ui;

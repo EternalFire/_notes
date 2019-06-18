@@ -35,6 +35,11 @@ void InitConfig()
     LoadOrSaveDefault<StProperty>("shaderNames.json", G.shaderNamesObject.root);
 }
 
+void SaveConfig()
+{
+    SaveObject<StConfig>("config.json", config);
+}
+
 void SaveShaderNames()
 {
 	SaveObject<StProperty>("shaderNames.json", G.shaderNamesObject.root);
@@ -58,11 +63,22 @@ void Init()
 	float w = config.width, h = config.height;
 
 	G.init(w, h);
+    
+    G.cameraPositionNew.x = config.cameraPosition[0];
+    G.cameraPositionNew.y = config.cameraPosition[1];
+    G.cameraPositionNew.z = config.cameraPosition[2];
+    G.cameraYawNew = config.cameraYaw;
+    G.cameraPitchNew = config.cameraPitch;
+    G.cameraZoomNew = config.cameraZoom;
+    G.camera.MovementSpeed = config.cameraSpeed;
+    G.camera.MouseSensitivity = config.cameraSensitivity;
+    G.resetCamera();
+    
     ui.init();
 
 	// create StShaderPanel
 	auto& shaderNamesArray = G.shaderNamesObject.root.children;
-	int i = 0;
+//    int i = 0;
 	for (auto it = shaderNamesArray.begin(); it != shaderNamesArray.end(); it++)
 	{
 		LoadStShaderPanel(it->sVal/*shaderName*/);

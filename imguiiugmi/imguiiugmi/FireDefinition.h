@@ -102,6 +102,7 @@ class Painter;
 
 void SaveShaderNames();
 void SaveStShaderPanel(const string& shaderName);
+void SaveConfig();
 
 NS_FIRE_END__
 ///

@@ -136,6 +136,9 @@
 		427F638722B6046F00223235 /* FireUIBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUIBase.h; sourceTree = "<group>"; };
 		427F638822B616CB00223235 /* FireUIShaderPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUIShaderPanel.h; sourceTree = "<group>"; };
 		427F638922B7DF2700223235 /* FireStPropertyObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireStPropertyObject.h; sourceTree = "<group>"; };
+		427F638A22B9351D00223235 /* FireUIShaderEntrance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUIShaderEntrance.h; sourceTree = "<group>"; };
+		427F638B22B9352800223235 /* FireDrawScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireDrawScene.h; sourceTree = "<group>"; };
+		427F638C22B939EA00223235 /* FireUICameraPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FireUICameraPanel.h; sourceTree = "<group>"; };
 		42E134F522AC04C800E4FA4B /* imguiiugmi */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imguiiugmi; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E134F822AC04C800E4FA4B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		42E1350022AC08FD00E4FA4B /* imgui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui.h; sourceTree = "<group>"; };
@@ -423,8 +426,10 @@
 			children = (
 				427A7A6722B023D9007532D8 /* FireUI.h */,
 				427F638722B6046F00223235 /* FireUIBase.h */,
+				427F638A22B9351D00223235 /* FireUIShaderEntrance.h */,
 				427F638822B616CB00223235 /* FireUIShaderPanel.h */,
 				427F638622B6036500223235 /* FireUIProperty.h */,
+				427F638C22B939EA00223235 /* FireUICameraPanel.h */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -433,6 +438,7 @@
 			isa = PBXGroup;
 			children = (
 				427A7A6922B0286F007532D8 /* FirePainter.h */,
+				427F638B22B9352800223235 /* FireDrawScene.h */,
 			);
 			name = Scene;
 			sourceTree = "<group>";
