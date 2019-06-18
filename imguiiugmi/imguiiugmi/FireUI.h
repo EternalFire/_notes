@@ -5,34 +5,37 @@
 #include <FireUIBase.h>
 #include <FireState.h>
 #include "imgui.h"
+#include <FireUIShaderEntrance.h>
 #include <FireUIShaderPanel.h>
 #include <FireUIProperty.h>
+#include <FireUtility.h>
 
 NS_FIRE_BEGIN
 
 class UI: public UIBase {
 public:
-    
+
     UI() {}
     ~UI() {}
-    
+
     void init() {
-        sp.init();
-        pp.init();
+		shaderEntrance.init();
+		shaderPanel.init();
+		propertyPanel.init();
     }
-    
+
     void render()
     {
-        
-        
-        sp.render();
-        pp.render();
+		shaderEntrance.render();
+        shaderPanel.render();
+        //propertyPanel.render();
     }
-    
-    
+
+
 public:
-    UIShaderPanel sp;
-    UIProperty pp;
+    UIShaderPanel shaderPanel;
+    UIProperty propertyPanel;
+	UIShaderEntrance shaderEntrance;
 };
 
 UI ui;

@@ -24,6 +24,7 @@ using namespace std;
 #include <FireUI.h>
 #include <FireState.h>
 #include <FirePainter.h>
+#include <FireDrawScene.h>
 
 ///
 NS_FIRE_BEGIN
@@ -34,13 +35,39 @@ void InitConfig()
     LoadOrSaveDefault<StProperty>("shaderNames.json", G.shaderNamesObject.root);
 }
 
+void SaveShaderNames()
+{
+	SaveObject<StProperty>("shaderNames.json", G.shaderNamesObject.root);
+}
+
+void SaveStShaderPanel(const string& shaderName)
+{
+	auto& stShaderPanel = G.stShaderPanelMap[shaderName];
+	const string& str = toJSON(stShaderPanel);
+	string path = stShaderPanel.name + ".json";
+	writeToFile(path.c_str(), str.c_str());
+}
+
+void LoadStShaderPanel(const string& shaderName)
+{
+	LoadObject<StShaderPanel>(shaderName + ".json", G.stShaderPanelMap[shaderName]);
+}
+
 void Init()
 {
 	float w = config.width, h = config.height;
+
 	G.init(w, h);
     ui.init();
 
 	// create StShaderPanel
+	auto& shaderNamesArray = G.shaderNamesObject.root.children;
+	int i = 0;
+	for (auto it = shaderNamesArray.begin(); it != shaderNamesArray.end(); it++)
+	{
+		LoadStShaderPanel(it->sVal/*shaderName*/);
+	}
+
 	struct StShaderPanel st;
 	// default value
 	st.name = "Shader Panel";
@@ -97,45 +124,58 @@ void TickScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //printf("TickScene\n");
+	auto& shaderPanelMap = G.stShaderPanelMap;
+	for (auto iterator = shaderPanelMap.begin(); iterator != shaderPanelMap.end(); iterator++)
 	{
-		auto& stShaderPanel = G.stShaderPanelMap["Shader Panel"];
-		auto shader = stShaderPanel.shader;
-		if (shader != NULL)
+		//if (iterator->first.compare("Shader Panel")) continue;
+
+		auto& stShaderPanel = iterator->second;
+		if (stShaderPanel.isUse) 
 		{
-			auto pShader = shader;
-			pShader->use();
-			pShader->setMat4("mvp", G.mvp);
-
-			pShader->setFloat("uRatioMixTex2Color", 1.0);
-			pShader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
-			pShader->setInt("uUsePointLight", 0);
-			pShader->setInt("uSwitchEffectInvert", 0);
-			pShader->setInt("uSwitchEffectGray", 0);
-
-			for (auto ite = stShaderPanel.propertyArray.begin(); ite != stShaderPanel.propertyArray.end(); ite++)
+			auto shader = stShaderPanel.shader;
+			if (shader != NULL)
 			{
-				auto& stProperty = *ite;
-				if (stProperty.type == Type_Color) {
-					//glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
-					shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
+				FireDrawScene::DrawStart(stShaderPanel);
+
+				//shader->use();
+				//shader->setMat4("mvp", G.mvp);
+
+				//shader->setFloat("uRatioMixTex2Color", 1.0);
+				//shader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
+				//shader->setInt("uUsePointLight", 0);
+				//shader->setInt("uSwitchEffectInvert", 0);
+				//shader->setInt("uSwitchEffectGray", 0);
+
+				//painter.renderCoordinateSystem();
+
+				// use property value
+				for (auto ite = stShaderPanel.propertyArray.begin(); ite != stShaderPanel.propertyArray.end(); ite++)
+				{
+					auto& stProperty = *ite;
+					if (stProperty.type == Type_Color) {
+						//glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
+						shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
+					}
+
+					// todo
+					// ...
 				}
 
-				// todo
-				// ...
-			}
+				FireDrawScene::Draw(stShaderPanel);
 
-			painter.renderCoordinateSystem();
+				//glm::vec3 position = glm::vec3(5.0f, 0, 0);
+				//glm::mat4 m1 = IMatrix4;
+				//m1 = glm::translate(m1, position);
 
-			glm::vec3 position = glm::vec3(5.0f, 0, 0);
-			glm::mat4 m1 = IMatrix4;
-			m1 = glm::translate(m1, position);
+				//pShader->setMat4("mvp", G.mvp * m1);
+				//pShader->setMat4("uMat4Model", m1);
+				//pShader->setFloat("uRatioMixTex2Color", 0.0);
+				//pShader->setFloat("uRatioMixAColor2UColor", 0.0);
+				//painter.renderCube();
+			} // end if
+		}
 
-			pShader->setMat4("mvp", G.mvp * m1);
-			pShader->setMat4("uMat4Model", m1);
-			pShader->setFloat("uRatioMixTex2Color", 0.0);
-			pShader->setFloat("uRatioMixAColor2UColor", 0.0);
-			painter.renderCube();
-		} // end if
+		FireDrawScene::DrawFinally(stShaderPanel);
 	}
 }
 

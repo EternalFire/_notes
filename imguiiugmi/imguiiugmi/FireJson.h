@@ -17,6 +17,7 @@ using namespace std;
 
 NS_FIRE_BEGIN
 
+// StProperty
 void toWriter(const StProperty& prop, rapidjson::Writer<rapidjson::StringBuffer>& writer)
 {
     writer.StartObject();
@@ -512,6 +513,7 @@ void toStProperty(const rapidjson::Value& object, StProperty& prop)
     }
 }
 
+// StShaderPanel
 string toJSON(const struct StShaderPanel& stShaderPanel)
 {
     string data = "";
@@ -522,6 +524,7 @@ string toJSON(const struct StShaderPanel& stShaderPanel)
     writer.Key("PanelName");   writer.String(stShaderPanel.name.c_str());
     writer.Key("Description"); writer.String(stShaderPanel.name.c_str());
     writer.Key("IsShow");      writer.String(toString(stShaderPanel.isShow).c_str());
+	writer.Key("IsUse");      writer.String(toString(stShaderPanel.isUse).c_str());
     writer.Key("VS");          writer.String(stShaderPanel.vertexShaderPath.c_str());
     writer.Key("FS");          writer.String(stShaderPanel.fragmentShaderPath.c_str());
     writer.Key("Properties");  writer.StartArray();
@@ -568,11 +571,19 @@ void parseJSON(const string& jsonStr, struct StShaderPanel& stShaderPanel)
             const char* IsShow = "IsShow";
             if (doc.HasMember(IsShow) && doc[IsShow].IsString())
             {
-                // stShaderPanel.name = doc[Description].GetString();
                 stShaderPanel.isShow = parseString<bool>(doc[IsShow].GetString());
             }
         }
-        
+
+		//IsUse
+		{
+			const char* IsUse = "IsUse";
+			if (doc.HasMember(IsUse) && doc[IsUse].IsString())
+			{
+				stShaderPanel.isUse = parseString<bool>(doc[IsUse].GetString());
+			}
+		}
+
         // VS
         {
             const char* VS = "VS";
@@ -663,6 +674,7 @@ void parseJSON(const string& jsonStr, struct StProperty& prop)
 	}
 }
 
+// StConfig
 string toJSON(const struct StConfig& config)
 {
     string data;

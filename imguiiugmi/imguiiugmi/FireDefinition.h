@@ -100,6 +100,9 @@ struct State;
 class UI;
 class Painter;
 
+void SaveShaderNames();
+void SaveStShaderPanel(const string& shaderName);
+
 NS_FIRE_END__
 ///
 

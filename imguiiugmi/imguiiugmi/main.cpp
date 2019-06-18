@@ -42,7 +42,7 @@ static void glfw_error_callback(int error, const char* description)
 
 int main(int, char**)
 {
-    Fire::InitConfig();
+    NS_FIRE::InitConfig();
     
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
@@ -70,7 +70,7 @@ int main(int, char**)
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create window with graphics context
-    int w = (int)Fire::config.width, h = (int)Fire::config.height;
+    int w = (int)NS_FIRE::config.width, h = (int)NS_FIRE::config.height;
     GLFWwindow* window = glfwCreateWindow(w, h, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
     if (window == NULL)
         return 1;
@@ -78,8 +78,8 @@ int main(int, char**)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
     
-	glfwSetCursorPosCallback(window, Fire::mouse_callback);
-	glfwSetScrollCallback(window, Fire::scroll_callback);
+	glfwSetCursorPosCallback(window, NS_FIRE::mouse_callback);
+	glfwSetScrollCallback(window, NS_FIRE::scroll_callback);
 
     // Initialize OpenGL loader
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
@@ -132,7 +132,7 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-	Fire::Init();
+	NS_FIRE::Init();
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -144,8 +144,8 @@ int main(int, char**)
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-		Fire::processInput(window, (float)Fire::G.deltaTime);
-        Fire::BeginTick((float)glfwGetTime());
+		NS_FIRE::processInput(window, (float)NS_FIRE::G.deltaTime);
+		NS_FIRE::BeginTick((float)glfwGetTime());
         
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -221,7 +221,7 @@ int main(int, char**)
             ImGui::End();
         }
         
-        Fire::TickUI();
+		NS_FIRE::TickUI();
         ImGui::Render();
         
         int display_w, display_h;
@@ -230,16 +230,16 @@ int main(int, char**)
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
   //      glClear(GL_COLOR_BUFFER_BIT);
 
-		Fire::TickScene();
+		NS_FIRE::TickScene();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());                       
         glfwSwapBuffers(window);        
 
-        Fire::EndTick();
+		NS_FIRE::EndTick();
     }
     
     
-    Fire::Clear();
+	NS_FIRE::Clear();
     
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();

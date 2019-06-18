@@ -218,7 +218,24 @@ bool LoadOrSaveDefault(const string& path, T& config)
     return exist;
 }
 
+template<typename T>
+void SaveObject(const string& path, T& config)
+{
+	const string& str = toJSON(config);
+	writeToFile(path.c_str(), str.c_str());
+}
 
+template<typename T>
+bool LoadObject(const string& path, T& config)
+{
+	bool exist = isFileExist(path.c_str());
+	if (exist)
+	{
+		string data = readFromFile(path.c_str());
+		parseJSON(data, config);
+	}
+	return exist;
+}
 
 NS_FIRE_END__
 ///

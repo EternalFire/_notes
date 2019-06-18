@@ -19,11 +19,12 @@ struct StShaderPanel {
     PropertyArray propertyArray;
     Shader* shader;
     bool isShow;
+	bool isUse;
     char nameBuffer[128];
     string vertexShaderPath;
     string fragmentShaderPath;
     
-    StShaderPanel():name(""), shader(NULL), isShow(true) {
+    StShaderPanel():name(""), shader(NULL), isShow(false), isUse(false) {
         memset(nameBuffer, 0, sizeof(nameBuffer));
     }
     ~StShaderPanel() {

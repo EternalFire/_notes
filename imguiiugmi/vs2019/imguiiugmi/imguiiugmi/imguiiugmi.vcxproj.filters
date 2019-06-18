@@ -311,5 +311,11 @@
     <ClInclude Include="..\..\..\imguiiugmi\FireStPropertyObject.h">
       <Filter>Fire\Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUIShaderEntrance.h">
+      <Filter>Fire\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireDrawScene.h">
+      <Filter>Fire\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

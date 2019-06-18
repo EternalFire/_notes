@@ -27,12 +27,23 @@ public:
     }
     
     void renderShaderPanel(const char* key) {
-        auto& stShaderPanel = G.stShaderPanelMap[key];
-        bool& open = stShaderPanel.isShow;
-        if (!open) return;
+        auto& stShaderPanel = G.stShaderPanelMap[key];		
+        bool* p_open = &stShaderPanel.isShow;		
+		if (!(*p_open)) 
+		{
+			if (lastOpenFlag[key] != *p_open) {
+				lastOpenFlag[key] = *p_open;
+
+				SaveStShaderPanel(stShaderPanel.name);
+				printf("close and save [%s]...\n", stShaderPanel.name.c_str());
+			}
+			return;
+		}
         
+		lastOpenFlag[key] = *p_open;
+
         ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
-        if (!ImGui::Begin(stShaderPanel.name.c_str(), &open, ImGuiWindowFlags_None))
+        if (!ImGui::Begin(stShaderPanel.name.c_str(), p_open, ImGuiWindowFlags_None))
         {
             ImGui::End();
             return;
@@ -103,7 +114,9 @@ public:
         
         ImGui::End();
     }
-    
+
+public:
+	map<string, bool> lastOpenFlag;
 };
 
 NS_FIRE_END__
