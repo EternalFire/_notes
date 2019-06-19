@@ -18,6 +18,7 @@ public:
 		{
 			shader->use();
 			shader->setMat4("mvp", G.mvp);
+            shader->setVec3("uViewPos", G.camera.Position);
 
 			shader->setFloat("uRatioMixTex2Color", 1.0);
 			shader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
@@ -64,8 +65,8 @@ public:
 		shader->use();
 		shader->setMat4("mvp", G.mvp * m1);
 		shader->setMat4("uMat4Model", m1);
-		shader->setFloat("uRatioMixTex2Color", 0.0);
-		shader->setFloat("uRatioMixAColor2UColor", 0.0);
+//        shader->setFloat("uRatioMixTex2Color", 0.0);
+//        shader->setFloat("uRatioMixAColor2UColor", 0.0);
 
 		painter.renderCube();
 	}

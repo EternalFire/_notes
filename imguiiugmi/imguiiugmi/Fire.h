@@ -139,7 +139,8 @@ void TickScene()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //printf("TickScene\n");
+    // shader execute order ?
+    
 	auto& shaderPanelMap = G.stShaderPanelMap;
 	for (auto iterator = shaderPanelMap.begin(); iterator != shaderPanelMap.end(); iterator++)
 	{
@@ -148,7 +149,7 @@ void TickScene()
 		auto& stShaderPanel = iterator->second;
 		if (stShaderPanel.isUse) 
 		{
-			auto shader = stShaderPanel.shader;
+			Shader* shader = stShaderPanel.shader;
 			if (shader != NULL)
 			{
 				FireDrawScene::DrawStart(stShaderPanel);
@@ -168,10 +169,65 @@ void TickScene()
 				for (auto ite = stShaderPanel.propertyArray.begin(); ite != stShaderPanel.propertyArray.end(); ite++)
 				{
 					auto& stProperty = *ite;
-					if (stProperty.type == Type_Color) {
-						//glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
-						shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
-					}
+                    const int& type = stProperty.type;
+                    switch (type)
+                    {
+                        case Type_Int:
+                        {
+                            shader->setInt(stProperty.name.c_str(), stProperty.iVal);
+                            break;
+                        }
+                        case Type_Float:
+                        {
+                            shader->setFloat(stProperty.name.c_str(), stProperty.fVal);
+                            break;
+                        }
+                        case Type_Vec2:
+                        {
+                            break;
+                        }
+                        case Type_IVec2:
+                        {
+                            break;
+                        }
+                        case Type_Vec3:
+                        {
+                            break;
+                        }
+                        case Type_IVec3:
+                        {
+                            break;
+                        }
+                        case Type_Vec4:
+                        {
+                            break;
+                        }
+                        case Type_IVec4:
+                        {
+                            break;
+                        }
+                        case Type_Color:
+                        {
+                            shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
+                            break;
+                        }
+                        case Type_IColor:
+                        {
+                            shader->setVec3(stProperty.name.c_str(), convertIColorToVec3(&stProperty.cVal));
+                            break;
+                        }
+                        case Type_Bool:
+                        {
+                            shader->setBool(stProperty.name.c_str(), (bool)stProperty.iVal);
+                            break;
+                        }
+                        default: break;
+                    }
+                    
+//                    if ( == Type_Color) {
+//                        //glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
+//                        shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
+//                    }
 
 					// todo
 					// ...
