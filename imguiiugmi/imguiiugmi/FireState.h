@@ -166,7 +166,20 @@ void clearShaderArray()
     
     vector.clear();
 }
-
+void clearShader(Shader* p)
+{
+	auto& vector = G.shaderArray;
+	for (auto it = vector.begin(); it != vector.end(); it++)
+	{
+		auto shader = *it;
+		if (shader == p) {
+			delete shader;
+			shader = NULL;
+			vector.erase(it);
+			break;
+		}
+	}
+}
 
 NS_FIRE_END__
 ///

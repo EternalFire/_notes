@@ -68,6 +68,16 @@ public:
 				ImGui::PushID(i++);
 				if (ImGui::Checkbox("use", &stShaderPanel.isUse)) {
 					printf("use %d %s\n", i, shaderName.c_str());
+
+					// check shader
+					if (stShaderPanel.shader == NULL)
+					{
+						if (stShaderPanel.vertexShaderPath.length() > 0 && stShaderPanel.fragmentShaderPath.length() > 0)
+						{
+							clearShader(stShaderPanel.shader);
+							stShaderPanel.shader = createShader(stShaderPanel.vertexShaderPath.c_str(), stShaderPanel.fragmentShaderPath.c_str());
+						}
+					}
 				}
 				ImGui::PopID();
 

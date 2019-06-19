@@ -76,7 +76,7 @@ glm::vec4 convertColorToVec4(Color* col)
 }
 glm::vec4 convertIColorToVec4(IColor* col)
 {
-    if (col) return glm::vec4(convertIColorToVec3(col), col->a);
+    if (col) return glm::vec4(convertIColorToVec3(col), CNTo1(col->a));
     return glm::vec4(1.0);
 }
 

@@ -317,5 +317,8 @@
     <ClInclude Include="..\..\..\imguiiugmi\FireDrawScene.h">
       <Filter>Fire\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\imguiiugmi\FireUICameraPanel.h">
+      <Filter>Fire\View</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,1 @@
+{"PanelName":"Simple","Description":"Simple","IsShow":"0","IsUse":"1","VS":"vertex.vs","FS":"colorFragment.fs","Properties":[{"Type":"Color","Name":"uColor","Value":{"r":"0.854784","g":"0.505835","b":"0.505835","a":"1"}}]}

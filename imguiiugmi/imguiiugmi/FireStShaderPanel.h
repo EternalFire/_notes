@@ -28,9 +28,22 @@ struct StShaderPanel {
         memset(nameBuffer, 0, sizeof(nameBuffer));
     }
     ~StShaderPanel() {
-        name.clear(); shader = NULL;
-        
+        name.clear(); shader = NULL;        
     }
+
+	StProperty* getProperty(const string& name)
+	{
+		for (auto ite = propertyArray.begin(); ite != propertyArray.end(); ite++)
+		{
+			auto& stProperty = *ite;
+			if (stProperty.name.compare(name) == 0)
+			{
+				return &stProperty;
+			}
+		}
+
+		return NULL;
+	}
 };
 
 

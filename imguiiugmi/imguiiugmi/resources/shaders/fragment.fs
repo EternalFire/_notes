@@ -18,13 +18,13 @@ in vec3 vsFragPos;
 // varying vec3 vsFragPos;
 
 uniform sampler2D texture0;
-uniform vec3 uColor;
+uniform vec4 uColor;
 uniform vec3 uViewPos;
 uniform float uRatioMixTex2Color;     // textureColor to mix(vertexColor, uColor)
 uniform float uRatioMixAColor2UColor; // vertexColor to uColor
 uniform float uTime;
 uniform vec3 uLightPos;
-uniform vec3 uLightColor;
+uniform vec4 uLightColor;
 uniform bool uUsePointLight; // point light switch
 uniform bool uSwitchEffectInvert;
 uniform bool uSwitchEffectGray;
@@ -37,7 +37,8 @@ vec3 lightingBasic(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor, ve
 void main()
 {
     vec4 textureColor = texture(texture0, texCoord);
-    vec4 color = vec4(mix(vertexColor, uColor, uRatioMixAColor2UColor), 1.0);
+    // vec4 color = vec4(mix(vertexColor, uColor, uRatioMixAColor2UColor), 1.0);
+    vec4 color = mix(vec4(vertexColor, 1.0f), uColor, uRatioMixAColor2UColor);
 
     //              from          to     ratio
     FragColor = mix(textureColor, color, uRatioMixTex2Color);
@@ -51,7 +52,7 @@ void main()
     {
         // vec3 lightPos = vec3(3.0 * cos(uTime), 3.0 * sin(uTime), 0.0);
         vec3 lightPos = uLightPos;
-        vec3 lightColor = uLightColor;
+        vec3 lightColor = uLightColor.rgb;
         FragColor.rgb = lightingBasic(vsFragPos, vsNormal, lightPos, lightColor, uViewPos, FragColor.rgb, 0.2, 0.5, 20.0);
     }
 

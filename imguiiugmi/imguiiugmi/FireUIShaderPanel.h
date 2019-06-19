@@ -2,6 +2,8 @@
 #ifndef FireUIShaderPanel_h
 #define FireUIShaderPanel_h
 
+#include "imgui.h"
+
 #include <FireDefinition.h>
 #include <FireUIBase.h>
 #include <FireState.h>
@@ -15,7 +17,11 @@ public:
     ~UIShaderPanel() {}
     
     void init() {
-        
+		for (auto it = G.stShaderPanelMap.begin(); it != G.stShaderPanelMap.end(); it++) {
+			const auto& stShaderPanel = it->second;
+			strcpy(vsPathMap[stShaderPanel.name], stShaderPanel.vertexShaderPath.c_str());
+			strcpy(fsPathMap[stShaderPanel.name], stShaderPanel.fragmentShaderPath.c_str());
+		}
     }
     
     void render() {
@@ -28,7 +34,9 @@ public:
     
     void renderShaderPanel(const char* key) {
         auto& stShaderPanel = G.stShaderPanelMap[key];		
-        bool* p_open = &stShaderPanel.isShow;		
+		bool* p_open = &stShaderPanel.isShow;
+		bool needRebuildShader = false;
+
 		if (!(*p_open)) 
 		{
 			if (lastOpenFlag[key] != *p_open) {
@@ -57,6 +65,14 @@ public:
         if (ImGui::InputText("Name", stShaderPanel.nameBuffer, sizeof(stShaderPanel.nameBuffer))) {
 //            printf("%s\n", stShaderPanel.nameBuffer);
         }
+
+		ImGui::SameLine(); ImGui::SetNextItemWidth(180);
+		if (ImGui::InputText("VS", vsPathMap[stShaderPanel.name], sizeof(vsPathMap[stShaderPanel.name]))) {
+			printf("vs = %s", vsPathMap[stShaderPanel.name]);
+		}
+
+		//stShaderPanel.vertexShaderPath
+		//stShaderPanel.fragmentShaderPath
         
         ImGui::SetNextItemWidth(180);
         // select property type
@@ -65,6 +81,12 @@ public:
         if (ImGui::Combo("Type", &item_current, &FuncHolder::ItemGetter, TypeNames, ARRAY_LENGTH(TypeNames), ARRAY_LENGTH(TypeNames))) {
             //printf("select %d \n", item_current);
         }
+
+
+		ImGui::SameLine(); ImGui::SetNextItemWidth(180);
+		if (ImGui::InputText("FS", fsPathMap[stShaderPanel.name], sizeof(fsPathMap[stShaderPanel.name]))) {
+			printf("fs = %s", fsPathMap[stShaderPanel.name]);			
+		}
         
         ImGui::Separator();
 //        ImVec2 size = ImGui::GetItemRectSize();
@@ -72,7 +94,7 @@ public:
         
 //        ImGui::SameLine(size.x + ImGui::GetStyle().ItemSpacing.x);
 //        ImGui::SameLine(180)
-        ImGui::SameLine(ImGui::GetWindowContentRegionWidth() / 2.5f);
+        ImGui::SameLine( ImGui::GetWindowContentRegionWidth() / 2.5f );
         if (ImGui::Button("Create"))
         {
             // create property data
@@ -95,6 +117,22 @@ public:
             string path = stShaderPanel.name + ".json";
             writeToFile(path.c_str(), str.c_str());
         }
+
+		ImGui::SameLine();
+		if (ImGui::Button("Build Shader"))
+		{
+			needRebuildShader = stShaderPanel.vertexShaderPath.compare(vsPathMap[stShaderPanel.name]) != 0 ||
+				stShaderPanel.fragmentShaderPath.compare(fsPathMap[stShaderPanel.name]) != 0;
+
+			if (needRebuildShader)
+			{
+				stShaderPanel.vertexShaderPath = vsPathMap[stShaderPanel.name];
+				stShaderPanel.fragmentShaderPath = fsPathMap[stShaderPanel.name];
+
+				clearShader(stShaderPanel.shader);
+				stShaderPanel.shader = createShader(stShaderPanel.vertexShaderPath.c_str(), stShaderPanel.fragmentShaderPath.c_str());
+			}
+		}
         
         // ==============================
         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -117,6 +155,8 @@ public:
 
 public:
 	map<string, bool> lastOpenFlag;
+	map<string, char[128]> vsPathMap;
+	map<string, char[128]> fsPathMap;
 };
 
 NS_FIRE_END__

@@ -74,42 +74,54 @@ void Init()
     G.camera.MouseSensitivity = config.cameraSensitivity;
     G.resetCamera();
     
-    ui.init();
 
 	// create StShaderPanel
 	auto& shaderNamesArray = G.shaderNamesObject.root.children;
-//    int i = 0;
+
 	for (auto it = shaderNamesArray.begin(); it != shaderNamesArray.end(); it++)
 	{
-		LoadStShaderPanel(it->sVal/*shaderName*/);
+		const auto& shaderName = it->sVal;
+		LoadStShaderPanel(shaderName);
+
+		struct StShaderPanel& st = G.stShaderPanelMap[shaderName];
+		st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
+	}
+	
+	struct StShaderPanel* pSt = NULL;
+
+	if (G.stShaderPanelMap.size() == 0)
+	{	
+		struct StShaderPanel st;
+		// default value
+		st.name = "Shader Panel";
+		st.vertexShaderPath = "vertex.vs";
+		st.fragmentShaderPath = "colorFragment.fs";
+
+		string path = st.name + ".json";
+		bool exist = isFileExist(path.c_str());
+		if (exist)
+		{
+			string data = readFromFile(path.c_str());
+			parseJSON(data, st);
+		}
+
+		// todo: find uniform
+
+		st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
+		G.stShaderPanelMap[st.name] = st;
 	}
 
-	struct StShaderPanel st;
-	// default value
-	st.name = "Shader Panel";
-	st.vertexShaderPath = "vertex.vs";
-	st.fragmentShaderPath = "colorFragment.fs";
-
-	string path = st.name + ".json";
-	bool exist = isFileExist(path.c_str());
-	if (exist)
-	{
-		string data = readFromFile(path.c_str());
-		parseJSON(data, st);
-	}
-
-	// todo: find uniform
-
-	st.shader = createShader(st.vertexShaderPath.c_str(), st.fragmentShaderPath.c_str());
-	G.stShaderPanelMap[st.name] = st;
+	pSt = &G.stShaderPanelMap["Shader Panel"];
 
 	// texture
 	G.texture0 = loadTexture("container.jpg");
-	st.shader->use();
-	st.shader->setInt("texture0", 0);
+	pSt->shader->use();
+	pSt->shader->setInt("texture0", 0);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, G.texture0);
+
+	ui.init();
 }
 
 void BeginTick(float currentTime)
@@ -154,17 +166,6 @@ void TickScene()
 			{
 				FireDrawScene::DrawStart(stShaderPanel);
 
-				//shader->use();
-				//shader->setMat4("mvp", G.mvp);
-
-				//shader->setFloat("uRatioMixTex2Color", 1.0);
-				//shader->setFloat("uRatioMixAColor2UColor", 0.0); // use vertex color
-				//shader->setInt("uUsePointLight", 0);
-				//shader->setInt("uSwitchEffectInvert", 0);
-				//shader->setInt("uSwitchEffectGray", 0);
-
-				//painter.renderCoordinateSystem();
-
 				// use property value
 				for (auto ite = stShaderPanel.propertyArray.begin(); ite != stShaderPanel.propertyArray.end(); ite++)
 				{
@@ -184,36 +185,42 @@ void TickScene()
                         }
                         case Type_Vec2:
                         {
+							shader->setVec2(stProperty.name.c_str(), glm::vec2(stProperty.v2Val.x, stProperty.v2Val.y));
                             break;
                         }
                         case Type_IVec2:
                         {
+							shader->setVec2(stProperty.name.c_str(), glm::vec2(stProperty.iv2Val.x, stProperty.iv2Val.y));
                             break;
                         }
                         case Type_Vec3:
                         {
+							shader->setVec3(stProperty.name.c_str(), glm::vec3(stProperty.v3Val.x, stProperty.v3Val.y, stProperty.v3Val.z));
                             break;
                         }
                         case Type_IVec3:
                         {
+							shader->setVec3(stProperty.name.c_str(), glm::vec3(stProperty.iv3Val.x, stProperty.iv3Val.y, stProperty.iv3Val.z));
                             break;
                         }
                         case Type_Vec4:
                         {
+							shader->setVec4(stProperty.name.c_str(), glm::vec4(stProperty.v4Val.x, stProperty.v4Val.y, stProperty.v4Val.z, stProperty.v4Val.w));
                             break;
                         }
                         case Type_IVec4:
                         {
+							shader->setVec4(stProperty.name.c_str(), glm::vec4(stProperty.iv4Val.x, stProperty.iv4Val.y, stProperty.iv4Val.z, stProperty.iv4Val.w));
                             break;
                         }
                         case Type_Color:
                         {
-                            shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
+                            shader->setVec4(stProperty.name.c_str(), convertColorToVec4(&stProperty.cfVal));
                             break;
                         }
                         case Type_IColor:
                         {
-                            shader->setVec3(stProperty.name.c_str(), convertIColorToVec3(&stProperty.cVal));
+                            shader->setVec4(stProperty.name.c_str(), convertIColorToVec4(&stProperty.cVal));
                             break;
                         }
                         case Type_Bool:
@@ -223,27 +230,10 @@ void TickScene()
                         }
                         default: break;
                     }
-                    
-//                    if ( == Type_Color) {
-//                        //glClearColor(stProperty.cfVal.r, stProperty.cfVal.g, stProperty.cfVal.b, stProperty.cfVal.a);
-//                        shader->setVec3(stProperty.name.c_str(), convertColorToVec3(&stProperty.cfVal));
-//                    }
-
-					// todo
-					// ...
 				}
 
 				FireDrawScene::Draw(stShaderPanel);
 
-				//glm::vec3 position = glm::vec3(5.0f, 0, 0);
-				//glm::mat4 m1 = IMatrix4;
-				//m1 = glm::translate(m1, position);
-
-				//pShader->setMat4("mvp", G.mvp * m1);
-				//pShader->setMat4("uMat4Model", m1);
-				//pShader->setFloat("uRatioMixTex2Color", 0.0);
-				//pShader->setFloat("uRatioMixAColor2UColor", 0.0);
-				//painter.renderCube();
 			} // end if
 		}
 

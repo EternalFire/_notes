@@ -56,6 +56,7 @@
     <ClInclude Include="..\..\..\imguiiugmi\FireStShaderPanel.h" />
     <ClInclude Include="..\..\..\imguiiugmi\FireUI.h" />
     <ClInclude Include="..\..\..\imguiiugmi\FireUIBase.h" />
+    <ClInclude Include="..\..\..\imguiiugmi\FireUICameraPanel.h" />
     <ClInclude Include="..\..\..\imguiiugmi\FireUIProperty.h" />
     <ClInclude Include="..\..\..\imguiiugmi\FireUIShaderEntrance.h" />
     <ClInclude Include="..\..\..\imguiiugmi\FireUIShaderPanel.h" />

@@ -5,6 +5,7 @@
 #include <FireDefinition.h>
 #include <FireConfig.h>
 #include <FireState.h>
+#include "imgui.h"
 
 NS_FIRE_BEGIN
 
@@ -39,7 +40,7 @@ public:
             auto c2 = ImGui::SliderFloat(KeyCameraZoom, &zoom, 1.0f, 45.0f);
             auto c3 = ImGui::SliderFloat(KeyCameraYaw,  &yaw, -2000.0f, 2000.0f);
             auto c4 = ImGui::SliderFloat(KeyCameraPitch, &pitch, -89.0f, 89.0f);
-            auto c5 = ImGui::DragFloat(KeyCameraSpeed, &G.camera.MovementSpeed, 0.1, 0, 50.0f);
+            auto c5 = ImGui::DragFloat(KeyCameraSpeed, &G.camera.MovementSpeed, 0.1f, 0, 50.0f);
             auto c6 = ImGui::DragFloat(KeyCameraSensitivity, &G.camera.MouseSensitivity, 0.01f, 0.1f, 1.0f);
             
             if (c1 || c2 || c3 || c4 || c5 || c6)
