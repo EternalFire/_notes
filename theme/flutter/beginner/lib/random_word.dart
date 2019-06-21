@@ -90,8 +90,6 @@ class _RandomWordState extends State<RandomWord>
         final index = i ~/ 2;
         print("item  $i  $index ");
 
-
-
         if (i >= _suggestionsMaxLength - 1) {
           return Container(
             alignment: Alignment.center,
