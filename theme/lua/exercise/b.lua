@@ -1,4 +1,6 @@
-function GetArrResult(itemIdList)
+local function GetArrResult(itemIdList)
+    local outputResultToConsole = true
+    local spValue_1 = 11 -- match any value
     local w = 5
     local h = 3
     local n = w * h
@@ -6,7 +8,6 @@ function GetArrResult(itemIdList)
     local allNodes
     local rowMap
     local colMap
-    local spValue_1 = 1
     local pathNodes
 
     if not list or #list < n then
@@ -120,24 +121,6 @@ function GetArrResult(itemIdList)
                         sameValue = true
                     else
                         if value == spValue_1 then
-                            -- for i, parent in ipairs(_node1.parents) do
-                            --     if parent and (parent.value == value1 or parent.value == spValue_1) then
-                            --         if colMap and colMap[1] then
-                            --             for j = 1, #colMap[1] do
-                            --                 local colNode = colMap[1][j]
-                            --                 if colNode and (colNode.value == parent.value or colNode.value == spValue_1) then
-                            --                     sameValue = true
-                            --                     break
-                            --                 end
-                            --             end
-                            --         end
-                            --     end
-
-                            --     if sameValue then
-                            --         break
-                            --     end
-                            -- end -- for
-
                             sameValue = true
                         end
                     end
@@ -244,32 +227,44 @@ function GetArrResult(itemIdList)
         end)
     end
 
+    local function printAllNodes()
+        -- local t = {}
+        for i, rowList in ipairs(rowMap or {}) do
+            local t1 = {}
+            for j, node in ipairs(rowList or {}) do
+                local field = string.format("(%2s,%2s)", node.index, node.value)
+                table.insert(t1, string.format("%8s", field))
+            end
+            -- table.insert(t, table.concat(t1))
+            print(table.concat(t1, " "))
+        end
+    end
+
     local function _run()
         local result = {}
 
         initAllNodes()
         initPath()
 
-        print(allNodes)
+        -- print(allNodes)
+        -- printAllNodes()
 
         -- check children
         -- printChildren()
-
-        -- if 1 then return result end;
 
         local pathRecord = {}
         local visited = {}
         local _pathListStr = ""
         iterateColList(function(_node, x, y, index, value, children)
             depthWalk(function(pathList, root)
-                -- print(string.format("depthWalk: %s\t\tindex: %d", table.concat(pathList, ","), root.index))
+            --    print(string.format("depthWalk: %s\t\tindex: %d", table.concat(pathList, ","), root.index))
 
                 local _pathList = filterPathList(pathList)
 
                 if #_pathList >= 3 then
                     _pathListStr = table.concat(_pathList, ",")
                     if _pathList and not visited[_pathListStr] then
-                        print(string.format("depthWalk: %s\t\tindex: %d", table.concat(pathList, ","), root.index))
+                        -- print(string.format("depthWalk: %s\t\tindex: %d", table.concat(pathList, ","), root.index))
 
                         table.insert(pathRecord, _pathList)
                         visited[_pathListStr] = true
@@ -287,14 +282,16 @@ function GetArrResult(itemIdList)
             end, _node)
         end, 1)
 
-        -- check path
-        for i,v in ipairs(pathRecord) do
-            print(i, table.concat(v, "--"))
-        end
+        if outputResultToConsole then
+            -- check path
+            for i, v in ipairs(pathRecord) do
+                print(i, table.concat(v, "--"))
+            end
 
-        print("---------------------------")
-        for i = 1, #result do
-            print(i, table.concat(result[i], "~"))
+            print("------------------------------")
+            for i = 1, #result do
+                print(i, table.concat(result[i], "~"))
+            end
         end
 
         return result
@@ -303,7 +300,9 @@ function GetArrResult(itemIdList)
     return _run()
 end
 
-local _result
+return GetArrResult
+
+-- local _result
 -- test
 --_result = GetArrResult({
 --   7,9,7,9,5,
@@ -311,15 +310,13 @@ local _result
 --   2,11,11,6,4
 --})
 
- _result = GetArrResult({
-     3, 3, 3, 2, 2,
-     9, 1, 9, 1, 7,
-     2, 2, 3, 6, 4
- })
+--  _result = GetArrResult({
+--      3, 3, 3, 2, 2,
+--      9, 1, 9, 1, 7,
+--      2, 2, 3, 6, 4
+--  })
 
-
-
-print("end")
+-- print("end")
 
 --[[
 
