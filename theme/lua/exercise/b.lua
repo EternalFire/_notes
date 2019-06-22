@@ -113,7 +113,22 @@ function GetArrResult(itemIdList)
                 element = stack[#stack]
                 table.remove(stack, #stack)
 
-                if #element.children == 0 then
+                local _noChildAfterSpValue = false
+
+                -- check special value
+                if element.value == spValue_1 and #element.children ~= 0 then
+                    _noChildAfterSpValue = true
+
+                    for i = 1, #element.children do
+                        local child = element.children[i]
+                        if child and (child.value == node.value or child.value == spValue_1) then
+                            _noChildAfterSpValue = false
+                            break
+                        end
+                    end
+                end
+
+                if #element.children == 0 or _noChildAfterSpValue then
                     local i = element.index
                     local pathList = { i }
                     local from
@@ -153,16 +168,28 @@ function GetArrResult(itemIdList)
                             sameValue = true
                         end
                     end
-
                 else
                     if value == value1 or value1 == spValue_1 then
                         sameValue = true
                     else
-                        for i, parent in ipairs(_node1.parents) do
-                            if parent and (parent.value == value1 or parent.value == spValue_1) then
-                                sameValue = true
-                                break
-                            end
+                        if value == spValue_1 then
+                            for i, parent in ipairs(_node1.parents) do
+                                if parent and (parent.value == value1 or parent.value == spValue_1) then
+                                    if colMap and colMap[1] then
+                                        for j = 1, #colMap[1] do
+                                            local colNode = colMap[1][j]
+                                            if colNode and (colNode.value == parent.value or colNode.value == spValue_1) then
+                                                sameValue = true
+                                                break
+                                            end
+                                        end
+                                    end
+                                end
+
+                                if sameValue then
+                                    break
+                                end
+                            end -- for
                         end
                     end
                 end
@@ -174,14 +201,17 @@ function GetArrResult(itemIdList)
             end, x + 1)
         end)
 
-        -- print(allNodes)
+        print(allNodes)
 
         local pathRecord = {}
+        local visited = {}
+        local _pathListStr = ""
         iterateColList(function(_node, x, y, index, value, children)
             depthWalk(function(pathList, root)
-                -- print(table.concat(pathList, ","), root.index)
+                print(string.format("depthWalk: %s\t\tindex: %d", table.concat(pathList, ","), root.index))
 
                 local _pathList
+
                 for i, _index in ipairs(pathList) do
                     local nodeInPath = getNodeByIndex(_index)
                     if nodeInPath.value == root.value or nodeInPath.value == spValue_1 then
@@ -190,8 +220,10 @@ function GetArrResult(itemIdList)
                     end
                 end
 
-                if _pathList then
+                _pathListStr = table.concat(_pathList, ",")
+                if _pathList and not visited[_pathListStr] then
                     table.insert(pathRecord, _pathList)
+                    visited[_pathListStr] = true
 
                     if (#_pathList >= 3) then
                         local rowIndexList = {}
@@ -220,11 +252,11 @@ end
 
 local _result
 -- test
---_result = GetArrResult({
+-- _result = GetArrResult({
 --    7,9,7,9,5,
 --    9,9,9,2,1,
 --    2,11,11,6,4
---})
+-- })
 
 _result = GetArrResult({
     3, 3, 3, 2, 2,
@@ -235,6 +267,8 @@ _result = GetArrResult({
 for i = 1, #_result do
     print(table.concat(_result[i], "~"))
 end
+
+print("end")
 
 --[[
 
