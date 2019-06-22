@@ -1,6 +1,50 @@
-local function GetArrResult(itemIdList)
+--[[
+    Get index of matched elements in column.
+    If an element appear in left three columns, then these elements are matched.
+    Special element can match any element.
+    itemIdList: 5x3 matrix element array in row order
+
+    sample:
+        itemIdList:
+            7, 9, 7, 9, 5, 9, 9, 9, 2, 1, 2, 11, 11, 6, 4
+
+        5x3 matrix:
+            1  2  3  4  5  i
+            ----------------------
+            7, 9, 7, 9, 5,
+
+            6  7  8  9  10  i
+            ----------------------
+            9, 9, 9, 2, 1,
+
+            11 12  13 14 15  i
+            ----------------------
+            2, 11, 11, 6, 4
+
+        match elements, special value is 1:
+
+            1  2  3  4  5  i
+            ----------------------
+            _, 9, _, 9, _,
+
+            6  7  8  9  10  i
+            ----------------------
+            9, 9, 9, _, 1,
+
+            11 12  13 14 15  i
+            ----------------------
+            _, _, _, _, _
+
+        match index in column:
+
+            2, 1, 2, 1, 2
+            2, 2, 2, 1, 2
+
+--]]
+local function GetMatchIndexPerColumn(itemIdList)
+    local outputAllNodeToConsole = true
     local outputResultToConsole = true
-    local spValue_1 = 11 -- match any value
+    local spValue_1 = 1 -- match any value
     local w = 5
     local h = 3
     local n = w * h
@@ -246,8 +290,10 @@ local function GetArrResult(itemIdList)
         initAllNodes()
         initPath()
 
-        -- print(allNodes)
-        -- printAllNodes()
+        if outputAllNodeToConsole then
+            -- print(allNodes)
+            printAllNodes()
+        end
 
         -- check children
         -- printChildren()
@@ -300,39 +346,24 @@ local function GetArrResult(itemIdList)
     return _run()
 end
 
-return GetArrResult
+local function test()
+    local _result
 
--- local _result
--- test
---_result = GetArrResult({
---   7,9,7,9,5,
---   9,9,9,2,1,
---   2,11,11,6,4
---})
+    _result = GetMatchIndexPerColumn({
+        7,9,7,9,5,
+        9,9,9,2,1,
+        2,11,11,6,4
+    })
 
---  _result = GetArrResult({
+--  _result = GetMatchIndexPerColumn({
 --      3, 3, 3, 2, 2,
 --      9, 1, 9, 1, 7,
 --      2, 2, 3, 6, 4
 --  })
 
--- print("end")
+    print("end")
+end
 
---[[
+test()
 
-"7,9,7,9,5,9,9,9,2,1,2,11,11,6,4"
-
-1   2   3   4   5  i
-----------------------
-7,  9,  7,  9,  5,
-
-6   7   8   9  10  i
-----------------------
-9,  9,  9,  2,  1,
-
-11  12  13  14  15  i
---------------------
-2,  11, 11, 6,  4
-
-
-]]
+return GetMatchIndexPerColumn
