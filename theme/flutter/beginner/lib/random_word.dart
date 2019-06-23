@@ -88,13 +88,13 @@ class _RandomWordState extends State<RandomWord>
         // 语法 "i ~/ 2" 表示i除以2，但返回值是整形（向下取整），比如i为：1, 2, 3, 4, 5
         // 时，结果为0, 1, 1, 2, 2， 这可以计算出ListView中减去分隔线后的实际单词对数量
         final index = i ~/ 2;
-        print("item  $i  $index ");
+        // print("item  $i  $index ");
 
         if (i >= _suggestionsMaxLength - 1) {
           return Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(16.0),
-            child: Text("没有更多了", style: TextStyle(color: Colors.grey),)
+            child: Text("没有更多了....", style: TextStyle(color: Colors.grey),)
           );
         }
 
@@ -154,7 +154,7 @@ class _RandomWordState extends State<RandomWord>
 
           return new Scaffold(
             appBar: new AppBar(
-              title: new Text('Saved'),
+              title: new Text('Saved word'),
             ),
             body: new ListView(
               children: divided,

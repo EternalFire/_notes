@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
-import 'random_word.dart';
+// import 'random_word.dart';
+// import 'demo.dart';
 
-void main()=>runApp(new MyApp());
+// void main()=>runApp(new DemoApp());
+
+// void main()=>runApp(new MyApp());
+
+
+void main() {
+  runApp(
+    new Center(
+      child: new Text(
+        'Hello, world!',
+        textDirection: TextDirection.ltr,
+      ),
+    ),
+  );
+}
