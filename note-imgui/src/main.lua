@@ -102,7 +102,7 @@ function case_imgui()
 			local ret
 			ret, isPanelOpened = imgui.begin("Panel", isPanelOpened, {imgui.ImGuiWindowFlags_None})
 			if not ret then
-				print("collapse...", os.time())
+				-- print("collapse...", os.time())
                 imgui.endToLua()
                 return
 			end
@@ -123,7 +123,7 @@ function case_imgui()
 			local ret
 			ret, isControlPanelOpened = imgui.begin("Control", isControlPanelOpened, {imgui.ImGuiWindowFlags_AlwaysAutoResize})
             if not ret then
-                print("collapse...", os.time())
+                -- print("collapse...", os.time())
                 imgui.endToLua()
                 return
             end
@@ -331,8 +331,22 @@ function run()
     --------------------
     layer:addChild(bgLayer)
     ----------------------------------------
+    keyboard(function(keyCode)
+        if keyCode == cc.KeyCode.KEY_LEFT_ARROW then
+            State.processLeft()
+        elseif keyCode == cc.KeyCode.KEY_RIGHT_ARROW then
+            State.processRight()
 
+        elseif keyCode == cc.KeyCode.KEY_UP_ARROW then
+            State.processUp()
 
+        elseif keyCode == cc.KeyCode.KEY_DOWN_ARROW then
+            State.processDown()
+
+        end
+    end, function(keyCode)
+        print("doKeyReleased: ", keyCode)
+    end)
     ---------------------------------------------------------
 end
 
@@ -350,6 +364,58 @@ local function main()
     case_imgui()
 
     setTimeout(function() run() end, 0)
+end
+
+function keyboard(doKeyPressed, doKeyReleased)
+    local pressedList = {}
+    local scene = display.getRunningScene()
+    local debug = false
+
+    -- local function doKeyPressed(keyCode)
+    --     if keyCode == cc.KeyCode.KEY_LEFT_ARROW then
+    --         print("<=")
+    --     end
+    -- end
+
+    -- local function doKeyReleased(keyCode)
+
+    -- end
+
+    local function onKeyPressed(keyCode, event)
+        if debug then print("input key [", keyCode, "]") end
+        table.insert(pressedList, 1, keyCode)
+        if doKeyPressed then
+            doKeyPressed(keyCode)
+        end
+    end
+
+    local function onKeyReleased(keyCode, event)
+        if debug then print("free key [", pressedList[1], "]") end
+        table.remove(pressedList, #pressedList)
+        if doKeyReleased then
+            doKeyReleased(keyCode)
+        end
+    end
+
+    local listener = cc.EventListenerKeyboard:create()
+    listener:registerScriptHandler(onKeyPressed, cc.Handler.EVENT_KEYBOARD_PRESSED)
+    listener:registerScriptHandler(onKeyReleased, cc.Handler.EVENT_KEYBOARD_RELEASED)
+
+    local eventDispatcher = scene:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(listener, scene)
+
+    setInterval( function()
+        if #pressedList > 0 then
+            for i = 1, #pressedList do
+                if debug then print("hold key [", pressedList[i], "]") end
+                if doKeyPressed then
+                    doKeyPressed(pressedList[i])
+                end
+            end
+        else
+            -- print("pressedList is empty")
+        end
+    end, 0.15)
 end
 
 function captureNode(renderTexture, node, fileBasename, isRGBA)
