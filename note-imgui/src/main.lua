@@ -239,6 +239,44 @@ function case_imgui()
         imgui.endToLua()
     end
 
+    local creatorPanelState = {
+        num = 1,
+        testSpriteList = {},
+    }
+    local function creatorPanel()
+        imgui.begin("creator")
+        do
+            imgui.labelText("", string.format("total: %s", tostring(#creatorPanelState.testSpriteList)))
+
+            local ret
+            ret, creatorPanelState.num = imgui.sliderInt("num", creatorPanelState.num, 1, 10)
+
+            imgui.pushButtonRepeat(true);
+            if imgui.button("TestSprite_1") then
+                for i = 1, creatorPanelState.num do
+                    local sprite = display.newSprite("res/1.png")
+                    sprite:addTo(State.bgLayer)
+
+                    local r = math.random(80, 200)
+                    local a = math.random() * 2 * math.pi
+                    local p = cc.p(math.sin(a) * r + display.cx, math.cos(a) * r + display.cy)
+                    sprite:setPosition(p)
+
+                    table.insert(creatorPanelState.testSpriteList, sprite)
+                end
+            end
+            imgui.popButtonRepeat();
+
+            if imgui.button("clear") then
+                for i = 1, #creatorPanelState.testSpriteList do
+                    creatorPanelState.testSpriteList[i]:removeFromParent()
+                    creatorPanelState.testSpriteList[i] = nil
+                end
+            end
+        end
+        imgui.endToLua()
+    end
+
     -- draw
     imgui.draw = function ()
         setupMainMenu()
@@ -254,6 +292,8 @@ function case_imgui()
         capturePanel()
 
         clipPanel()
+
+        creatorPanel()
     end -- end of imgui.draw
 
     --
@@ -371,27 +411,19 @@ function keyboard(doKeyPressed, doKeyReleased)
     local scene = display.getRunningScene()
     local debug = false
 
-    -- local function doKeyPressed(keyCode)
-    --     if keyCode == cc.KeyCode.KEY_LEFT_ARROW then
-    --         print("<=")
-    --     end
-    -- end
-
-    -- local function doKeyReleased(keyCode)
-
-    -- end
-
     local function onKeyPressed(keyCode, event)
         if debug then print("input key [", keyCode, "]") end
-        table.insert(pressedList, 1, keyCode)
+        table.insert(pressedList, keyCode)
+
         if doKeyPressed then
             doKeyPressed(keyCode)
         end
     end
 
     local function onKeyReleased(keyCode, event)
-        if debug then print("free key [", pressedList[1], "]") end
-        table.remove(pressedList, #pressedList)
+        if debug then print("free key [", keyCode, "]") end
+        table.removebyvalue(pressedList, keyCode, false)
+
         if doKeyReleased then
             doKeyReleased(keyCode)
         end
@@ -415,7 +447,7 @@ function keyboard(doKeyPressed, doKeyReleased)
         else
             -- print("pressedList is empty")
         end
-    end, 0.15)
+    end, 0.02)
 end
 
 function captureNode(renderTexture, node, fileBasename, isRGBA)
