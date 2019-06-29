@@ -309,14 +309,12 @@ function run()
     end
 
     local layer = display.newLayer():addTo(scene)
-
     local bgLayer = display.newLayer({r=100,g=100,b=100,a=200})
 
     local emitter = cc.ParticleSystemQuad:create("Particles/LavaFlow.plist")
     local batch = cc.ParticleBatchNode:createWithTexture(emitter:getTexture())
     batch:addChild(emitter)
     bgLayer:addChild(batch)
-
     emitter:move(display.center)
 
     display.newSprite("ball.png", display.center.x, display.center.y):addTo(bgLayer)
@@ -373,6 +371,7 @@ function run()
     layer:addChild(bgLayer)
     ----------------------------------------
     keyboard(function(keyCode)
+        -- pressed
         if keyCode == cc.KeyCode.KEY_LEFT_ARROW then
             State.processLeft()
         elseif keyCode == cc.KeyCode.KEY_RIGHT_ARROW then
@@ -386,9 +385,34 @@ function run()
 
         end
     end, function(keyCode)
+        -- released
         print("doKeyReleased: ", keyCode)
     end)
     ---------------------------------------------------------
+
+    local node = display.newNode():addTo(State.bgLayer)
+    node:setName("touchNode1")
+        local node2 = display.newNode():addTo(node)
+        node2:setName("touchNode2")
+    local node3 = display.newNode():addTo(State.bgLayer)
+    node3:setName("touchNode3")
+
+    display.newSprite("ball.png"):addTo(node):move(0, 0)
+
+    -- createTouchListener(node2, {
+    --     debug = true,
+    --     boxOrRadius = 100,
+    --     isSwallow = true,
+    -- })
+
+    local option = {
+        isTouchMove = true,
+        -- boxOrRadius = cc.rect(0,0, 100, 100),
+        -- checkZeroSize = true
+        boxOrRadius = 200,
+        isSwallow = false,
+    }
+    createTouchListener(node, option)
 end
 
 local function main()
@@ -405,6 +429,147 @@ local function main()
     case_imgui()
 
     setTimeout(function() run() end, 0)
+end
+
+function createTouchListener(node, option)
+    if node then
+        option = option or {}
+        local debug = option.debug or false
+
+        local beganCB     = option.beganCB     -- function
+        local movedCB     = option.movedCB     -- function
+        local endedCB     = option.endedCB     -- function
+        local cancelledCB = option.cancelledCB -- function
+
+        local boxOrRadius      = option.boxOrRadius -- number or rect
+        local op_checkZeroSize = false; if option.checkZeroSize ~= nil then op_checkZeroSize = option.checkZeroSize end
+
+        local op_isTouchMove   = false; if option.isTouchMove ~= nil then op_isTouchMove = option.isTouchMove end
+        local op_isSwallow     = true;  if option.isSwallow ~= nil then op_isSwallow = option.isSwallow end
+
+        local listener = cc.EventListenerTouchOneByOne:create()
+        local radius, box
+        local zeroPoint = cc.p(0, 0)
+        local isInside = false
+
+        if boxOrRadius then
+            if type(boxOrRadius) == "number" then
+                radius = boxOrRadius
+            elseif boxOrRadius.x and boxOrRadius.y and boxOrRadius.width and boxOrRadius.height then
+                box = boxOrRadius
+            end
+        end
+
+        local function _checkInside(positionInNode)
+            if positionInNode then
+                if radius then
+                    if debug then print("check circle ", radius, positionInNode.x, positionInNode.y) end
+
+                    if cc.pDistanceSQ(positionInNode, zeroPoint) <= radius * radius then
+                        return true
+                    end
+                elseif box then
+                    if debug then print("check box ", positionInNode.x, positionInNode.y) end
+
+                    if cc.rectContainsPoint(box, positionInNode) then
+                        return true
+                    end
+                else
+                    if debug then print("check default ", positionInNode.x, positionInNode.y) end
+
+                    local s = node:getContentSize()
+                    if s.width == 0 or s.height == 0 then
+                        if op_checkZeroSize then
+                            local min = 10
+                            if s.width < min then s.width = min end
+                            if s.height < min then s.height = min end
+                        else
+                            return false
+                        end
+                    end
+
+                    local rect = cc.rect(0, 0, s.width, s.height)
+                    if cc.rectContainsPoint(rect, positionInNode) then
+                        return true
+                    end
+                end
+            end
+
+            return false
+        end
+
+        local function touchComplete()
+            isInside = false
+        end
+
+        local function _onTouchBegan(touch, event)
+            local positionInNode = node:convertToNodeSpace(touch:getLocation())
+            local target = event:getCurrentTarget()
+            isInside = _checkInside(positionInNode)
+
+            if debug then print("onTouchBegan", os.clock(), target:getName(), isInside) end
+
+            if beganCB then
+                return beganCB(isInside)
+            else
+                if isInside then
+                    return true
+                end
+            end
+
+            return false
+        end
+
+        local function _onTouchMoved(touch, event)
+            if debug then print("onTouchMoved", os.clock()) end
+
+            if op_isTouchMove then
+                local delta = touch:getDelta()
+                local pos = cc.p(node:getPosition())
+                pos.x = pos.x + delta.x
+                pos.y = pos.y + delta.y
+                node:setPosition(pos)
+            end
+
+            if movedCB then
+                local touchLocation = touch:getLocation()
+                movedCB(touchLocation)
+            end
+        end
+
+        local function _onTouchEnded(touch, event)
+            if debug then print("onTouchEnded", os.clock()) end
+
+            local _isInSide = isInside
+            touchComplete()
+
+            if endedCB then
+                endedCB(_isInSide)
+            end
+        end
+
+        local function _onTouchCancelled(touch, event)
+            if debug then print("onTouchCancelled", os.clock()) end
+
+            local _isInSide = isInside
+            touchComplete()
+
+            if cancelledCB then
+                cancelledCB()
+            end
+        end
+
+        listener:setSwallowTouches(op_isSwallow)
+        listener:registerScriptHandler(_onTouchBegan, cc.Handler.EVENT_TOUCH_BEGAN)
+        listener:registerScriptHandler(_onTouchMoved, cc.Handler.EVENT_TOUCH_MOVED)
+        listener:registerScriptHandler(_onTouchEnded, cc.Handler.EVENT_TOUCH_ENDED)
+        listener:registerScriptHandler(_onTouchCancelled, cc.Handler.EVENT_TOUCH_CANCELLED)
+
+        local eventDispatcher = node:getEventDispatcher()
+        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, node)
+
+        return listener
+    end
 end
 
 function keyboard(doKeyPressed, doKeyReleased)
