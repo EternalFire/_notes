@@ -249,7 +249,7 @@ function case_imgui()
             imgui.labelText("", string.format("total: %s", tostring(#creatorPanelState.testSpriteList)))
 
             local ret
-            ret, creatorPanelState.num = imgui.sliderInt("num", creatorPanelState.num, 1, 10)
+            ret, creatorPanelState.num = imgui.sliderInt("num", creatorPanelState.num, 1, 50)
 
             imgui.pushButtonRepeat(true);
             if imgui.button("TestSprite_1") then
@@ -268,9 +268,10 @@ function case_imgui()
             imgui.popButtonRepeat();
 
             if imgui.button("clear") then
-                for i = 1, #creatorPanelState.testSpriteList do
-                    creatorPanelState.testSpriteList[i]:removeFromParent()
-                    creatorPanelState.testSpriteList[i] = nil
+                while #creatorPanelState.testSpriteList > 0 do
+                    creatorPanelState.testSpriteList[1]:removeFromParent()
+                    creatorPanelState.testSpriteList[1] = nil
+                    table.remove(creatorPanelState.testSpriteList, 1)
                 end
             end
         end
