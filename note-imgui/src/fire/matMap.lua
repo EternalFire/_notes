@@ -184,10 +184,11 @@ local function createMatMap(m, n)
 
     function Mat:walkCross(callback, startX, startY)
         self:walk(function(i, x, y, value, node)
-            if startX == x and startY == y then
-                return
-            end
             if startX == x or startY == y then
+                if startX == x and startY == y then
+                    return
+                end
+
                 callback(i, x, y, value, node)
             end
         end)

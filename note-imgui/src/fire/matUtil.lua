@@ -28,8 +28,8 @@ local function _checkContinualNode(nodeList, times, isVertical)
                 num = num + 1
                 table.insert(list, node)
             else
-                num = 0
-                list = {}
+                num = 1
+                list = {node}
             end
 
             pre = node
@@ -46,15 +46,29 @@ end
 ---find the nodes with the same value in matMap
 ---and the number of neighbor greater than times
 ---@return NodeList with the same value
-function matUtil.findCrossNodesContinually(mat, x0, y0, times)
+function matUtil.findCrossNodesContinually(mat, x0, y0, times, isFindVertical, isFindHorizontal)
     if mat then
         times = times or 1
         times = math.max(1, times)
 
-        local vertical, horizontal = matUtil.findCrossNodes(mat, x0, y0)
+        if isFindVertical == nil then
+            isFindVertical = true
+        end
 
-        local vNodeList = _checkContinualNode(vertical, times, true)
-        local hNodeList = _checkContinualNode(horizontal, times, false)
+        if isFindHorizontal == nil then
+            isFindHorizontal = true
+        end
+
+        local vertical, horizontal = matUtil.findCrossNodes(mat, x0, y0, isFindVertical, isFindHorizontal)
+        local vNodeList, hNodeList
+
+        if isFindVertical then
+            vNodeList = _checkContinualNode(vertical, times, true)
+        end
+
+        if isFindHorizontal then
+            hNodeList = _checkContinualNode(horizontal, times, false)
+        end
 
         return vNodeList, hNodeList
     end
@@ -87,39 +101,122 @@ function matUtil.findCrossNodesInDirection(mat, x0, y0)
     return up, down, left, right
 end
 
-function matUtil.findCrossNodes(mat, x0, y0)
+function matUtil.findCrossNodes(mat, x0, y0, isFindVertical, isFindHorizontal)
     local vertical = {}
     local horizontal = {}
-    local target = mat:get(x0, y0)
 
-    mat:walkCross(function(i, x, y, value, node)
-        if value == target.value then
-            if mat:isUpSide(target.x, target.y, x, y) or mat:isDownSide(target.x, target.y, x, y) then
-                table.insert(vertical, node)
-            end
+    if isFindVertical == nil then
+        isFindVertical = true
+    end
 
-            if mat:isLeftSide(target.x, target.y, x, y) or mat:isRightSide(target.x, target.y, x, y) then
-                table.insert(horizontal, node)
+    if isFindHorizontal == nil then
+        isFindHorizontal = true
+    end
+
+    if isFindVertical or isFindHorizontal then
+        local target = mat:get(x0, y0)
+
+        mat:walkCross(function(i, x, y, value, node)
+            if value == target.value then
+
+                if isFindVertical then
+                    if mat:isUpSide(target.x, target.y, x, y) or mat:isDownSide(target.x, target.y, x, y) then
+                        table.insert(vertical, node)
+                    end
+                end
+
+                if isFindHorizontal then
+                    if mat:isLeftSide(target.x, target.y, x, y) or mat:isRightSide(target.x, target.y, x, y) then
+                        table.insert(horizontal, node)
+                    end
+                end
             end
+        end, target.x, target.y)
+
+        local toSort = false
+
+        if #vertical > 0 then
+            table.insert(vertical, target)
+            toSort = true
         end
-    end, target.x, target.y)
 
-    if #vertical > 0 then
-        table.insert(vertical, target)
+        if #horizontal > 0 then
+            table.insert(horizontal, target)
+            toSort = true
+        end
+
+        if toSort then
+            local function cmpIndex(nodeA, nodeB)
+                return nodeA.index < nodeB.index
+            end
+
+            table.sort(vertical, cmpIndex)
+            table.sort(horizontal, cmpIndex)
+        end
     end
-
-    if #horizontal > 0 then
-        table.insert(horizontal, target)
-    end
-
-    local function cmpIndex(nodeA, nodeB)
-        return nodeA.index < nodeB.index
-    end
-
-    table.sort(vertical, cmpIndex)
-    table.sort(horizontal, cmpIndex)
 
     return vertical, horizontal
+end
+
+function matUtil.findAllEqualCrossNodesContinually(mat, times)
+    times = times or 3
+    local vNodes = {} -- { index = { nodeList } }
+    local hNodes = {} -- { index = { nodeList } }
+    local vRecord = {}
+    local hRecord = {}
+
+    mat:walk(function(i, x, y, value, node)
+        local isFindVertical = true
+        local isFindHorizontal = true
+
+        if vRecord[i] then
+            isFindVertical = false
+            print("ignore vertical i =", i, x, y)
+        end
+
+        if hRecord[i] then
+            isFindHorizontal = false
+            print("ignore horizontal i =", i, x, y)
+        end
+
+        local vertical, horizontal = matUtil.findCrossNodesContinually(mat, x, y, times, isFindVertical, isFindHorizontal)
+        if vertical then
+            local num = 0
+            for _i = 1, #vertical do
+                local _node = vertical[_i]
+                if _node then
+                    if not vRecord[_node.index] then
+                        vRecord[_node.index] = true
+                        num = num + 1
+                    end
+                end
+            end
+
+            if num == #vertical then
+                vNodes[i] = vNodes[i] or {}
+                table.insert(vNodes[i], vertical)
+            end
+        end
+
+        if horizontal then
+            local num = 0
+            for _i = 1, #horizontal do
+                local _node = horizontal[_i]
+                if _node then
+                    if not hRecord[_node.index] then
+                        hRecord[_node.index] = true
+                        num = num + 1
+                    end
+                end
+            end
+
+            if num == #horizontal then
+                hNodes[i] = hNodes[i] or {}
+                table.insert(hNodes[i], horizontal)
+            end
+        end
+    end)
+    return vNodes, hNodes
 end
 
 if runTest then
@@ -129,7 +226,7 @@ if runTest then
 
         local mat = createMatMap(4, 4)
         mat:set({
-            1, 2, 3, 1,
+            1, 2, 3, 0,
             1, 0, 0, 0,
             1, 3, 1, 0,
             0, 1, 0, 0,
@@ -143,14 +240,21 @@ if runTest then
         -- local list3 = mat:find(3)
 
         -- local up, down, left, right = matUtil.findCrossNodesInDirection(mat, 3, 2)
-        local vertical, horizontal = matUtil.findCrossNodesContinually(mat, 1, 3, 3)
-        if vertical then
-            print("vertical continual match")
-        end
 
-        if horizontal then
-            print("horizontal continual match")
-        end
+
+        -- local vertical, horizontal = matUtil.findCrossNodesContinually(mat, 4, 4, 2)
+        -- if vertical then
+        --     print("vertical continual match")
+        -- end
+        -- if horizontal then
+        --     print("horizontal continual match")
+        -- end
+
+        local times = 4
+        local vNodes = {} -- { index = { nodeList } }
+        local hNodes = {} -- { index = { nodeList } }
+
+        vNodes, hNodes = matUtil.findAllEqualCrossNodesContinually(mat, times)
 
         print()
     end
