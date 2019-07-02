@@ -504,7 +504,7 @@ function run()
     }
     createTouchListener(node, option)
 
-
+    createMatTestView(State.bgLayer)
 end
 
 local function main()
