@@ -6,6 +6,8 @@ from pylab import *
 from numpy import *
 from numpy import random
 from scipy.ndimage import filters
+import scipy.integrate
+from functools import partial
 
 def test_rotateHalf():
     name = "sample-01.jpg"
@@ -191,6 +193,22 @@ def test_noise():
     image = Image.fromarray(uint8(im0))
     saveImage(image, "test_noise_1.jpg")
 
+def test_normal_pdf():
+    xs = [x / 10.0 for x in range(-50, 50)]
+    l1 = [normal_pdf(x,sigma=1) for x in xs]
+    # print xs
+    # print xs[-1]
+    # print l1
+
+    # result = scipy.integrate.quad(normal_pdf, xs[0], xs[-1], args=(0,1))
+    # print result
+
+    figure()
+    plot(xs, l1,'-',label='mu=0,sigma=1')
+    # title(u"正态分布的概率密度函数")
+    # title("正态分布的概率密度函数".decode("utf-8"))
+    show()
+
 
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
@@ -204,6 +222,10 @@ def main():
     # test_pickle()
     # test_gaussian()
     # test_sobel()
-    test_noise()
+    # test_noise()
+    # test_normal_pdf()
+
+
+    pass
 
 main()
