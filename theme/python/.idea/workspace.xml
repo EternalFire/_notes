@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1d8d4364-9570-4614-b85f-644e9c7ffff6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/python.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/python.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/playground.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,44 +17,16 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/playground.py">
+        <entry file="file://$PROJECT_DIR$/mydl/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="271" column="18" lean-forward="true" selection-start-line="271" selection-start-column="18" selection-end-line="271" selection-end-column="18" />
+            <state relative-caret-position="308">
+              <caret line="128" column="6" lean-forward="true" selection-start-line="128" selection-start-column="6" selection-end-line="128" selection-end-column="6" />
               <folding>
-                <element signature="e#24#33#0" expanded="true" />
-                <element signature="e#257#567#0" />
-                <element signature="e#592#900#0" />
-                <element signature="e#929#1676#0" />
-                <element signature="e#1707#2103#0" />
-                <element signature="e#2124#2732#0" />
-                <element signature="e#2755#2936#0" />
-                <element signature="e#2971#3109#0" />
-                <element signature="e#3125#3312#0" />
-                <element signature="e#3336#3800#0" />
-                <element signature="e#3825#4274#0" />
-                <element signature="e#4303#4669#0" />
-                <element signature="e#7598#7687#0" />
-                <element signature="e#7907#7996#0" />
+                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#156#342#0" />
+                <element signature="e#161#167#0" />
+                <element signature="e#93#159#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/numpy/core/shape_base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="237" column="21" selection-start-line="237" selection-start-column="21" selection-end-line="237" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2019.1/python_stubs/2069204142/numpy/random/mtrand.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="73">
-              <caret line="2077" column="4" selection-start-line="2077" selection-start-column="4" selection-end-line="2077" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -62,8 +34,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/helper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+            <state relative-caret-position="-1022">
+              <caret line="5" column="9" lean-forward="true" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -74,6 +46,7 @@
     <findStrings>
       <find>classify</find>
       <find>KnnClassifier</find>
+      <find>plot</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -84,7 +57,9 @@
       <list>
         <option value="$PROJECT_DIR$/learnPytorch.py" />
         <option value="$PROJECT_DIR$/helper.py" />
+        <option value="$PROJECT_DIR$/mydl/init.py" />
         <option value="$PROJECT_DIR$/playground.py" />
+        <option value="$PROJECT_DIR$/mydl/test.py" />
       </list>
     </option>
   </component>
@@ -100,10 +75,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="723" />
-    <option name="y" value="32" />
+    <option name="x" value="965" />
+    <option name="y" value="47" />
     <option name="width" value="957" />
-    <option name="height" value="1011" />
+    <option name="height" value="1002" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -111,6 +86,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -118,11 +94,15 @@
               <item name="python" type="b2602c69:ProjectViewProjectNode" />
               <item name="python" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="python" type="b2602c69:ProjectViewProjectNode" />
+              <item name="python" type="462c0819:PsiDirectoryNode" />
+              <item name="mydl" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -142,7 +122,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.test">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="python" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -150,7 +130,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/bin/python" />
+      <option name="SDK_HOME" value="D:\Software\Anaconda3\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -164,8 +144,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mydl/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.1" />
+      <item itemvalue="Python.test" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.1" />
       </list>
     </recent_temporary>
@@ -184,11 +190,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="723" y="32" width="957" height="1011" extended-state="0" />
-    <editor active="true" />
+    <frame x="965" y="47" width="957" height="1002" extended-state="0" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" weight="0.21843687" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.21762785" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="0" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
@@ -196,8 +201,8 @@
       <window_info anchor="bottom" id="Message" order="3" />
       <window_info anchor="bottom" id="Find" order="4" />
       <window_info anchor="bottom" id="Version Control" order="5" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.36235037" />
-      <window_info anchor="bottom" id="Debug" order="7" weight="0.39499456" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.36520737" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.3945268" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="10" />
@@ -276,56 +281,77 @@
     <entry file="file://D:/Software/Anaconda3/Lib/site-packages/torch/nn/modules/conv.py" />
     <entry file="file://D:/Software/Anaconda3/Lib/site-packages/torch/__init__.pyi" />
     <entry file="file://D:/Software/Anaconda3/Lib/site-packages/matplotlib/__init__.py" />
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2019.1/python_stubs/2069204142/numpy/random/mtrand.py" />
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/numpy/core/shape_base.py" />
+    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-392692586/numpy/core/_multiarray_umath.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="7029" column="8" lean-forward="true" selection-start-line="7029" selection-start-column="8" selection-end-line="7029" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Software/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="2707" lean-forward="true" selection-start-line="2707" selection-end-line="2707" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="353" column="16" selection-start-line="353" selection-start-column="16" selection-end-line="353" selection-end-column="16" />
+          <folding>
+            <element signature="e#24#33#0" expanded="true" />
+            <element signature="e#258#568#0" />
+            <element signature="e#594#902#0" />
+            <element signature="e#932#1679#0" />
+            <element signature="e#1711#2109#0" />
+            <element signature="e#2131#2740#0" />
+            <element signature="e#2764#2945#0" />
+            <element signature="e#2971#3109#0" />
+            <element signature="e#3137#3324#0" />
+            <element signature="e#3349#3813#0" />
+            <element signature="e#3839#4288#0" />
+            <element signature="e#4318#4684#0" />
+            <element signature="e#4707#8368#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1022">
+          <caret line="5" column="9" lean-forward="true" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/learnPytorch.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="135" column="46" lean-forward="true" selection-start-line="135" selection-start-column="46" selection-end-line="135" selection-end-column="46" />
+        <state relative-caret-position="406">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2019.1/python_stubs/2069204142/numpy/random/mtrand.py">
+    <entry file="file://$PROJECT_DIR$/mydl/init.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="73">
-          <caret line="2077" column="4" selection-start-line="2077" selection-start-column="4" selection-end-line="2077" selection-end-column="4" />
+        <state relative-caret-position="14">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/numpy/core/shape_base.py">
+    <entry file="file://$PROJECT_DIR$/mydl/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="237" column="21" selection-start-line="237" selection-start-column="21" selection-end-line="237" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/playground.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="271" column="18" lean-forward="true" selection-start-line="271" selection-start-column="18" selection-end-line="271" selection-end-column="18" />
+        <state relative-caret-position="308">
+          <caret line="128" column="6" lean-forward="true" selection-start-line="128" selection-start-column="6" selection-end-line="128" selection-end-column="6" />
           <folding>
-            <element signature="e#24#33#0" expanded="true" />
-            <element signature="e#257#567#0" />
-            <element signature="e#592#900#0" />
-            <element signature="e#929#1676#0" />
-            <element signature="e#1707#2103#0" />
-            <element signature="e#2124#2732#0" />
-            <element signature="e#2755#2936#0" />
-            <element signature="e#2971#3109#0" />
-            <element signature="e#3125#3312#0" />
-            <element signature="e#3336#3800#0" />
-            <element signature="e#3825#4274#0" />
-            <element signature="e#4303#4669#0" />
-            <element signature="e#7598#7687#0" />
-            <element signature="e#7907#7996#0" />
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#156#342#0" />
+            <element signature="e#161#167#0" />
+            <element signature="e#93#159#0" />
           </folding>
         </state>
       </provider>

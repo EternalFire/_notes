@@ -8,7 +8,7 @@ from numpy import random
 from scipy.ndimage import filters
 import scipy.integrate
 from functools import partial
-
+import mydl.init as dl
 
 def test_rotateHalf():
     name = "sample-01.jpg"
@@ -303,8 +303,8 @@ def test_knn():
             axis('equal')
 
     n = 200
-    # makeSample(n, False)
-    # makeSample(n, True)
+    makeSample(n, False)
+    makeSample(n, True)
 
     # name = "points_normal.pkl"
     # name_test = "points_normal_test.pkl"
@@ -351,7 +351,7 @@ def main():
     # test_sobel()
     # test_noise()
     # test_normal_pdf()
-    test_knn()
+    # test_knn()
     pass
 
 
