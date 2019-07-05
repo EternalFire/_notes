@@ -116,7 +116,6 @@ def createBox(left, top, right, bottom):
 def createImage(name):
     imagePath = getResPath(name)
     print(imagePath)
-
     image = Image.open(imagePath)
     return image
 
@@ -140,7 +139,7 @@ def histeq(im,nbr_bins=256):
     # 计算图像的直方图
     imhist,bins = histogram(im.flatten(),nbr_bins,normed=True)
     cdf = imhist.cumsum() # cumulative distribution function
-    print len(cdf), "cdf = ", cdf
+    print(len(cdf), "cdf = ", cdf)
     cdf = 255 * cdf / cdf[-1] # 归一化
     # 使用累积分布函数的线性插值，计算新的像素值
     im2 = interp(im.flatten(),bins[:-1],cdf)
@@ -154,7 +153,7 @@ def compute_average(imlist):
         try:
             averageim += array(Image.open(imname))
         except:
-            print imname + '...skipped'
+            print(imname + '...skipped')
             averageim /= len(imlist)
     # 返回 uint8 类型的平均图像
     return array(averageim, 'uint8')
