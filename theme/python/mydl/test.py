@@ -92,6 +92,11 @@ def test_1_5():
     filteredX = X[X > 0]
     print(filteredX.reshape(len(filteredX), 1))
 
+    x = np.array([-1.0, 1.0, 2.0])
+    y = x > 0
+    print(y)  # [False  True  True]
+    y = y.astype(np.int)
+    print(y)  # [0 1 1]
     return
 
 
@@ -120,10 +125,83 @@ def test_1_6():
     return
 
 
+def test_3_2_3():
+    def step_function(x):
+        return np.array(x > 0, dtype=np.int)
+
+    x = np.arange(-5.0, 5.0, 0.1)
+    y = step_function(x)
+    plt.plot(x, y)
+    plt.ylim(-0.1, 1.1)  # 指定y轴的范围
+    plt.show()
+    return
+
+
+def test_3_2_4():
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+
+    s = 3.0
+    x1 = np.arange(-5.0 * s, 5.0 * s, 0.1)
+    y = sigmoid(x1)
+    print(y)
+    plt.plot(x1, y, label="sigmoid")
+    plt.ylim(-0.1, 1.1)  # 指定y轴的范围
+    plt.show()
+    return
+
+
+def test_3_2_5():
+    def step_function(x):
+        return np.array(x > 0, dtype=np.int)
+
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+
+    s = 3.0
+    x1 = np.arange(-5.0 * s, 5.0 * s, 0.1)
+    y = sigmoid(x1)
+    plt.plot(x1, y, label="sigmoid")
+    plt.ylim(-0.1, 1.1)  # 指定y轴的范围
+
+    y = step_function(x1)
+    plt.plot(x1, y, label="step", linestyle="--")
+    plt.legend()
+
+    plt.show()
+    return
+
+
+def test_3_2_7():
+    def relu(x):
+        return np.maximum(0, x)
+
+    s = 2.0
+    x1 = np.arange(-5.0 * s, 5.0 * s, 0.1)
+    y = relu(x1)
+    print(y)
+    plt.plot(x1, y, label="relu")
+    plt.ylim(-2, 15)  # 指定y轴的范围
+    plt.legend()
+    plt.show()
+    return
+
+
+def test_3_4_3():
+    pass
+
+
 def main():
     # test_1_4()
     # test_1_5()
     # test_1_6()
+    # test_3_2_3()
+    # test_3_2_4()
+    # test_3_2_5()
+    # test_3_2_7()
+    test_3_4_3()
     return
 
+
 main()
+

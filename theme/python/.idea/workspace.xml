@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1d8d4364-9570-4614-b85f-644e9c7ffff6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../note-DeepLearningFromScratch.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../note-DeepLearningFromScratch.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/python.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/python.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/playground.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mydl/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/mydl/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../trick/note-2019.07.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../trick/note-2019.07.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,13 +19,15 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mydl/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="128" column="6" lean-forward="true" selection-start-line="128" selection-start-column="6" selection-end-line="128" selection-end-column="6" />
+            <state relative-caret-position="286">
+              <caret line="175" column="16" lean-forward="true" selection-start-line="175" selection-start-column="16" selection-end-line="175" selection-end-column="16" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#156#342#0" />
-                <element signature="e#161#167#0" />
-                <element signature="e#93#159#0" />
+                <element signature="e#156#456#0" />
+                <element signature="e#479#1835#0" />
+                <element signature="e#1858#2321#0" />
+                <element signature="e#2485#2491#0" />
+                <element signature="e#3186#3636#0" />
               </folding>
             </state>
           </provider>
@@ -34,8 +36,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/helper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1022">
-              <caret line="5" column="9" lean-forward="true" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+            <state relative-caret-position="70">
+              <caret line="5" column="9" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -283,13 +285,6 @@
     <entry file="file://D:/Software/Anaconda3/Lib/site-packages/matplotlib/__init__.py" />
     <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2019.1/python_stubs/2069204142/numpy/random/mtrand.py" />
     <entry file="file://$USER_HOME$/anaconda3/lib/python3.7/site-packages/numpy/core/shape_base.py" />
-    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-392692586/numpy/core/_multiarray_umath.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="7029" column="8" lean-forward="true" selection-start-line="7029" selection-start-column="8" selection-end-line="7029" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Software/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="206">
@@ -319,13 +314,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1022">
-          <caret line="5" column="9" lean-forward="true" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/learnPytorch.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
@@ -343,15 +331,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="70">
+          <caret line="5" column="9" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-392692586/numpy/core/_multiarray_umath.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="5464" column="4" lean-forward="true" selection-start-line="5464" selection-start-column="4" selection-end-line="5464" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mydl/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="128" column="6" lean-forward="true" selection-start-line="128" selection-start-column="6" selection-end-line="128" selection-end-column="6" />
+        <state relative-caret-position="286">
+          <caret line="175" column="16" lean-forward="true" selection-start-line="175" selection-start-column="16" selection-end-line="175" selection-end-column="16" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#156#342#0" />
-            <element signature="e#161#167#0" />
-            <element signature="e#93#159#0" />
+            <element signature="e#156#456#0" />
+            <element signature="e#479#1835#0" />
+            <element signature="e#1858#2321#0" />
+            <element signature="e#2485#2491#0" />
+            <element signature="e#3186#3636#0" />
           </folding>
         </state>
       </provider>
