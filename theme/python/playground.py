@@ -145,6 +145,40 @@ def test_np_2():
     saveImage(image, "test_np_2_histeq.jpg")
 
 
+def test_np_3():
+    import numpy as np
+    A = np.array([
+        [1, 2, 3, 4],
+        # [5, 6, 7, 8],
+    ])
+    print("A = \n", A, "\nA.shape = ", A.shape)
+
+    # (m,n) x (n,p) = (m,p)
+    m = A.shape[0]
+    n = A.shape[1]
+    p = 12
+    I = np.ones((n, p))
+    print("I = \n", I)
+
+    # A x I = B => (m, p)
+    B = A.dot(I)
+    print("B = \n", B, "\nB.shape = ", B.shape)
+
+    m = 3
+    n = B.shape[0]
+    p = B.shape[1]
+    I2 = np.ones((m, n))
+    C = I2.dot(B)
+    print("C = \n", C, "\nC.shape = ", C.shape)
+
+    m, n = C.shape
+    p = 1
+    I3 = np.ones((n, p))
+    D = C.dot(I3)
+    print("D = \n", D, "\nD.shape = ", D.shape)
+    return
+
+
 def test_pickle():
     # r = { "x": 0, "y": 10, "width": 100, "height": 100 }
     # saveData("rect", r)
@@ -352,6 +386,7 @@ def main():
     # test_noise()
     # test_normal_pdf()
     # test_knn()
+    test_np_3()
     pass
 
 
