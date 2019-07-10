@@ -193,13 +193,13 @@ def test_3_4_3():
 
 def main():
     # test_1_4()
-    # test_1_5()
+    test_1_5()
     # test_1_6()
     # test_3_2_3()
     # test_3_2_4()
     # test_3_2_5()
     # test_3_2_7()
-    test_3_4_3()
+    # test_3_4_3()
     return
 
 
