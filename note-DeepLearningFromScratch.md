@@ -19,6 +19,7 @@
     - [mini-batch](#mini-batch)
       - [np.random.choice()](#nprandomchoice)
     - [数值微分](#%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86)
+    - [梯度](#%E6%A2%AF%E5%BA%A6)
 
 ---
 
@@ -295,6 +296,15 @@ sigmoid 函数的导数不为 0 .
 
 **梯度法** 使用 梯度的信息 决定 前进的方向.
 
+> 利用微小的差分求导数的过程称为 数值微分(numerical  differentiation)
+
+解析性求导, 用数学公式推导求导数的过程.
+
+> 有多个变量的函数的导数称为 偏导数
+
+### 梯度
+
+> 由全部变量的偏导数汇总而成的向量称为 梯度(gradient)
 
 
 ---
