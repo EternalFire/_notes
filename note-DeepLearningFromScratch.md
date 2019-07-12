@@ -20,6 +20,7 @@
       - [np.random.choice()](#nprandomchoice)
     - [数值微分](#%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86)
     - [梯度](#%E6%A2%AF%E5%BA%A6)
+    - [学习算法的实现](#%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0)
 
 ---
 
@@ -302,10 +303,50 @@ sigmoid 函数的导数不为 0 .
 
 > 有多个变量的函数的导数称为 偏导数
 
+偏导数 (partial derivative)
+
+$f(x_0,x_1)={x_0}^2 + {x_1}^2$
+
+$\frac{\partial f}{\partial x_0} = \frac{df(x_0)}{dx_0}, x_1 为常量$
+
+$\frac{\partial f}{\partial x_1} = \frac{df(x_1)}{dx_1}, x_0 为常量$
+
 ### 梯度
 
 > 由全部变量的偏导数汇总而成的向量称为 梯度(gradient)
 
+$( \frac{\partial f}{\partial x_0}, \frac{\partial f}{\partial x_1} )$
+
+> 梯度指示的方向是各点处的函数值减小最多的方向
+
+梯度法: 利用梯度寻找函数最小值(寻找梯度为0的地方)
+
+梯度为0的地方: 函数的最小值, 极小值, 鞍点
+
+> 通过不断地沿梯度方向前进，逐渐减小函数值的过程
+
+> 寻找最小值的梯度法称为 梯度下降法（gradient descent method），
+
+> 寻找最大值的梯度法称为 梯度上升法（gradient ascent method）
+
+学习率, $\eta$
+
+每一次学习都会执行下面的计算, 并且反复进行:
+
+$x_0 = x_0 - \eta \frac{\partial f}{\partial x_0}$
+
+$x_1 = x_1 - \eta \frac{\partial f}{\partial x_1}$
+
+学习率属于 超参数, 通过 人工设置
+
+### 学习算法的实现
+
+随机梯度下降法（stochastic gradient descent）, SGD
+
+随机选择 mini batch 数据
+
+误差反向传播法, 求解梯度
+
+> 一个 epoch 表示学习中所有训练数据均被使用过一次时的 更新次数
 
 ---
-
