@@ -190,16 +190,26 @@ def test_3_2_7():
 def test_3_4_3():
     pass
 
+def test_argmax():
+    x = np.array([
+        [10,100,20,30],
+        [90,70,80,2220],
+        [1, 70, 800, 0]
+    ])
+    print(np.argmax(x, axis=1))  # row, [1 3 2]
+    print(np.argmax(x, axis=0))  # col, [1 0 2 1]
+
 
 def main():
     # test_1_4()
-    test_1_5()
+    # test_1_5()
     # test_1_6()
     # test_3_2_3()
     # test_3_2_4()
     # test_3_2_5()
     # test_3_2_7()
     # test_3_4_3()
+    test_argmax()
     return
 
 
