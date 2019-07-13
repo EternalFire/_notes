@@ -504,7 +504,8 @@ function run()
     }
     createTouchListener(node, option)
 
-    createMatTestView(State.bgLayer)
+    -- createMatTestView(State.bgLayer)
+    _test()
 end
 
 local function main()
@@ -514,6 +515,109 @@ local function main()
     case_imgui()
 
     setTimeout(function() run() end, 0)
+end
+
+function _test()
+    local max_duration = 999.9
+    local Act1
+    Act1 = class("Act1", function()
+        local instance = cc.DelayTime:create(max_duration)
+        return instance
+    end)
+    -- local Act1 = class("Act1", cc.ActionInterval)
+
+    function Act1:ctor(duration)
+        -- self:initWithDuration(max_duration)
+        -- self:initWithDuration(duration)
+
+        self._dt = 0
+        self._max_dt = duration
+
+        self._timer = cc.Director:getInstance():getScheduler():scheduleScriptFunc(function(t)
+            -- print("getElapsed ", self:getElapsed())
+            -- print("getTarget ", self:getTarget())
+
+            self:runStep(t)
+        end, 0, false)
+    end
+
+    function Act1:initWithDuration(duration)
+        cc.ActionInterval.initWithDuration(self, duration)
+        print("Act1:initWithDuration ", duration, self:isDone())
+    end
+
+    function Act1:runStep(t)
+        self._dt = self._dt + t
+
+        if self._dt >= self._max_dt - 0.05 then
+            cc.Director:getInstance():getScheduler():unscheduleScriptEntry(self._timer)
+            self._timer = nil
+
+            if self._composeInstance then
+                -- self._composeInstance:step(max_duration)
+                self._composeInstance:step(max_duration - self._composeInstance:getElapsed())
+                print("force done!", self._composeInstance:getElapsed())
+            else
+                self:step(max_duration)
+                print("force done!", self:getElapsed())
+            end
+
+            -- print("getNumberOfRunningActions", self:getTarget():getNumberOfRunningActions())
+            -- self:initWithDuration(0.001)
+            -- self:setDuration(0.001)
+            -- self:getTarget():stopAction(self)
+        end
+
+        self:_update(t)
+    end
+
+    function Act1:_update(t)
+        -- print("Act1 waiting ", t, self._dt, self._max_dt)
+    end
+
+    function Act1:clone()
+        return Act1:create(max_duration)
+    end
+
+    -- instance of cc.Sequence
+    function Act1:setComposeAction(instance)
+        self._composeInstance = instance
+    end
+
+
+    local scene = display.getRunningScene()
+    local node = cc.Node:create()
+    node:addTo(scene)
+
+    print(os.clock(), node)
+    local act_1 = Act1:create(3.0)
+    -- act_1:retain()
+
+    -- local timer
+    -- local function run()
+    --     cc.Director:getInstance():getScheduler():unscheduleScriptEntry(timer)
+
+    --     act_1:step(max_duration)
+    --     print("1111111111111111111111111")
+    -- end
+    -- --                                                                      second
+    -- timer = cc.Director:getInstance():getScheduler():scheduleScriptFunc(run, 3, false)
+
+    local seq = cc.Sequence:create(
+        act_1,
+        cc.CallFunc:create(function()
+            print("done!", os.clock())
+        end),
+        cc.DelayTime:create(3),
+        cc.CallFunc:create(function()
+            print("time = ", os.time(), os.clock())
+        end)
+    )
+
+    act_1:setComposeAction(seq)
+    node:runAction(seq)
+
+    -- node:runAction(act_1)
 end
 
 return main
