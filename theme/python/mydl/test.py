@@ -190,6 +190,7 @@ def test_3_2_7():
 def test_3_4_3():
     pass
 
+
 def test_argmax():
     x = np.array([
         [10,100,20,30],
@@ -199,6 +200,38 @@ def test_argmax():
     print(np.argmax(x, axis=1))  # row, [1 3 2]
     print(np.argmax(x, axis=0))  # col, [1 0 2 1]
 
+
+def test_booleanArray():
+    x = np.array([[1.0, -0.5], [-2.0, 3.0]])
+    mask = (x <= 0)
+    print(mask)
+
+    out = x.copy()
+    out[mask] = 0
+    # out[np.array([[True, True], [False, False]])] = 0
+    print(out)
+
+def test_shape():
+    X = np.random.rand(2)
+    print(len(X))
+    print(X, X.shape, X.shape[0])
+
+    W = np.random.rand(2, 3)
+    print(len(W))
+    print(W, W.shape)
+
+    # XX = np.random.rand(1, 2)
+    XX = X.copy().reshape(1, 2)
+    print(XX, XX.shape)
+
+    print(np.dot(X, W))
+    print(np.dot(XX, W))
+    print(np.equal(X, XX))
+
+    XX2 = np.random.rand(2, 1)
+    print(XX2, XX2.shape)
+
+    # print(np.dot(XX2, W))
 
 def main():
     # test_1_4()
@@ -210,8 +243,9 @@ def main():
     # test_3_2_7()
     # test_3_4_3()
     # test_argmax()
+    # test_booleanArray()
+    test_shape()
     return
 
 
 main()
-
