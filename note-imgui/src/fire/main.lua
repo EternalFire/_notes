@@ -518,106 +518,70 @@ local function main()
 end
 
 function _test()
-    local max_duration = 999.9
-    local Act1
-    Act1 = class("Act1", function()
-        local instance = cc.DelayTime:create(max_duration)
-        return instance
-    end)
-    -- local Act1 = class("Act1", cc.ActionInterval)
+    -- print("FireAction.test() start")
+    FireAction.test()
 
-    function Act1:ctor(duration)
-        -- self:initWithDuration(max_duration)
-        -- self:initWithDuration(duration)
+    -- test_ccs_v2_skeleton_animation()
+end
 
-        self._dt = 0
-        self._max_dt = duration
+function test_ccs_v2_skeleton_animation()
+    local scene = display.getRunningScene()
+    local v = "ccs_skeleton.csb"
+    -- local v = "MainScene.csb"
+    -- ccs.ArmatureDataManager:getInstance():addArmatureFileInfo(v);
 
-        self._timer = cc.Director:getInstance():getScheduler():scheduleScriptFunc(function(t)
-            -- print("getElapsed ", self:getElapsed())
-            -- print("getTarget ", self:getTarget())
 
-            self:runStep(t)
-        end, 0, false)
+    -- local ccsArmature = ccs.Armature:create()
+    -- ccsArmature:init("ccs_skeleton")
+
+    -- ccsArmature:addTo(scene):move(200, 300)
+
+    local root = cc.CSLoader:createNode(v)
+    root:addTo(scene):move(200, 300)
+
+    local actionTimeline = cc.CSLoader:createTimeline(v)
+    actionTimeline:play("animation0", true)
+    root:runAction(actionTimeline)
+
+    print(root:getName())
+    dump(root:getAllSubBonesMap())
+
+    local skins = root:getSkins()
+    if skins then
+        print("#skins = ", #skins)
     end
 
-    function Act1:initWithDuration(duration)
-        cc.ActionInterval.initWithDuration(self, duration)
-        print("Act1:initWithDuration ", duration, self:isDone())
+    -- get skin name
+    local allSubSkins = root:getAllSubSkins()
+    if allSubSkins then
+        print("#allSubSkins = ", #allSubSkins)
+        for i = 1, #allSubSkins do
+            print(i, allSubSkins[i]:getName())
+        end
     end
 
-    function Act1:runStep(t)
-        self._dt = self._dt + t
-
-        if self._dt >= self._max_dt - 0.05 then
-            cc.Director:getInstance():getScheduler():unscheduleScriptEntry(self._timer)
-            self._timer = nil
-
-            if self._composeInstance then
-                -- self._composeInstance:step(max_duration)
-                self._composeInstance:step(max_duration - self._composeInstance:getElapsed())
-                print("force done!", self._composeInstance:getElapsed())
-            else
-                self:step(max_duration)
-                print("force done!", self:getElapsed())
-            end
-
-            -- print("getNumberOfRunningActions", self:getTarget():getNumberOfRunningActions())
-            -- self:initWithDuration(0.001)
-            -- self:setDuration(0.001)
-            -- self:getTarget():stopAction(self)
+    local allbones = root:getAllSubBones();
+    if allbones then
+        print("#allbones = ", #allbones)
+        for i = 1, #allbones do
+            print(i, allbones[i]:getName())
         end
 
-        self:_update(t)
+        -- skin
+        allbones[1]:displaySkin("Sprite_2", true) -- hide other skin
     end
 
-    function Act1:_update(t)
-        -- print("Act1 waiting ", t, self._dt, self._max_dt)
-    end
+    -- change skin by skeleton node
+    root:addSkinGroup("group_1", { ["Bone_1"] = "AddCoinButton_1" })
+    root:addSkinGroup("group_2", { ["Bone_1"] = "Sprite_2" })
 
-    function Act1:clone()
-        return Act1:create(max_duration)
-    end
+    setInterval(function()
+        root:changeSkins("group_1")
+    end, 3)
 
-    -- instance of cc.Sequence
-    function Act1:setComposeAction(instance)
-        self._composeInstance = instance
-    end
-
-
-    local scene = display.getRunningScene()
-    local node = cc.Node:create()
-    node:addTo(scene)
-
-    print(os.clock(), node)
-    local act_1 = Act1:create(3.0)
-    -- act_1:retain()
-
-    -- local timer
-    -- local function run()
-    --     cc.Director:getInstance():getScheduler():unscheduleScriptEntry(timer)
-
-    --     act_1:step(max_duration)
-    --     print("1111111111111111111111111")
-    -- end
-    -- --                                                                      second
-    -- timer = cc.Director:getInstance():getScheduler():scheduleScriptFunc(run, 3, false)
-
-    local seq = cc.Sequence:create(
-        act_1,
-        cc.CallFunc:create(function()
-            print("done!", os.clock())
-        end),
-        cc.DelayTime:create(3),
-        cc.CallFunc:create(function()
-            print("time = ", os.time(), os.clock())
-        end)
-    )
-
-    act_1:setComposeAction(seq)
-    node:runAction(seq)
-
-    -- node:runAction(act_1)
+    setInterval(function()
+        root:changeSkins("group_2")
+    end, 2)
 end
 
 return main
