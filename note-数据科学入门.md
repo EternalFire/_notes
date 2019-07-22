@@ -55,7 +55,7 @@ $$P(E|F) = P(F|E)P(E)/(P(F|E)P(E)+P(F|\lnot E)P(\lnot E))$$
 
 均匀分布（uniform distribution）
 
->用带概率密度函数（probability density function，pdf）的连续分布来表示概率，一个变量位于某个区间的概率等于概率密度函数在这个区间上的积分。
+>我们用带概率密度函数（probability density function，pdf）的连续分布来表示概率，一个变量位于某个区间的概率等于概率密度函数在这个区间上的积分。
 
 累积分布函数（cumulative distribution function，cdf）, 表示 一个随机变量小于等于某一特定值的概率
 
@@ -64,6 +64,10 @@ $$P(E|F) = P(F|E)P(E)/(P(F|E)P(E)+P(F|\lnot E)P(\lnot E))$$
 >均值描述钟型曲线的中心，标准差描述曲线有多"宽"
 
 $\mu = 0$, $\sigma = 1$, 标准正态分布.
+
+$$
+f(x|\mu,\sigma) = \frac{1}{\sqrt{2 \pi \sigma}} exp(- \frac{(x - \mu)^2}{2 \sigma^2})
+$$
 
 中心极限定理（central limit theorem）, 使用随机变量计算正态分布
 

@@ -9,6 +9,7 @@ from scipy.ndimage import filters
 import scipy.integrate
 from functools import partial
 import mydl.init as dl
+import matplotlib.pyplot as plt
 
 def test_rotateHalf():
     name = "sample-01.jpg"
@@ -255,6 +256,45 @@ def test_normal_pdf():
     show()
 
 
+def test_normal_cdf():
+    def normal_cdf(x, mu=0, sigma=1):
+        return (1 + math.erf((x - mu) / math.sqrt(2) / sigma)) / 2
+
+    xs = [x / 10.0 for x in range(-50, 50)]
+    plt.plot(xs, [normal_cdf(x, sigma=1) for x in xs], '-', label='mu=0,sigma=1')
+    plt.plot(xs, [normal_cdf(x, sigma=2) for x in xs], '--', label='mu=0,sigma=2')
+    plt.plot(xs, [normal_cdf(x, sigma=0.5) for x in xs], ':', label='mu=0,sigma=0.5')
+    plt.plot(xs, [normal_cdf(x, mu=-1) for x in xs], '-.', label='mu=-1,sigma=1')
+    plt.legend(loc=4)  # 底部右边
+    # plt.title(r"多个正态分布的累积分布函数")
+    plt.show()
+
+
+def test_pdf():
+    def uniform_pdf(x):
+        return 1 if x >= 0 and x < 1 else 0
+
+    def uniform_cdf(x):
+        "returns the probability that a uniform random variable is <= x"
+        if x < 0:
+            return 0  # 均匀分布的随机变量不会小于0
+        elif x < 1:
+            return x  # e.g. P(X <= 0.4) = 0.4
+        else:
+            return 1  # 均匀分布的随机变量总是小于1
+
+    X = [x / 10.0 for x in range(-30, 30)]
+    Y = [uniform_pdf(x) for x in X]
+    Y1 = [uniform_cdf(x) for x in X]
+
+    figure()
+    plot(X, Y)
+    plot(X, Y1, "--")
+    show()
+
+    return
+
+
 def test_knn():
     class KnnClassifier(object):
         def __init__(self, labels, samples):
@@ -371,6 +411,7 @@ def test_knn():
     show()
 
 
+
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
     # saveGrayImage("sample-01.jpg")
@@ -386,8 +427,11 @@ def main():
     # test_noise()
     # test_normal_pdf()
     # test_knn()
-    test_np_3()
-    pass
+    # test_np_3()
+    # test_pdf()
+    # test_normal_cdf()
+
+    return
 
 
 main()
