@@ -2,7 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.image import imread
 import helper as helper
+import sys
+import traceback
 import mydl.init as dl
+
+
+def _print(*content):
+    depth = 1
+    file_name = sys._getframe(depth).f_code.co_filename  # 文件名
+    function_name = sys._getframe(depth).f_code.co_name  # 函数名
+    file_line = sys._getframe(depth).f_lineno  # 行号
+    print(file_name, function_name, file_line, content)
 
 
 def test_1_4():
@@ -103,6 +113,7 @@ def test_1_5():
 def test_1_6():
     # 生成数据
     x = np.arange(0, 6, 0.1)  # 以0.1为单位，生成0到6的数据
+    print(x)
     y = np.sin(x)
     y2 = np.cos(x)
 
@@ -190,7 +201,6 @@ def test_3_2_7():
 def test_3_4_3():
     pass
 
-
 def test_argmax():
     x = np.array([
         [10,100,20,30],
@@ -211,9 +221,10 @@ def test_booleanArray():
     # out[np.array([[True, True], [False, False]])] = 0
     print(out)
 
+
 def test_shape():
     X = np.random.rand(2)
-    print(len(X))
+    _print(len(X))
     print(X, X.shape, X.shape[0])
 
     W = np.random.rand(2, 3)
@@ -233,6 +244,94 @@ def test_shape():
 
     # print(np.dot(XX2, W))
 
+
+def test_reshape():
+    X = np.random.rand(2)
+    print("len(X) = ", len(X))
+    print("X = ", X, "X.shape = ", X.shape)
+    print()
+
+    Y = np.zeros(6)
+    print("Y = ", Y)
+    print()
+
+    Y[:len(X)] += X
+    print("Y[:len(X)] += X")
+    print(Y)
+    print()
+
+    row = 3
+    col = int(len(Y) / row)
+    print("row = ", row, "col = ", col)
+    print(Y.reshape(row, col))
+    print()
+    pass
+
+def test_dot_2():
+    X = np.arange(0,3,1)
+    Y = np.arange(0,3,1)
+    print("X, Y")
+    print(X, Y)
+
+    print("\nX.dot(Y)")
+    d0 = X.dot(Y)
+    print(d0, d0.shape)
+
+    print("\nX.reshape((1,3)).dot(Y)")
+    d1 = X.reshape((1,3)).dot(Y)
+    print(d1, d1.shape)
+
+    print("\nX.reshape((1, 3)).dot(Y.reshape((3, 1)))")
+    d2 = X.reshape((1, 3)).dot(Y.reshape((3, 1)))
+    print(d2, d2.shape)
+
+    print("\nX.reshape((3, 1)).dot(Y.reshape((1, 3)))")
+    d3 = X.reshape((3, 1)).dot(Y.reshape((1, 3)))
+    print(d3, d3.shape)
+
+
+def test_dot_n():
+    X = np.arange(0, 24, 1)
+    Y = np.arange(0, 24, 1)
+    print("X, Y")
+    print(X, Y)
+    print("len(X)", len(X))  # 24
+    print()
+
+    X432 = X.reshape((4, 3, 2))  # 4x3x2=24
+    print("X432")
+    print(X432)
+    print(X432.shape, X432[0].shape, X432[0][0].shape)
+    print()
+
+    print("X432[0]")
+    print(X432[0])
+    print()
+
+    print("X432[0][0]")
+    print(X432[0][0])
+    print()
+
+    Y432 = Y.reshape(4, 3, 2)
+    print(Y432)
+    print()
+
+    # 逆序
+    # print("b = np.arange(3*4*5*6)[::-1]")
+    # b = np.arange(3 * 4 * 5 * 6)[::-1]
+    # print(b)
+
+    # print(Y432[0,0,:])
+    # print(Y432.shape[-2])
+
+    # 倒数第2维, 其他维度按顺序排列, 首个维度
+    Y324 = np.transpose(Y432, (1, 2, 0))
+    # print(Y324.shape)
+    print(X432.dot(Y324))
+
+    return
+
+
 def main():
     # test_1_4()
     # test_1_5()
@@ -244,7 +343,10 @@ def main():
     # test_3_4_3()
     # test_argmax()
     # test_booleanArray()
-    test_shape()
+    # test_shape()
+    # test_reshape()
+    # test_dot_2()
+    # test_dot_n()
     return
 
 

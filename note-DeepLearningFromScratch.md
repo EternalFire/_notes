@@ -23,6 +23,7 @@
     - [学习算法的实现](#%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0)
   - [5. 误差反向传播法](#5-%E8%AF%AF%E5%B7%AE%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%B3%95)
   - [6. 与学习相关的技巧](#6-%E4%B8%8E%E5%AD%A6%E4%B9%A0%E7%9B%B8%E5%85%B3%E7%9A%84%E6%8A%80%E5%B7%A7)
+    - [Batch Normalization](#Batch-Normalization)
   - [7. 卷积神经网络](#7-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C)
 
 ---
@@ -414,7 +415,34 @@ softmax 函数 + 交叉熵误差
 
 ## 6. 与学习相关的技巧
 
-...
+### Batch Normalization
+
+Batch Normalization, 以进行学习时的mini-batch为单位，按 mini-batch 进行正规化( 使数据分布的均值为 0、方差为 1 的正规化 )
+
+```
+优势:
+  可以使学习快速进行(可以增大学习率)。
+  不那么依赖初始值(对于初始值不用那么神经质)。
+  抑制过拟合(降低Dropout等的必要性)。
+```
+
+$$
+\mu_B = \frac{1}{m} \sum_{i=1}^mx_i
+$$
+
+$$
+\sigma_B^2 = \frac{1}{m} \sum_{i=1}^m (x_i-\mu_B)^2
+$$
+
+$$
+\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2  + \epsilon}}
+$$
+
+$$
+y_i = \gamma \hat{x}_i + \beta
+$$
+
+
 
 ---
 
@@ -466,5 +494,5 @@ Average 池化, 计算目标区域的平均值
 
 滤波器 (FN, C, FH, FW), 各分量表示 滤波器数量, 通道数, 高度, 宽度.
 
-axis 是分量的另一种描述.
+axis 是分量的另一种描述. shape 是 (a, b, c, d) 对应的轴 ID 表示: (0, 1, 2, 3). 第0维上有 a 个元素, 第1维上有 b 个元素, 第2维上有 c 个元素, 第3维上有 d 个元素.
 
