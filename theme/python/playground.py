@@ -10,6 +10,7 @@ import scipy.integrate
 from functools import partial
 import mydl.init as dl
 import matplotlib.pyplot as plt
+from collections import Counter, defaultdict
 
 def test_rotateHalf():
     name = "sample-01.jpg"
@@ -119,6 +120,7 @@ def test_np():
     # im = array(createImage(name))
     im = array(createImage(name).convert("L"), "f")
     print(im.shape, im.dtype)
+    print(im)
 
     saveImage(createImage(name).convert("L"), "gray.jpg")
 
@@ -411,6 +413,63 @@ def test_knn():
     show()
 
 
+def test_entropy():
+    def entropy(class_probabilities):
+        """given a list of class probabilities, compute the entropy"""
+        return sum(-p * math.log(p, 2)
+                   for p in class_probabilities
+                   if p)  # 忽略零可能性
+
+    def class_probabilities(labels):
+        total_count = len(labels)
+        return [count / total_count
+                for count in Counter(labels).values()]
+
+    def data_entropy(labeled_data):
+        labels = [label for _, label in labeled_data]
+        probabilities = class_probabilities(labels)
+        return entropy(probabilities)
+
+    def partition_entropy(subsets):
+        """find the entropy from this partition of data into subsets subsets is a list of lists of labeled data"""
+        total_count = sum(len(subset) for subset in subsets)
+        return sum(data_entropy(subset) * len(subset) / total_count
+                   for subset in subsets)
+
+    inputs = [
+        ({'level': 'Senior', 'lang': 'Java', 'tweets': 'no', 'phd': 'no'}, False),
+        ({'level': 'Senior', 'lang': 'Java', 'tweets': 'no', 'phd': 'yes'},False),
+        ({'level': 'Mid', 'lang': 'Python', 'tweets': 'no', 'phd': 'no'},True),
+        ({'level': 'Junior', 'lang': 'Python', 'tweets': 'no', 'phd': 'no'},True),
+        ({'level': 'Junior', 'lang': 'R', 'tweets': 'yes', 'phd': 'no'},True),
+        ({'level': 'Junior', 'lang': 'R', 'tweets': 'yes', 'phd': 'yes'},False),
+        ({'level': 'Mid', 'lang': 'R', 'tweets': 'yes', 'phd': 'yes'},True),
+        ({'level': 'Senior', 'lang': 'Python', 'tweets': 'no', 'phd': 'no'}, False),
+        ({'level': 'Senior', 'lang': 'R', 'tweets': 'yes', 'phd': 'no'}, True),
+        ({'level': 'Junior', 'lang': 'Python', 'tweets': 'yes', 'phd': 'no'}, True),
+        ({'level': 'Senior', 'lang': 'Python', 'tweets': 'yes', 'phd': 'yes'}, True),
+        ({'level': 'Mid', 'lang': 'Python', 'tweets': 'no', 'phd': 'yes'}, True),
+        ({'level': 'Mid', 'lang': 'Java', 'tweets': 'yes', 'phd': 'no'}, True),
+        ({'level': 'Junior', 'lang': 'Python', 'tweets': 'no', 'phd': 'yes'}, False)
+    ]
+
+    def partition_by(inputs, attribute):
+        """each input is a pair (attribute_dict, label). returns a dict : attribute_value -> inputs"""
+        groups = defaultdict(list)
+        for input in inputs:
+            key = input[0][attribute]
+            groups[key].append(input)
+        return groups
+
+    def partition_entropy_by(inputs, attribute):
+        """computes the entropy corresponding to the given partition"""
+        partitions = partition_by(inputs, attribute)
+        return partition_entropy(partitions.values())
+
+    for key in ['level', 'lang', 'tweets', 'phd']:
+        print(key, partition_entropy_by(inputs, key))
+
+    return
 
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
@@ -430,6 +489,28 @@ def main():
     # test_np_3()
     # test_pdf()
     # test_normal_cdf()
+
+    # ==============================================
+    # name = "sample-01.jpg"
+    # im = array(createImage(name).convert('L'))
+    # print(im.shape)
+    #
+    # im_1 = imresize(im, (int(im.shape[1] / 10), int(im.shape[0] / 10)))
+    # print(im_1.shape)
+    # print(im_1)
+    #
+    # dat = (im_1 > 255 / 2).tolist()
+    # s = ""
+    #
+    # for line in dat:
+    #     s = s + str([(1 if x else 0) for x in line]) + "\n"
+    #
+    # writeStringToFile("a.txt", s)
+    # image = Image.fromarray(uint8(im_1))
+    # saveImage(image, "im_1.jpg")
+    # ==============================================
+
+    test_entropy()
 
     return
 

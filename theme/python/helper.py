@@ -62,6 +62,10 @@ def loadData(filename):
 
 ################################################################
 
+def writeStringToFile(filename, content):
+    with open(getOutPath(filename), "w") as f:
+        f.write(content)
+
 ################################################################
 # Image
 #
