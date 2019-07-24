@@ -11,6 +11,7 @@ from functools import partial
 import mydl.init as dl
 import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
+import re
 
 def test_rotateHalf():
     name = "sample-01.jpg"
@@ -471,6 +472,44 @@ def test_entropy():
 
     return
 
+def tokenize(message):
+    message = message.lower()
+    all_words = re.findall("[a-z0-9']+", message)
+    return set(all_words)
+
+def test_mapReduce():
+    def wc_mapper(document):
+        """for each word in the document, emit (word,1)"""
+        for word in tokenize(document):
+            yield (word, 1)
+
+    def wc_reducer(word, counts):
+        """sum up the counts for a word"""
+        yield (word, sum(counts))
+
+    def word_count(documents):
+        """count the words in the input documents using MapReduce"""
+        collector = defaultdict(list)  # 存放分好组的值
+
+        for document in documents:
+            for word, count in wc_mapper(document):
+                collector[word].append(count)
+
+        print(collector)
+
+        return [output
+                for word, counts in collector.items()
+                for output in wc_reducer(word, counts)
+                ]
+
+
+    documents = ["data science", "big data", "science fiction"]
+    output = word_count(documents)
+    print(output)
+
+    return
+
+
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
     # saveGrayImage("sample-01.jpg")
@@ -510,7 +549,13 @@ def main():
     # saveImage(image, "im_1.jpg")
     # ==============================================
 
-    test_entropy()
+    # test_entropy()
+
+    # test_mapReduce()
+
+    # list_1 = [[1, -1, 2, 3], [0, 0, 9, 3], [-1, -1, -1, 6]]
+    # list_2 = [x if x > 0 else -x for xs in list_1 for x in xs]
+    # print(list_2)  # [1, 1, 2, 3, 0, 0, 9, 3, 1, 1, 1, 6]
 
     return
 
