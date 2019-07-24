@@ -3,8 +3,14 @@ import matplotlib.pyplot as plt
 from matplotlib.image import imread
 import helper as helper
 import sys
+import os
+from PIL import Image
+import pickle
 import traceback
 import mydl.init as dl
+
+sys.path.append(os.pardir)
+from mydl.mnist import load_mnist
 
 
 def _print(*content):
@@ -13,6 +19,68 @@ def _print(*content):
     function_name = sys._getframe(depth).f_code.co_name  # 函数名
     file_line = sys._getframe(depth).f_lineno  # 行号
     print(file_name, function_name, file_line, content)
+
+# =========================================
+# functions
+def identity_function(x):
+    return x
+
+
+def step_function(x):
+    return np.array(x > 0, dtype=np.int)
+
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+
+def sigmoid_grad(x):
+    return (1.0 - sigmoid(x)) * sigmoid(x)
+
+
+def relu(x):
+    return np.maximum(0, x)
+
+
+def relu_grad(x):
+    grad = np.zeros(x)
+    grad[x >= 0] = 1
+    return grad
+
+
+def softmax(x):
+    if x.ndim == 2:
+        x = x.T
+        x = x - np.max(x, axis=0)
+        y = np.exp(x) / np.sum(np.exp(x), axis=0)
+        return y.T
+
+    x = x - np.max(x)  # 溢出对策
+    return np.exp(x) / np.sum(np.exp(x))
+
+
+def mean_squared_error(y, t):
+    return 0.5 * np.sum((y - t) ** 2)
+
+
+def cross_entropy_error(y, t):
+    if y.ndim == 1:
+        t = t.reshape(1, t.size)
+        y = y.reshape(1, y.size)
+
+    # 监督数据是one-hot-vector的情况下，转换为正确解标签的索引
+    if t.size == y.size:
+        t = t.argmax(axis=1)
+
+    batch_size = y.shape[0]
+    return -np.sum(np.log(y[np.arange(batch_size), t] + 1e-7)) / batch_size
+
+
+def softmax_loss(X, t):
+    y = softmax(X)
+    return cross_entropy_error(y, t)
+
+# =========================================
 
 
 def test_1_4():
@@ -280,6 +348,68 @@ def test_3_4_3():
     return
 
 
+def test_3_6_1():
+    (x_train, t_train), (x_test, t_test) = load_mnist(flatten=True, normalize=False)
+    print(x_train.shape)  # (60000, 784)
+    print(t_train.shape)  # (60000,)
+    print(x_test.shape)  # (10000, 784)
+    print(t_test.shape)  # (10000,)
+
+    img = x_train[0]
+    label = t_train[0]
+    print("t_train[0] = ", label)  # 5
+    print("img.shape = ", img.shape)  # (784,)
+
+    img = img.reshape(28, 28)  # 把图像的形状变成原来的尺寸
+    print(img.shape) # (28, 28)
+
+    # pil_img = Image.fromarray(np.uint8(img))
+    # pil_img.show()
+    helper.img_show(img)
+    return
+
+
+def test_3_6_2():
+    # with open(os.path.join(helper.curDir(), "data", "sample_weight.pkl"), "rb") as f:
+    #     data = pickle.load(f)
+    # print(data)
+
+    def get_data():
+        (x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, flatten=True, one_hot_label=False)
+        return x_test, t_test
+
+    def init_network():
+        with open(os.path.join(helper.curDir(), "data", "sample_weight.pkl"), "rb") as f:
+            network = pickle.load(f)
+        return network
+
+    def predict(network, x):
+        W1, W2, W3 = network['W1'], network['W2'], network['W3']
+        b1, b2, b3 = network['b1'], network['b2'], network['b3']
+
+        a1 = np.dot(x, W1) + b1
+        z1 = sigmoid(a1)
+        a2 = np.dot(z1, W2) + b2
+        z2 = sigmoid(a2)
+        a3 = np.dot(z2, W3) + b3
+        y = softmax(a3)
+
+        return y
+
+    x, t = get_data()
+    network = init_network()
+
+    accuracy_cnt = 0
+    for i in range(len(x)):
+        y = predict(network, x[i])
+        p = np.argmax(y)  # 获取概率最高的元素的索引
+        if p == t[i]:
+            accuracy_cnt += 1
+
+    print("Accuracy:" + str(float(accuracy_cnt) / len(x)))
+    return
+
+
 def test_argmax():
     x = np.array([
         [10,100,20,30],
@@ -420,13 +550,17 @@ def main():
     # test_3_2_5()
     # test_3_2_7()
     # test_3_4_2()
-    test_3_4_3()
+    # test_3_4_3()
+    # test_3_6_1()
+    test_3_6_2()
     # test_argmax()
     # test_booleanArray()
     # test_shape()
     # test_reshape()
     # test_dot_2()
     # test_dot_n()
+
+
     return
 
 

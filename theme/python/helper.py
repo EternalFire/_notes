@@ -178,6 +178,10 @@ def gaussianGrayFilter(name):
     image = Image.fromarray(uint8(im2))
     return image
 
+def img_show(img):
+    pil_img = Image.fromarray(uint8(img))
+    pil_img.show()
+
 ################################################################
 
 
