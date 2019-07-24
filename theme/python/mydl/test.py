@@ -142,6 +142,7 @@ def test_3_2_3():
 
     x = np.arange(-5.0, 5.0, 0.1)
     y = step_function(x)
+    # print(y)
     plt.plot(x, y)
     plt.ylim(-0.1, 1.1)  # 指定y轴的范围
     plt.show()
@@ -198,8 +199,86 @@ def test_3_2_7():
     return
 
 
+def test_3_4_2():
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+
+    def identity_function(x):
+        return x
+
+    # input To layer 1
+    # 1x2 dot 2x3 => 1x3
+    X = np.array([1.0, 0.5])  # 1 x 2
+    W1 = np.array([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]])  # 2 x 3
+    B1 = np.array([0.1, 0.2, 0.3])  # 1 x 3
+    print(X.shape, X, "\n\n", W1.shape, W1, "\n\n", B1.shape, B1)
+
+    print("X dot W1 ", np.dot(X, W1))
+    # print(np.dot(W1, X))  # error
+
+    # yes!
+    # condition_1 = (np.dot(X, np.array([[1.0], [0.5]])) == np.dot(X, X))
+    # print("yes!") if condition_1 else print("no!!")
+
+    A1 = X.dot(W1) + B1
+    print("\n\n A1 ", A1.shape, A1)
+
+    Z1 = sigmoid(A1)
+    print("\n\n Z1", Z1.shape, Z1)  # 1 x 3
+
+    # layer 1 To layer 2
+    # 1x3 dot 3x2 => 1x2
+    W2 = np.array([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]])
+    B2 = np.array([0.1, 0.2])
+    print("\n\n", W2.shape, W2, "\n\n", B2.shape, B2)
+
+    A2 = np.dot(Z1, W2) + B2
+    Z2 = sigmoid(A2)
+    print("Z2", Z2.shape, Z2)  # 1 x 2
+
+    # layer 2 To output
+    # 1x2 dot 2x2 => 1x2
+    W3 = np.array([[0.1, 0.3], [0.2, 0.4]])
+    B3 = np.array([0.1, 0.2])
+    A3 = np.dot(Z2, W3) + B3
+    Y = identity_function(A3)  # 或者Y = A3,  1 x 2
+
+    print("\n\nA3", A3.shape, A3)
+    print("Y", Y.shape, Y)
+    return
+
+
 def test_3_4_3():
-    pass
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+
+    def init_network():
+        network = {}
+        network["W1"] = np.array([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]])
+        network["B1"] = np.array([0.1, 0.2, 0.3])
+        network["W2"] = np.array([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]])
+        network["B2"] = np.array([0.1, 0.2])
+        network["W3"] = np.array([[0.1, 0.3], [0.2, 0.4]])
+        network["B3"] = np.array([0.1, 0.2])
+        return network
+
+    def forward(network, X):
+        W1, W2, W3 = network["W1"], network["W2"], network["W3"]
+        B1, B2, B3 = network["B1"], network["B2"], network["B3"]
+        A1 = np.dot(X, W1) + B1
+        Z1 = sigmoid(A1)
+        A2 = np.dot(Z1, W2) + B2
+        Z2 = sigmoid(A2)
+        A3 = np.dot(Z2, W3) + B3
+        Y = A3
+        return Y
+
+    network = init_network()
+    x = np.array([1.0, 0.5])
+    y = forward(network, x)
+    print(y)  # [ 0.31682708 0.69627909]
+    return
+
 
 def test_argmax():
     x = np.array([
@@ -340,7 +419,8 @@ def main():
     # test_3_2_4()
     # test_3_2_5()
     # test_3_2_7()
-    # test_3_4_3()
+    # test_3_4_2()
+    test_3_4_3()
     # test_argmax()
     # test_booleanArray()
     # test_shape()
