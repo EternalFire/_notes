@@ -363,9 +363,17 @@ def test_3_6_1():
     img = img.reshape(28, 28)  # 把图像的形状变成原来的尺寸
     print(img.shape) # (28, 28)
 
-    # pil_img = Image.fromarray(np.uint8(img))
-    # pil_img.show()
-    helper.img_show(img)
+    # =======================
+    pil_img = Image.fromarray(np.uint8(img))
+    pil_img.show()
+    # =======================
+    # helper.img_show(img)
+    # =======================
+    # plt.imshow(img)
+    # =======================
+    # plt.imshow(pil_img)
+    # plt.show()
+    # =======================
     return
 
 
@@ -552,15 +560,24 @@ def main():
     # test_3_4_2()
     # test_3_4_3()
     # test_3_6_1()
-    # test_3_6_2()
-    test_argmax()
+    test_3_6_2()
+    # test_argmax()
     # test_booleanArray()
     # test_shape()
     # test_reshape()
     # test_dot_2()
     # test_dot_n()
 
-
+    # a = 1
+    # c = 3
+    # d = 4
+    # b = 2
+    # x = np.array([ [a, b], [c, d] ])
+    # print(x[0])
+    # print()
+    # print(x[1])
+    #
+    # print(x[:, 0])
     return
 
 

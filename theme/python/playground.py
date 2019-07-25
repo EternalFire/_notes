@@ -557,6 +557,10 @@ def main():
     # list_2 = [x if x > 0 else -x for xs in list_1 for x in xs]
     # print(list_2)  # [1, 1, 2, 3, 0, 0, 9, 3, 1, 1, 1, 6]
 
+    c = Counter([1,2,3,4,4,4,4,3])
+    print(c)
+    print(c.most_common(2))  # 最多的两个
+    print(Counter(['red', 'blue', 'red', 'green', 'blue', 'blue']))
     return
 
 
