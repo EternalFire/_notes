@@ -6,6 +6,7 @@ import sys
 import os
 from PIL import Image
 import pickle
+import time
 import traceback
 import mydl.init as dl
 
@@ -418,6 +419,45 @@ def test_3_6_2():
     return
 
 
+def test_3_6_3():
+    def get_data():
+        (x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, flatten=True, one_hot_label=False)
+        return x_test, t_test
+
+    def init_network():
+        with open(os.path.join(helper.curDir(), "data", "sample_weight.pkl"), "rb") as f:
+            network = pickle.load(f)
+        return network
+
+    def predict(network, x):
+        W1, W2, W3 = network['W1'], network['W2'], network['W3']
+        b1, b2, b3 = network['b1'], network['b2'], network['b3']
+
+        a1 = np.dot(x, W1) + b1
+        z1 = sigmoid(a1)
+        a2 = np.dot(z1, W2) + b2
+        z2 = sigmoid(a2)
+        a3 = np.dot(z2, W3) + b3
+        y = softmax(a3)
+
+        return y
+
+    x, t = get_data()
+    network = init_network()
+
+    batch_size = 100  # 批数量
+    accuracy_cnt = 0
+
+    for i in range(0, len(x), batch_size):
+        x_batch = x[i: i + batch_size]
+        y_batch = predict(network, x_batch)
+        p = np.argmax(y_batch, axis=1)  # 获取行方向概率最高的元素的索引
+        accuracy_cnt += np.sum(p == t[i: i + batch_size])
+
+    print("Accuracy:" + str(float(accuracy_cnt) / len(x)))
+    return
+
+
 def test_argmax():
     x = np.array([
         [10,100,20,30],
@@ -550,6 +590,7 @@ def test_dot_n():
 
 
 def main():
+    start_time = time.time()
     # test_1_4()
     # test_1_5()
     # test_1_6()
@@ -560,13 +601,32 @@ def main():
     # test_3_4_2()
     # test_3_4_3()
     # test_3_6_1()
-    test_3_6_2()
+    # test_3_6_2()
+    # test_3_6_3()
     # test_argmax()
     # test_booleanArray()
     # test_shape()
     # test_reshape()
     # test_dot_2()
     # test_dot_n()
+
+
+    end_time = time.time()
+    print(end_time - start_time)
+
+    # ================================================
+    #
+    # a = np.array([0.3, 2.8, 4.0, 4.0, 1.2])
+    # y = softmax(a)
+    # print(y, np.sum(y))
+    # print(np.array(a == np.max(a), dtype=np.int))  # set max element to 1
+    # ================================================
+    #
+    # x = np.array([2,3,0,0,-10,2])
+    # y = step_function(x)
+    # print(y)
+
+    # ================================================
 
     # a = 1
     # c = 3
