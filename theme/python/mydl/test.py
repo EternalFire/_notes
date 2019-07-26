@@ -619,7 +619,7 @@ def main():
     # a = np.array([0.3, 2.8, 4.0, 4.0, 1.2])
     # y = softmax(a)
     # print(y, np.sum(y))
-    # print(np.array(a == np.max(a), dtype=np.int))  # set max element to 1
+    # print(np.array(a == np.max(a), dtype=np.int))  # set max element to 1, others to 0
     # ================================================
     #
     # x = np.array([2,3,0,0,-10,2])

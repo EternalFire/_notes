@@ -263,7 +263,9 @@ SVM, KNN 分类器
 
 ### 损失函数
 
-损失函数（loss function）, 用于衡量神经网络的性能指标. 均方误差（mean squared error）, 交叉熵误差（cross entropy error）.
+损失函数（loss function）, 用于衡量神经网络的性能指标.
+
+常用损失函数: 均方误差（mean squared error）, 交叉熵误差（cross entropy error）.
 
 标签形式 与 one-hot 形式
 
@@ -330,9 +332,11 @@ $( \frac{\partial f}{\partial x_0}, \frac{\partial f}{\partial x_1} )$
 
 > 梯度指示的方向是各点处的函数值减小最多的方向
 
-梯度法: 利用梯度寻找函数最小值(寻找梯度为0的地方)
+使用 数值微分 计算梯度.
 
-梯度为0的地方: 函数的最小值, 极小值, 鞍点
+梯度法(gradient method): 利用梯度寻找函数最小值(寻找梯度为0的地方), 使损失函数的值尽可能小.
+
+梯度为0的地方: 函数的最小值, 极小值, 鞍点(saddle point)
 
 > 通过不断地沿梯度方向前进，逐渐减小函数值的过程
 
