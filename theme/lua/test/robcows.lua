@@ -235,7 +235,10 @@ local function CreateRobcows()
             return _cardsWithType
         end
 
-        _cardsWithType[CardType.Cow0] = { cards }
+        if not retSmallCow and not retJQK and not retBomb then
+            _cardsWithType[CardType.Cow0] = { cards }
+        end
+
         return _cardsWithType
     end
 
@@ -573,9 +576,9 @@ local function test()
     -- local cardsWithType = Robcows:makeCardType(cards_1)
     -- Robcows:printCardsWithType(cardsWithType)
 
-    -- local cards_1 = poker.createCards("♣A", "♥A", "♦A", "♥4", "♠A")
-    -- local cardsWithType = Robcows:makeCardType(cards_1)
-    -- Robcows:printCardsWithType(cardsWithType)
+    local cards_1 = poker.createCards("♣A", "♥A", "♦A", "♥4", "♠A")
+    local cardsWithType = Robcows:makeCardType(cards_1, true)
+    Robcows:printCardsWithType(cardsWithType)
 
     -- local cards_1 = poker.createCards("♣9", "♥4", "♦6", "♥10", "♠Q")
     -- local cardsWithType = Robcows:makeCardType(cards_1)
@@ -593,6 +596,7 @@ local function test2()
     local s_turn_start
     local s_choose_banker
     local s_add_rate
+    local s_deal
     local s_make_card_type
     local s_pk
     local s_turn_end
@@ -615,6 +619,9 @@ local function test2()
     local gameState = require("gamestate")
     gameState:init()
 
+    print("create all cards")
+    gameState.allCards = Robcows:createAllCards()
+
     local s_turn_start = createState({
         name = "s_turn_start",
         transfer = function(s)
@@ -623,6 +630,7 @@ local function test2()
         end,
         onEnter = function(s)
             -- s:done()
+            gameState.usedCard = {}
         end,
         onLeave = function(s)end,
         onTick = function(s, dt)
@@ -639,17 +647,18 @@ local function test2()
             print(s.name, s.isEntered, s.isDone)
             return "s_add_rate"
         end,
-        onEnter = function(s)end,
+        onEnter = function(s)
+            gameState:iterateSeat(function(player)
+                gameState:chooseBankerRateRandomly(player)
+            end)
+
+            local banker = gameState:findBanker()
+            print("banker is ", banker._tag)
+        end,
         onLeave = function(s)end,
         onTick = function(s, dt)
-            print(s.name, s.tickedCount, s.tickedTime)
+            -- print(s.name, s.tickedCount, s.tickedTime)
             if s.tickedTime >= 0.44 then
-
-                gameState:iterateSeat(function(player)
-                    gameState:chooseBankerRateRandomly(player)
-                end)
-
-                local banker = gameState:findBanker()
 
                 s:done()
             end
@@ -663,13 +672,48 @@ local function test2()
         name = "s_add_rate",
         transfer = function(s)
             print(s.name, s.isEntered, s.isDone)
-            return "s_make_card_type"
+            return "s_deal"
         end,
-        onEnter = function(s)end,
+        onEnter = function(s)
+            gameState:iterateSeat(function(player)
+                if gameState.banker ~= player then
+                    if player.isRobot then
+                        gameState:addRateRandomly(player)
+                    elseif player.isUser then
+                        gameState:addRate(player) -- waiting for player
+                    end
+
+                    print(player._tag, player.rateAdd)
+                end
+            end)
+        end,
         onLeave = function(s)end,
         onTick = function(s, dt)
-            print(s.name, s.tickedCount, s.tickedTime)
+            -- print(s.name, s.tickedCount, s.tickedTime)
             if s.tickedTime >= 1 then
+                s:done()
+            end
+        end,
+        onPause = function(s)end,
+        onResume = function(s)end,
+        onInterrupt = function(s)end,
+    })
+
+    local s_deal = createState({
+        name = "s_deal",
+        transfer = function(s)
+            return "s_make_card_type"
+        end,
+        onEnter = function(s, preState)
+            gameState:iterateSeat(function(player)
+                gameState:deal(player)
+                print(player._tag)
+                poker.printCards(player.cards)
+            end)
+        end,
+        onLeave = function(s)end,
+        onTick = function(s, dt)
+            if s.tickedTime >= 0.2 then
                 s:done()
             end
         end,
@@ -684,7 +728,31 @@ local function test2()
             print(s.name, s.isEntered, s.isDone)
             return "s_pk"
         end,
-        onEnter = function(s)end,
+        onEnter = function(s)
+            gameState:iterateSeat(function(player)
+                print(player._tag)
+                -- poker.printCards(player.cards)
+                local cardsWithType = Robcows:makeCardType(player.cards)
+
+                for k, list in pairs(cardsWithType) do
+                    player.cardType = k
+                    player.typeCards = list[1]
+                    player.sortedCards = Robcows:sortByCardType(player.typeCards, player.cardType)
+                    ------
+                    print("player.cardType = ", player.cardType)
+                    print("typeCards:")
+                    poker.printCards(player.typeCards)
+                    print("sortedCards:")
+                    poker.printCards(player.sortedCards)
+                    ------
+                    break
+                end
+
+                Robcows:printCardsWithType(cardsWithType)
+            end)
+            -- local cardsWithType = Robcows:makeCardType(cards_1)
+            -- Robcows:printCardsWithType(cardsWithType)
+        end,
         onLeave = function(s)end,
         onTick = function(s, dt)
             print(s.name, s.tickedCount, s.tickedTime)
@@ -703,7 +771,9 @@ local function test2()
             print(s.name, s.isEntered, s.isDone)
             return "s_turn_end"
         end,
-        onEnter = function(s)end,
+        onEnter = function(s)
+            -- compare to banker
+        end,
         onLeave = function(s)end,
         onTick = function(s, dt)
             print(s.name, s.tickedCount, s.tickedTime)
@@ -722,13 +792,16 @@ local function test2()
             print(s.name, s.isEntered, s.isDone)
             return "s_turn_start"
         end,
-        onEnter = function(s)end,
-        onLeave = function(s)end,
+        onEnter = function(s)
+            -- add money
+        end,
+        onLeave = function(s)
+            print("-----------------------------------")
+        end,
         onTick = function(s, dt)
             print(s.name, s.tickedCount, s.tickedTime)
             if s.tickedTime >= 0.8 then
                 s:done()
-                print("-----------------------------------")
             end
         end,
         onPause = function(s)end,
@@ -740,6 +813,7 @@ local function test2()
         s_turn_start,
         s_choose_banker,
         s_add_rate,
+        s_deal,
         s_make_card_type,
         s_pk,
         s_turn_end,

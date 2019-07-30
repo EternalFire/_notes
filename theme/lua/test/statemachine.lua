@@ -30,7 +30,7 @@ local function createState(param)
                 self.isTicking = false
                 self.isPaused = false
             end,
-            enter = function(self)
+            enter = function(self, preState)
                 if _debug_state then
                     print(os.clock(), "enter ", self.name)
                 end
@@ -42,7 +42,7 @@ local function createState(param)
                 self.tickedTime = 0
 
                 if type(self.onEnter) == "function" then
-                    self:onEnter()
+                    self:onEnter(preState)
                 end
             end,
             leave = function(self)
@@ -131,7 +131,7 @@ local function createStateMachine(param)
                         end
                     end
 
-                    state:enter()
+                    state:enter(cur)
                     self.currentState = state
                 end
             end,
@@ -147,7 +147,7 @@ local function createStateMachine(param)
 
                         local nextState = stateDict[nextStateName]
                         if nextState then
-                            nextState:enter()
+                            nextState:enter(cur)
                             self.currentState = nextState
                         end
                     end
@@ -188,8 +188,9 @@ end
 --     name = "s1",
 --     transfer = function(s)
 --         print(s.name, s.isEntered, s.isDone)
+--         return "next_state_name"
 --     end,
---     onEnter = function(s)end,
+--     onEnter = function(s, preState)end,
 --     onLeave = function(s)end,
 --     onTick = function(s, dt)end,
 --     onPause = function(s)end,

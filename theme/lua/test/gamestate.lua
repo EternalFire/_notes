@@ -8,6 +8,8 @@ local gameState = {
     -- 默认桌子
     seatState = {},
     banker = nil,
+    allCards = nil,
+    usedCard = nil,
 
     -- tableState = { seatState = {} }
 }
@@ -19,6 +21,10 @@ local BankerRate = {
     Lv3 = 3,
     Lv4 = 4,
 }
+local BankerRates = {}
+for _, v in pairs(BankerRate) do
+    table.insert(BankerRates, v)
+end
 
 --- 加倍倍率
 local AddRate = {
@@ -28,6 +34,11 @@ local AddRate = {
     Lv4 = 20,
     Lv5 = 25,
 }
+
+local AddRates = {}
+for _, v in pairs(AddRate) do
+    table.insert(AddRates, v)
+end
 
 --- 座位
 local Seat = {
@@ -40,7 +51,9 @@ local Seat = {
 }
 
 gameState.BankerRate = BankerRate
+gameState.BankerRates = BankerRates
 gameState.AddRate = AddRate
+gameState.AddRates = AddRates
 gameState.Seat = Seat
 
 gameState.seatState[Seat.Stand] = {}
@@ -59,6 +72,9 @@ function gameState:createPlayer(param)
     player.rateBanker = BankerRate.Lv1
     player.rateAdd = AddRate.Lv1
     player.cards = {}
+    player.cardType = 0
+    player.typeCards = {}
+    player.sortedCards = {}
     player.seatIndex = Seat.Stand
     player.gold = 0
     player.headUrl = ""
@@ -113,6 +129,7 @@ function gameState:init()
             end
         end
     end
+
 end
 
 function gameState:haveASeat(player, place, tableState)
@@ -154,7 +171,7 @@ end
 
 function gameState:chooseBankerRateRandomly(player)
     if player then
-        local list = {BankerRate.Lv1, BankerRate.Lv2, BankerRate.Lv3, BankerRate.Lv4}
+        local list = self.BankerRates
         local index = math.random(1, #list)
         player.rateBanker = list[index]
         return player.rateBanker
@@ -204,6 +221,46 @@ function gameState:iterateSeat(callback, tableState)
                     end
                 end
             end
+        end
+    end
+end
+
+function gameState:addRate(player, rate)
+    if player then
+        if rate == nil then
+            rate = AddRate.Lv1
+        end
+
+        player.rateAdd = rate
+        return rate
+    end
+end
+
+function gameState:addRateRandomly(player)
+    if player then
+        local list = self.AddRates
+        local index = math.random(1, #list)
+        player.rateAdd = list[index]
+        return player.rateAdd
+    end
+end
+
+function gameState:deal(player)
+    if player then
+        if self.allCards then
+            self.usedCard = self.usedCard or {}
+
+            local list = {}
+            while #list ~= 5 do
+                local i = math.random(1, #self.allCards)
+                if not self.usedCard[i] then
+                    self.usedCard[i] = true
+                    table.insert(list, self.allCards[i])
+                end
+            end
+
+            player.cards = list
+            return list
         end
     end
 end
