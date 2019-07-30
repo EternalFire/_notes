@@ -40,6 +40,27 @@ local CardTypeNameDict = {
     [CardType.JQKs] = "五花牛",
     [CardType.SmallCow] = "五小牛",
 }
+local CardTypeRateDict = {
+    [CardType.Cow0] = 1,
+    [CardType.Cow1] = 1,
+    [CardType.Cow2] = 1,
+    [CardType.Cow3] = 1,
+    [CardType.Cow4] = 1,
+    [CardType.Cow5] = 1,
+    [CardType.Cow6] = 1,
+    [CardType.Cow7] = 2,
+    [CardType.Cow8] = 2,
+    [CardType.Cow9] = 2,
+    [CardType.Cow10] = 3,
+    [CardType.Bomb] = 4,
+    [CardType.JQKs] = 5,
+    [CardType.SmallCow] = 5,
+}
+local CardsCmpResult = {
+    Win = 1,
+    Peace = 2,
+    Lose = 3,
+}
 
 local function CreateRobcows()
     local Robcows = {}
@@ -67,6 +88,7 @@ local function CreateRobcows()
 
     Robcows.ColorEmojiDict = ColorEmojiDict
     Robcows.EmojiColorDict = EmojiColorDict
+    Robcows.CardsCmpResult = CardsCmpResult
 
     ---card data
     ---input "colorValue" or (color, value)
@@ -105,6 +127,28 @@ local function CreateRobcows()
         local cvA = Robcows:cv(cardA)
         local cvB = Robcows:cv(cardB)
         return cvA > cvB
+    end
+
+    function Robcows.compareCards(cardsA, cardTypeA, cardsB, cardTypeB)
+        if type(cardsA) == "table" and type(cardsB) == "table" then
+            if CardTypeNameDict[cardTypeA] ~= nil and CardTypeNameDict[cardTypeB] ~= nil then
+                local rateA = CardTypeRateDict[cardTypeA]
+                local rateB = CardTypeRateDict[cardTypeB]
+
+                if cardTypeA > cardTypeB then
+                    return Robcows.CardsCmpResult.Win, rateA, rateB
+                elseif cardTypeA < cardTypeB then
+                    return Robcows.CardsCmpResult.Lose, rateA, rateB
+                else
+                    local ret = Robcows.compareCard(cardsA[1], cardsB[1])
+                    if ret then
+                        return Robcows.CardsCmpResult.Win, rateA, rateB
+                    else
+                        return Robcows.CardsCmpResult.Lose, rateA, rateB
+                    end
+                end
+            end
+        end
     end
 
     ------------------------------------------
@@ -576,9 +620,9 @@ local function test()
     -- local cardsWithType = Robcows:makeCardType(cards_1)
     -- Robcows:printCardsWithType(cardsWithType)
 
-    local cards_1 = poker.createCards("♣A", "♥A", "♦A", "♥4", "♠A")
-    local cardsWithType = Robcows:makeCardType(cards_1, true)
-    Robcows:printCardsWithType(cardsWithType)
+    -- local cards_1 = poker.createCards("♣A", "♥A", "♦A", "♥4", "♠A")
+    -- local cardsWithType = Robcows:makeCardType(cards_1, true)
+    -- Robcows:printCardsWithType(cardsWithType)
 
     -- local cards_1 = poker.createCards("♣9", "♥4", "♦6", "♥10", "♠Q")
     -- local cardsWithType = Robcows:makeCardType(cards_1)
@@ -631,6 +675,11 @@ local function test2()
         onEnter = function(s)
             -- s:done()
             gameState.usedCard = {}
+
+            gameState:iterateSeat(function(player)
+                player.cardType = CardType.Cow0
+                player.wonGold = 0
+            end)
         end,
         onLeave = function(s)end,
         onTick = function(s, dt)
@@ -748,7 +797,7 @@ local function test2()
                     break
                 end
 
-                Robcows:printCardsWithType(cardsWithType)
+                -- Robcows:printCardsWithType(cardsWithType)
             end)
             -- local cardsWithType = Robcows:makeCardType(cards_1)
             -- Robcows:printCardsWithType(cardsWithType)
@@ -773,6 +822,32 @@ local function test2()
         end,
         onEnter = function(s)
             -- compare to banker
+            local banker = gameState.banker
+            local betGold = gameState.betGold
+
+            gameState:iterateSeat(function(player)
+                if player ~= banker then
+                    local retCmp, ratePlayer, rateBanker = Robcows.compareCards(player.sortedCards, player.cardType, banker.sortedCards, banker.cardType)
+
+                    if retCmp == Robcows.CardsCmpResult.Win then
+                        -- player win
+                        player.wonGold = betGold * player.rateAdd * ratePlayer
+
+                        -- banker lose
+                        banker.wonGold = banker.wonGold - player.wonGold
+
+                    elseif retCmp == Robcows.CardsCmpResult.Lose then
+                        -- banker win
+                        local gold_0 = betGold * banker.rateAdd * rateBanker
+                        banker.wonGold = banker.wonGold + gold_0
+
+                        -- player lose
+                        player.wonGold = player.wonGold - gold_0
+                    end
+
+                    print(player._tag, player.wonGold, banker._tag, banker.wonGold)
+                end
+            end)
         end,
         onLeave = function(s)end,
         onTick = function(s, dt)
@@ -789,18 +864,23 @@ local function test2()
     local s_turn_end = createState({
         name = "s_turn_end",
         transfer = function(s)
-            print(s.name, s.isEntered, s.isDone)
+            -- print(s.name, s.isEntered, s.isDone)
             return "s_turn_start"
         end,
         onEnter = function(s)
             -- add money
+            print("calculate gold in turn")
+            gameState:iterateSeat(function(player)
+                player.gold = player.gold + player.wonGold
+                print(player._tag, player.gold)
+            end)
         end,
         onLeave = function(s)
-            print("-----------------------------------")
+            print("----------------------------------------")
         end,
         onTick = function(s, dt)
-            print(s.name, s.tickedCount, s.tickedTime)
-            if s.tickedTime >= 0.8 then
+            -- print(s.name, s.tickedCount, s.tickedTime)
+            if s.tickedTime >= 5.0 then
                 s:done()
             end
         end,

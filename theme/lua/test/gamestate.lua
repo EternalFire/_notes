@@ -10,9 +10,19 @@ local gameState = {
     banker = nil,
     allCards = nil,
     usedCard = nil,
+    betGold = 0,
 
     -- tableState = { seatState = {} }
 }
+
+--- 下注金额
+local BetGold = {
+    Lv1 = 1,
+}
+local BetGolds = {}
+for _, v in pairs(BetGold) do
+    table.insert(BetGolds, v)
+end
 
 --- 抢庄倍率
 local BankerRate = {
@@ -50,6 +60,8 @@ local Seat = {
     E = 5,
 }
 
+gameState.BetGold = BetGold
+gameState.BetGolds = BetGolds
 gameState.BankerRate = BankerRate
 gameState.BankerRates = BankerRates
 gameState.AddRate = AddRate
@@ -77,6 +89,7 @@ function gameState:createPlayer(param)
     player.sortedCards = {}
     player.seatIndex = Seat.Stand
     player.gold = 0
+    player.wonGold = 0
     player.headUrl = ""
     player.name = ""
     player._tag = ""
@@ -115,6 +128,12 @@ function gameState:init()
         local robot = self:createPlayer({ isRobot = true, isUser = false })
     end
 
+    -- init gold
+    print("initialize player's gold")
+    for i, player in ipairs(self.players) do
+        player.gold = 1000
+    end
+
     -- players, have a seat
     print("have a seat...")
     local index = 1
@@ -130,6 +149,7 @@ function gameState:init()
         end
     end
 
+    self.betGold = BetGold.Lv1
 end
 
 function gameState:haveASeat(player, place, tableState)
