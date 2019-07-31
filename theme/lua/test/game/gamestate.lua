@@ -26,15 +26,17 @@ end
 
 --- 抢庄倍率
 local BankerRate = {
+    Lv0 = 0,
     Lv1 = 1,
     Lv2 = 2,
-    Lv3 = 3,
+    -- Lv3 = 3,
     Lv4 = 4,
 }
 local BankerRates = {}
 for _, v in pairs(BankerRate) do
     table.insert(BankerRates, v)
 end
+table.sort(BankerRates)
 
 --- 加倍倍率
 local AddRate = {
@@ -49,6 +51,7 @@ local AddRates = {}
 for _, v in pairs(AddRate) do
     table.insert(AddRates, v)
 end
+table.sort(AddRates)
 
 --- 座位
 local Seat = {
@@ -192,7 +195,7 @@ end
 function gameState:chooseBankerRateRandomly(player)
     if player then
         local list = self.BankerRates
-        local index = math.random(1, #list)
+        local index = math.random(2, #list)
         player.rateBanker = list[index]
         return player.rateBanker
     end

@@ -1,6 +1,11 @@
 
-require("__cc")
-local poker = require("poker")
+local poker
+
+if _UseInGame then
+    poker = import("game.poker")
+else
+    poker = require("poker")
+end
 
 local CardColor = poker.CardColor
 local CardColors = poker.CardColors
@@ -88,6 +93,9 @@ local function CreateRobcows()
 
     Robcows.ColorEmojiDict = ColorEmojiDict
     Robcows.EmojiColorDict = EmojiColorDict
+    Robcows.CardType = CardType
+    Robcows.CardTypeNameDict = CardTypeNameDict
+    Robcows.CardTypeRateDict = CardTypeRateDict
     Robcows.CardsCmpResult = CardsCmpResult
 
     ---card data
@@ -922,7 +930,7 @@ local function test2()
     end
 
 end
-test2()
+-- test2()
 
 return Robcows
 
