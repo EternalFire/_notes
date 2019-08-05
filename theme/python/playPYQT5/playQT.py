@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
     QMainWindow, QMenu, QAction, QTextEdit, QLabel, qApp,
     QHBoxLayout, QVBoxLayout, QGridLayout, QLineEdit,
-    QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog)
+    QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog,
+    QCheckBox)
 
 
 def demo_ui():
@@ -586,6 +587,39 @@ def demo_dialog():
     sys.exit(app.exec_())
 
 
+def demo_widgets():
+    class Example(QWidget):
+        def __init__(self):
+            super().__init__()
+            self.initUI()
+
+        def initUI(self):
+            vbox = QVBoxLayout(self)
+
+            # checkbox
+            # A QCheckBox is a widget that has two states: on and off
+            cb = QCheckBox("show title", self)
+            cb.toggle()
+            cb.stateChanged.connect(self.changeTitle)
+
+
+
+            vbox.addWidget(cb)
+            self.setLayout(vbox)
+            self.setGeometry(50, 50, 400, 600)
+            self.show()
+
+        def changeTitle(self, state):
+            if state == Qt.Checked:
+                self.setWindowTitle("Hello Widgets")
+            else:
+                self.setWindowTitle("-")
+
+    app = QApplication([])
+    ex = Example()
+    sys.exit(app.exec_())
+
+
 if __name__ == "__main__":
     print("case __main__")
     # demo_ui()buttonClicked
@@ -596,4 +630,5 @@ if __name__ == "__main__":
     # demo_Layout()
     # demo_grid_span()
     # demo_signals_slots()
-    demo_dialog()
+    # demo_dialog()
+    demo_widgets()
