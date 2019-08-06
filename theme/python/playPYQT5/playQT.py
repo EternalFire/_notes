@@ -6,7 +6,7 @@
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData
-from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag
+from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag, QPainter
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
     QMainWindow, QMenu, QAction, QTextEdit, QLabel, qApp,
@@ -874,6 +874,31 @@ def demo_button_drag_drop():
     ex.show()
     app.exec_()
 
+def demo_painter():
+    class Example(QWidget):
+
+        def __init__(self):
+            super().__init__()
+            self.text = "Лев Николаевич Толстой\nАнна Каренина"
+            self.show()
+
+        # The painting is done within the paintEvent() method.
+        # The painting code is placed between the begin() and end() methods of the QPainter object.
+        def paintEvent(self, event: QtGui.QPaintEvent) -> None:
+            qp = QPainter()
+            qp.begin(self)
+            self.drawText(event, qp)
+            qp.end()
+
+        def drawText(self, event, qp):
+            qp.setPen(QColor(168, 34, 3))
+            qp.setFont(QFont("Decorative", 10))
+            qp.drawText(event.rect(), Qt.AlignCenter, self.text)
+
+    app = QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
     print("case __main__")
@@ -888,4 +913,5 @@ if __name__ == "__main__":
     # demo_dialog()
     # demo_widgets()
     # demo_widgets2()
-    demo_button_drag_drop()
+    # demo_button_drag_drop()
+    demo_painter()
