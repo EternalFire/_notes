@@ -5,14 +5,14 @@
 
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject
-from PyQt5.QtGui import QIcon, QFont, QColor
+from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer
+from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
     QMainWindow, QMenu, QAction, QTextEdit, QLabel, qApp,
     QHBoxLayout, QVBoxLayout, QGridLayout, QLineEdit,
     QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog,
-    QCheckBox)
+    QCheckBox, QProgressBar, QCalendarWidget)
 
 
 def demo_ui():
@@ -594,26 +594,135 @@ def demo_widgets():
             self.initUI()
 
         def initUI(self):
-            vbox = QVBoxLayout(self)
+            vbox = QVBoxLayout()
+
+            # QLabel with QPixmap
+            label = QLabel(self)
+            label.setPixmap(QPixmap("res/icon.jpg"))
+            label.setVisible(True)
+            vbox.addWidget(label)
+            self.label = label
 
             # checkbox
             # A QCheckBox is a widget that has two states: on and off
-            cb = QCheckBox("show title", self)
+            cb = QCheckBox("show something", self)
             cb.toggle()
             cb.stateChanged.connect(self.changeTitle)
-
-
+            cb.resize(cb.sizeHint())
 
             vbox.addWidget(cb)
+
+            hbox = QHBoxLayout()
+
+            # toggle
+            toggle1 = QPushButton("Toggle1", self)
+            toggle1.setCheckable(True)
+            toggle1.clicked[bool].connect(self.toggle)
+
+            toggle2 = QPushButton("Toggle2", self)
+            toggle2.setCheckable(True)
+            toggle2.clicked.connect(self.toggle)
+
+            hbox.addWidget(toggle1)
+            hbox.addWidget(toggle2)
+
+            vbox.addLayout(hbox)
+
+            # slider
+            slider = QSlider(Qt.Horizontal, self)
+            slider.valueChanged[int].connect(self.changeSliderVal)
+
+            vbox.addWidget(slider)
+
+            # progressbar
+            # A progress bar is a widget that is used when we process lengthy tasks.
+            hbox2 = QHBoxLayout()
+            self.pbar = QProgressBar(self)
+            btn_pbar = QPushButton("start", self)
+            btn_pbar.clicked.connect(self.doAction)
+            self.btn_pbar = btn_pbar
+
+            self.timer = QBasicTimer()
+            self.step = 0
+
+            hbox2.addWidget(self.pbar)
+            hbox2.addWidget(btn_pbar)
+            vbox.addLayout(hbox2)
+
+            # QCalendarWidget
+            calendar = QCalendarWidget(self)
+            calendar.setGridVisible(True)
+            calendar.clicked[QDate].connect(self.showDate)
+
+            self.labelDate = QLabel("labelDate", self)
+            vbox.addWidget(calendar)
+            vbox.addWidget(self.labelDate)
+
             self.setLayout(vbox)
-            self.setGeometry(50, 50, 400, 600)
+
+            self.setStyleSheet("QWidget { background-color: %s }" % "#fff")
+            # self.setGeometry(50, 50, 400, 600)
             self.show()
 
         def changeTitle(self, state):
-            if state == Qt.Checked:
+            checked = state == Qt.Checked
+
+            if checked:
                 self.setWindowTitle("Hello Widgets")
             else:
                 self.setWindowTitle("-")
+
+            self.label.setVisible(checked)
+
+        def toggle(self, pressed):
+            source = self.sender()
+            print(source.text(), pressed)
+
+            col = "#ffffff"
+
+            if pressed:
+                if source.text() == "Toggle1":
+                    col = "#894522"
+                elif source.text() == "Toggle2":
+                    col = "#32a14d"
+
+            self.setStyleSheet("QWidget { background-color: %s }" % col)
+
+        def changeSliderVal(self, val):
+            print("valueChanged ", val)
+
+            if val > 50:
+                self.label.setPixmap(QPixmap("res/h.png"))
+            else:
+                self.label.setPixmap(QPixmap("res/icon.jpg"))
+
+        def doAction(self):
+            if self.step >= 100:
+                self.btn_pbar.setText("start")
+                self.step = 0
+                self.pbar.setValue(self.step)
+                return
+
+            if self.timer.isActive():
+                self.timer.stop()
+                self.btn_pbar.setText("start")
+            else:
+                self.timer.start(50, self)
+                self.btn_pbar.setText("stop")
+
+        # Each QObject and its descendants have a timerEvent() event handler.
+        # In order to react to timer events, we reimplement the event handler.
+        def timerEvent(self, e) -> None:
+            if self.step >= 100:
+                self.timer.stop()
+                self.btn_pbar.setText("finished")
+            else:
+                self.step = self.step + 1
+                self.pbar.setValue(self.step)
+
+        def showDate(self, date: QDate):
+            # self.labelDate.setText(date.toString(Qt.DefaultLocaleLongDate))
+            self.labelDate.setText(date.toString())
 
     app = QApplication([])
     ex = Example()
