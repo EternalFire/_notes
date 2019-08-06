@@ -5,14 +5,14 @@
 
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer
-from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap
+from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData
+from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
     QMainWindow, QMenu, QAction, QTextEdit, QLabel, qApp,
     QHBoxLayout, QVBoxLayout, QGridLayout, QLineEdit,
     QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog,
-    QCheckBox, QProgressBar, QCalendarWidget)
+    QCheckBox, QProgressBar, QCalendarWidget, QSplitter, QComboBox)
 
 
 def demo_ui():
@@ -729,6 +729,152 @@ def demo_widgets():
     sys.exit(app.exec_())
 
 
+def demo_widgets2():
+    class Example(QWidget):
+        def __init__(self):
+            super().__init__()
+            # self.initUI()
+            # self.initSplitter()
+            self.initComboBox()
+
+        def initUI(self):
+            print("demo_widgets2.initUI")
+            self.label = QLabel(self)
+            self.edit = QLineEdit(self)
+            self.edit.textChanged.connect(self.onTextChanged)
+
+            vbox = QVBoxLayout()
+            vbox.addWidget(self.label)
+            vbox.addWidget(self.edit)
+
+            self.setLayout(vbox)
+            self.show()
+
+        def onTextChanged(self, text):
+            self.label.setText(text)
+            # self.label.adjustSize()
+            print(self.label.size())
+
+        def initSplitter(self):
+            print("demo_widgets2.initSplitter")
+            hbox = QHBoxLayout(self)
+            # hbox = QVBoxLayout(self)
+
+            # QSplitter lets the user control the size of child widgets by dragging the boundary between its children.
+            topleft = QFrame(self)
+            topright = QFrame(self)
+            bottom = QFrame(self)
+
+            # We use a styled frame in order to see the boundaries between the QFrame widgets.
+            topleft.setFrameShape(QFrame.StyledPanel)
+            topright.setFrameShape(QFrame.StyledPanel)
+            bottom.setFrameShape(QFrame.StyledPanel)
+
+            # QLabel("a label", topleft)
+
+            splitter1 = QSplitter(Qt.Horizontal)
+            splitter2 = QSplitter(Qt.Vertical)
+
+            splitter1.addWidget(topleft)
+            splitter1.addWidget(topright)
+
+            splitter2.addWidget(splitter1)
+            splitter2.addWidget(bottom)
+
+            hbox.addWidget(splitter2)
+
+            self.setLayout(hbox)
+            self.setGeometry(300, 300, 300, 200)
+            self.show()
+
+        def initComboBox(self):
+            self.lbl = QLabel("Ubuntu", self)
+
+            combo = QComboBox(self)
+
+            # These are the names of Linux distros.
+            combo.addItem("Ubuntu")
+            combo.addItem("Mandriva")
+            combo.addItem("Fedora")
+            combo.addItem("Arch")
+            combo.addItem("Gentoo")
+
+            combo.move(50, 50)
+            self.lbl.move(50, 150)
+
+            combo.activated[str].connect(self.onActivated)
+
+            self.setGeometry(300, 300, 300, 200)
+            self.setWindowTitle('QComboBox')
+            self.show()
+
+        def onActivated(self, text):
+            self.lbl.setText(text)
+            self.lbl.adjustSize()
+            print(text, type(text))
+
+    app = QApplication([])
+    ex = Example()
+    sys.exit(app.exec_())
+
+
+def demo_button_drag_drop():
+    class Button(QPushButton):
+        def __init__(self, title, parent):
+            super().__init__(title, parent)
+
+        def mouseMoveEvent(self, e: QtGui.QMouseEvent) -> None:
+            if e.buttons() != Qt.RightButton:
+                return
+
+            mineData = QMimeData()
+            mineData.setText("mineData in MouseMoveEvent")
+
+            drag = QDrag(self)
+            drag.setMimeData(mineData)
+            drag.setHotSpot(e.pos() - self.rect().topLeft())
+
+            dropAction = drag.exec_(Qt.MoveAction)
+
+        def mousePressEvent(self, e: QtGui.QMouseEvent) -> None:
+            # Notice that we call mousePressEvent() method on the parent as well.
+            # Otherwise, we would not see the button being pushed.
+            super().mousePressEvent(e)
+
+            if e.button() == Qt.LeftButton:
+                print("press")
+
+    class Example(QWidget):
+        def __init__(self):
+            super().__init__()
+        #     self.initUI()
+        #
+        # def initUI(self):
+            self.setAcceptDrops(True)
+
+            self.button = Button("Button", self)
+            self.button.move(100, 65)
+
+            self.setWindowTitle("Click or Move")
+            self.setGeometry(300, 300, 280, 150)
+
+        def dragEnterEvent(self, e: QtGui.QDragEnterEvent) -> None:
+            e.accept()
+
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            position = e.pos()
+            self.button.move(position)
+            print(e.mimeData().text())
+
+            e.setDropAction(Qt.MoveAction)
+            e.accept()
+
+    app = QApplication(sys.argv)
+    ex = Example()
+    ex.show()
+    app.exec_()
+
+
 if __name__ == "__main__":
     print("case __main__")
     # demo_ui()buttonClicked
@@ -740,4 +886,6 @@ if __name__ == "__main__":
     # demo_grid_span()
     # demo_signals_slots()
     # demo_dialog()
-    demo_widgets()
+    # demo_widgets()
+    # demo_widgets2()
+    demo_button_drag_drop()
