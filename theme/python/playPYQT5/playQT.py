@@ -3,10 +3,10 @@
 # http://zetcode.com/gui/pyqt5/
 #
 
-import sys
+import sys, random
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData
-from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag, QPainter
+from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag, QPainter, QPen, QBrush, QPainterPath
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
     QMainWindow, QMenu, QAction, QTextEdit, QLabel, qApp,
@@ -874,6 +874,7 @@ def demo_button_drag_drop():
     ex.show()
     app.exec_()
 
+
 def demo_painter():
     class Example(QWidget):
 
@@ -885,15 +886,146 @@ def demo_painter():
         # The painting is done within the paintEvent() method.
         # The painting code is placed between the begin() and end() methods of the QPainter object.
         def paintEvent(self, event: QtGui.QPaintEvent) -> None:
+            print("paint event!", self.size())
             qp = QPainter()
             qp.begin(self)
+
+            qp.setBrush(Qt.darkGray)
+            qp.drawRect(self.rect())
+
+            qp.setRenderHint(QPainter.Antialiasing)
+
+            self.drawRectangles(qp)
             self.drawText(event, qp)
+            self.drawPoints(qp)
+            self.drawLines(qp)
+            self.drawBrushes(qp)
+            self.drawBezierCurve(qp)
             qp.end()
 
-        def drawText(self, event, qp):
+        def drawText(self, event, qp: QPainter):
             qp.setPen(QColor(168, 34, 3))
             qp.setFont(QFont("Decorative", 10))
             qp.drawText(event.rect(), Qt.AlignCenter, self.text)
+
+        def drawPoints(self, qp: QPainter):
+            # qp.setPen(Qt.red)
+            qp.setPen(Qt.yellow)
+
+            size = self.size()
+
+            for i in range(1000):
+                x = random.randint(1, size.width()-1)
+                y = random.randint(1, size.height() - 1)
+                qp.drawPoint(x, y)
+
+        def drawRectangles(self, qp):
+            col = QColor(0, 0, 0)
+            col.setNamedColor('#d4d4d4')
+            qp.setPen(col)
+
+            # A brush is an elementary graphics object which is used to draw the background of a shape.
+            qp.setBrush(QColor(200, 0, 0))
+            qp.drawRect(10, 15, 90, 60)
+
+            qp.setBrush(QColor(255, 80, 0, 160))
+            qp.drawRect(130, 15, 90, 60)
+
+            qp.setBrush(QColor(25, 0, 90, 200))
+            qp.drawRect(250, 15, 90, 60)
+
+        def drawLines(self, qp):
+            # The QPen is an elementary graphics object.
+            # It is used to draw lines, curves and outlines of rectangles, ellipses, polygons, or other shapes.
+            pen = QPen(Qt.black, 2, Qt.SolidLine)
+
+            qp.setPen(pen)
+            qp.drawLine(20, 40, 250, 40)
+
+            pen.setStyle(Qt.DashLine)
+            qp.setPen(pen)
+            qp.drawLine(20, 80, 250, 80)
+
+            pen.setStyle(Qt.DashDotLine)
+            qp.setPen(pen)
+            qp.drawLine(20, 120, 250, 120)
+
+            pen.setStyle(Qt.DotLine)
+            qp.setPen(pen)
+            qp.drawLine(20, 160, 250, 160)
+
+            pen.setStyle(Qt.DashDotDotLine)
+            qp.setPen(pen)
+            qp.drawLine(20, 200, 250, 200)
+
+            pen.setStyle(Qt.CustomDashLine)
+            # Odd numbers define a dash, even numbers space.
+            pen.setDashPattern([1, 4, 15, 4])
+            qp.setPen(pen)
+            qp.drawLine(20, 240, 250, 240)
+
+        def drawBrushes(self, qp):
+            # QBrush is an elementary graphics object.
+            # It is used to paint the background of graphics shapes,
+            # such as rectangles, ellipses, or polygons.
+            # A brush can be of three different types:
+            # a predefined brush, a gradient, or a texture pattern.
+            brush = QBrush(Qt.SolidPattern)
+
+            dx, dy = 360, 20
+
+            qp.setBrush(brush)
+            qp.drawRect(10 + dx, 15 + dy, 90, 60)
+
+            brush.setStyle(Qt.Dense1Pattern)
+            qp.setBrush(brush)
+            qp.drawRect(130 + dx, 15 + dy, 90, 60)
+
+            brush.setStyle(Qt.Dense2Pattern)
+            qp.setBrush(brush)
+            qp.drawRect(250 + dx, 15 + dy, 90, 60)
+
+            brush.setStyle(Qt.DiagCrossPattern)
+            qp.setBrush(brush)
+            qp.drawRect(10 + dx, 105 + dy, 90, 60)
+
+            brush.setStyle(Qt.Dense5Pattern)
+            qp.setBrush(brush)
+            qp.drawRect(130 + dx, 105 + dy, 90, 60)
+
+            brush.setStyle(Qt.Dense6Pattern)
+            qp.setBrush(brush)
+            qp.drawRect(250 + dx, 105 + dy, 90, 60)
+
+            brush.setStyle(Qt.HorPattern)
+            qp.setBrush(brush)
+            qp.drawRect(10 + dx, 195 + dy, 90, 60)
+
+            brush.setStyle(Qt.VerPattern)
+            qp.setBrush(brush)
+            qp.drawRect(130 + dx, 195 + dy, 90, 60)
+
+            brush.setStyle(Qt.BDiagPattern)
+            qp.setBrush(brush)
+            qp.drawRect(250 + dx, 195 + dy, 90, 60)
+
+        def drawBezierCurve(self, qp:QPainter):
+            # brush = QBrush(Qt.HorPattern)
+            # brush.setStyle(Qt.HorPattern)
+            # qp.setBrush(brush)
+
+            pen = QPen(Qt.darkGreen, 2, Qt.SolidLine)
+            qp.setPen(pen)
+            qp.setBrush(Qt.transparent)
+
+            path = QPainterPath()
+            dx, dy = 0, 240
+            path.moveTo(30 + dx, 30 + dy)
+            # The curve is created with cubicTo() method
+            # starting point, control point, and ending point
+            path.cubicTo(30 + dx, 30 + dy, 200 + dx, 350 + dy, 350 + dx, 30 + dy)
+
+            qp.drawPath(path)
 
     app = QApplication(sys.argv)
     ex = Example()
