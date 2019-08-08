@@ -6,7 +6,7 @@
 import sys, random, os
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import (QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData, \
-    QFile, QIODevice, QTextStream, QFileDevice, QUrl)
+    QFile, QIODevice, QTextStream, QFileDevice, QUrl, QTextCodec)
 from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag, QPainter, QPen, QBrush, QPainterPath
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
@@ -868,30 +868,6 @@ def demo_button_drag_drop():
             print("e.mimeData().text():")
             print(e.mimeData().text())
 
-            # ==================================================
-
-            # file_path = os.path.abspath(e.mimeData().text())
-            # print(file_path)
-
-            for url in e.mimeData().urls():
-                # file_path = url.toLocalFile().toLocal8Bit().data()  # error: toLocal8Bit
-                # print(url.toLocalFile())
-                print()
-
-                qurl = QUrl(url)
-                file_path = qurl.toLocalFile()
-                print("file_path = ", file_path)
-
-                f = QFile(file_path)
-                print("exist? ", f.exists())
-
-                if f.exists():
-                    f.open(QIODevice.ReadOnly|QIODevice.Text)
-                    if f.isOpen():
-                        text_stream = QTextStream(f)
-                        print(text_stream.readAll())
-            # ==================================================
-
             e.setDropAction(Qt.MoveAction)
             e.accept()
 
@@ -1192,6 +1168,82 @@ def demo_file():
     print("f.isOpen() ", f.isOpen())
 
 
+def demo_drop_file():
+    class DropFileWidget(QWidget):
+        def __init__(self):
+            super().__init__()
+
+            vbox = QVBoxLayout()
+            textEdit = QTextEdit(self)
+            self.textEdit = textEdit
+
+            # textEdit.setAcceptDrops(False)
+            # print("textEdit.acceptDrops() = ", textEdit.acceptDrops())
+            # textEdit.dropEvent[QtGui.QDropEvent].connect(self.dropEvent)
+
+            # vbox_1 = QVBoxLayout()
+
+            # label = QLabel("Drag Text File", self)
+            # label.setAlignment(Qt.AlignCenter)
+            # print("label.acceptDrops()", label.acceptDrops())
+
+            # vbox_1.addStretch(1)
+            # vbox_1.addWidget(label)
+            # vbox_1.addStretch(1)
+
+            # vbox.addLayout(vbox_1)
+            # vbox.addWidget(label)
+            vbox.addStretch(1)
+            vbox.addWidget(textEdit)
+            self.setLayout(vbox)
+
+            self.setAcceptDrops(True)
+            self.setGeometry(100, 100, 400, 300)
+            self.setWindowTitle("Drop File To Blank Area")
+            self.show()
+
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            print("drop event received..")
+            print(e.mimeData().formats())
+            # ==================================================
+
+            # file_path = os.path.abspath(e.mimeData().text())
+            # print(file_path)
+
+            for url in e.mimeData().urls():
+                # file_path = url.toLocalFile().toLocal8Bit().data()  # error: toLocal8Bit
+                # print(url.toLocalFile())
+                print()
+
+                qurl = QUrl(url)
+                file_path = qurl.toLocalFile()
+                print("file_path = ", file_path)
+
+                f = QFile(file_path)
+                print("exist? ", f.exists())
+
+                if f.exists():
+                    f.open(QIODevice.ReadOnly | QIODevice.Text)
+                    isOpen = f.isOpen()
+                    print("f.isOpen() = ", isOpen)
+
+                    if isOpen:
+                        text_stream = QTextStream(f)
+                        text_stream.setCodec(QTextCodec.codecForName("UTF-8"))
+                        text_stream.setAutoDetectUnicode(True)
+                        text = text_stream.readAll()
+                        self.textEdit.setText(text)
+                        print(text)
+            # ==================================================
+            e.accept()
+
+
+    app = QApplication([])
+    w = DropFileWidget()
+    sys.exit(app.exec_())
+    return
+
+
 if __name__ == "__main__":
     print("case __main__")
     # demo_ui()buttonClicked
@@ -1205,7 +1257,8 @@ if __name__ == "__main__":
     # demo_dialog()
     # demo_widgets()
     # demo_widgets2()
-    demo_button_drag_drop()
+    # demo_button_drag_drop()
     # demo_painter()
     # demo_custom_widget()
     # demo_file()
+    demo_drop_file()
