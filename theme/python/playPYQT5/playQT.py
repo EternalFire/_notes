@@ -5,7 +5,8 @@
 
 import sys, random, os
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData, QFile
+from PyQt5.QtCore import (QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData, \
+    QFile, QIODevice, QTextStream, QFileDevice, QUrl)
 from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag, QPainter, QPen, QBrush, QPainterPath
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
@@ -864,7 +865,32 @@ def demo_button_drag_drop():
         def dropEvent(self, e: QtGui.QDropEvent) -> None:
             position = e.pos()
             self.button.move(position)
+            print("e.mimeData().text():")
             print(e.mimeData().text())
+
+            # ==================================================
+
+            # file_path = os.path.abspath(e.mimeData().text())
+            # print(file_path)
+
+            for url in e.mimeData().urls():
+                # file_path = url.toLocalFile().toLocal8Bit().data()  # error: toLocal8Bit
+                # print(url.toLocalFile())
+                print()
+
+                qurl = QUrl(url)
+                file_path = qurl.toLocalFile()
+                print("file_path = ", file_path)
+
+                f = QFile(file_path)
+                print("exist? ", f.exists())
+
+                if f.exists():
+                    f.open(QIODevice.ReadOnly|QIODevice.Text)
+                    if f.isOpen():
+                        text_stream = QTextStream(f)
+                        print(text_stream.readAll())
+            # ==================================================
 
             e.setDropAction(Qt.MoveAction)
             e.accept()
@@ -1142,9 +1168,28 @@ def demo_custom_widget():
 
 
 def demo_file():
-    f = QFile("out/temp/playQT.spec")
-    ret = f.copy("out/temp/playQT.spec.new")
-    print("copy ret = ", ret)
+    file_path = "out/temp/playQT.spec"
+    file_path = os.path.abspath(file_path)
+
+    f = QFile(file_path)
+    # ret = f.copy("out/temp/playQT.spec.new.12")
+    # f = QFile("out/temp/playQT.spec.new")
+
+    ret = f.exists()
+    print("exists ret = ", ret)
+
+    f.open(QIODevice.ReadOnly | QIODevice.Text | QIODevice.Truncate)
+    print("f.isOpen() ", f.isOpen())
+
+    text_stream = QTextStream(f)
+    s = text_stream.readAll()
+
+    print(type(s))
+    print("> len(s) = ", len(s))
+    print("f.error() = ", f.error(), "QFileDevice.NoError = ", QFileDevice.NoError)
+    print("errorString = ", f.errorString())
+    f.close()
+    print("f.isOpen() ", f.isOpen())
 
 
 if __name__ == "__main__":
@@ -1160,7 +1205,7 @@ if __name__ == "__main__":
     # demo_dialog()
     # demo_widgets()
     # demo_widgets2()
-    # demo_button_drag_drop()
+    demo_button_drag_drop()
     # demo_painter()
     # demo_custom_widget()
-    demo_file()
+    # demo_file()
