@@ -6,7 +6,7 @@
 import sys, random, os
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import (QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData, \
-    QFile, QIODevice, QTextStream, QFileDevice, QUrl, QTextCodec)
+    QFile, QIODevice, QTextStream, QFileDevice, QUrl, QTextCodec, QDir)
 from PyQt5.QtGui import QIcon, QFont, QColor, QPixmap, QDrag, QPainter, QPen, QBrush, QPainterPath
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QMessageBox, QDesktopWidget,
@@ -1143,31 +1143,6 @@ def demo_custom_widget():
     sys.exit(app.exec_())
 
 
-def demo_file():
-    file_path = "out/temp/playQT.spec"
-    file_path = os.path.abspath(file_path)
-
-    f = QFile(file_path)
-    # ret = f.copy("out/temp/playQT.spec.new.12")
-    # f = QFile("out/temp/playQT.spec.new")
-
-    ret = f.exists()
-    print("exists ret = ", ret)
-
-    f.open(QIODevice.ReadOnly | QIODevice.Text | QIODevice.Truncate)
-    print("f.isOpen() ", f.isOpen())
-
-    text_stream = QTextStream(f)
-    s = text_stream.readAll()
-
-    print(type(s))
-    print("> len(s) = ", len(s))
-    print("f.error() = ", f.error(), "QFileDevice.NoError = ", QFileDevice.NoError)
-    print("errorString = ", f.errorString())
-    f.close()
-    print("f.isOpen() ", f.isOpen())
-
-
 def demo_drop_file():
     class DropFileWidget(QWidget):
         def __init__(self):
@@ -1177,30 +1152,47 @@ def demo_drop_file():
             textEdit = QTextEdit(self)
             self.textEdit = textEdit
 
-            # textEdit.setAcceptDrops(False)
+            textEdit.setAcceptDrops(False)
             # print("textEdit.acceptDrops() = ", textEdit.acceptDrops())
             # textEdit.dropEvent[QtGui.QDropEvent].connect(self.dropEvent)
 
-            # vbox_1 = QVBoxLayout()
+            label = QLabel("Drag Text File", self)
+            label.setAlignment(Qt.AlignCenter)
+            print("label.acceptDrops()", label.acceptDrops())
 
-            # label = QLabel("Drag Text File", self)
-            # label.setAlignment(Qt.AlignCenter)
-            # print("label.acceptDrops()", label.acceptDrops())
-
-            # vbox_1.addStretch(1)
-            # vbox_1.addWidget(label)
-            # vbox_1.addStretch(1)
-
-            # vbox.addLayout(vbox_1)
+            # ========================================================
+            # # box layout
+            #
+            # box_1 = QHBoxLayout()
+            #
+            # box_1.addStretch(1)
+            # box_1.addWidget(label)
+            # box_1.addStretch(1)
+            #
+            # vbox.addLayout(box_1)
             # vbox.addWidget(label)
-            vbox.addStretch(1)
-            vbox.addWidget(textEdit)
-            self.setLayout(vbox)
+            #
+            # # vbox.addStretch(1)
+            # vbox.addWidget(textEdit)
+            # self.setLayout(vbox)
+            # ========================================================
+            # grid layout
+            grid = QGridLayout()
+
+            grid.addWidget(label, 0, 0, 1, 2)
+            grid.addWidget(textEdit, 1, 1, 3, 1)
+
+            self.setLayout(grid)
+            # ========================================================
 
             self.setAcceptDrops(True)
             self.setGeometry(100, 100, 400, 300)
             self.setWindowTitle("Drop File To Blank Area")
             self.show()
+
+        def dragEnterEvent(self, e: QtGui.QDragEnterEvent) -> None:
+            print("dragEnterEvent")
+            e.accept()
 
         def dropEvent(self, e: QtGui.QDropEvent) -> None:
             print("drop event received..")
@@ -1244,6 +1236,86 @@ def demo_drop_file():
     return
 
 
+def demo_file():
+    file_path = "out/temp/playQT.spec"
+    file_path = os.path.abspath(file_path)
+
+    f = QFile(file_path)
+    # ret = f.copy("out/temp/playQT.spec.new.12")
+    # f = QFile("out/temp/playQT.spec.new")
+
+    ret = f.exists()
+    print("exists ret = ", ret)
+
+    f.open(QIODevice.ReadOnly | QIODevice.Text | QIODevice.Truncate)
+    print("f.isOpen() ", f.isOpen())
+
+    text_stream = QTextStream(f)
+    s = text_stream.readAll()
+
+    print(type(s))
+    print("> len(s) = ", len(s))
+    print("f.error() = ", f.error(), "QFileDevice.NoError = ", QFileDevice.NoError)
+    print("errorString = ", f.errorString())
+    f.close()
+    print("f.isOpen() ", f.isOpen())
+
+def demo_dir():
+    out_path = os.path.abspath("out")
+    # out_path = os.path.join(out_path, "d1")
+    d = QDir(out_path)
+    print(d.absolutePath())
+    print("d.exists()", d.exists())
+    print("d.exists('a.txt')", d.exists('a.txt'))  # check file exist
+    print("d.exists('temp')", d.exists('temp'))  # check directory exist
+
+    # remove empty directory
+    # ret = d.rmdir("d1")
+    # print("rmdir = ", ret)
+
+    # remove directory
+    # ret = d.removeRecursively()
+    # print("ret = ", ret)
+
+    # make a directory
+    # d.mkdir("d1")
+
+    # make directory path
+    # ret = d.mkpath("d_1/d_2/d_3")
+    # print("ret = ", ret)
+    # ret = d.mkpath("d_1/d_4/d_5")
+    # print("ret = ", ret)
+
+    # remove directory path, if directory is empty
+    # ret = d.rmpath("d_1/d_4/d_5")
+    # print("ret = ", ret)
+
+    ret = d.cd("d_1")
+    print("cd = ", ret)
+    print(d.absolutePath())
+    if ret:
+        ret = d.removeRecursively()
+        print("removeRecursively() ret = ", ret)
+    else:
+        ret = d.mkpath("d_1/d_2/d_3")
+        print("ret = ", ret)
+
+        ret = d.mkpath("d_1/d_4/d_5")
+        print("ret = ", ret)
+
+        ret = d.cd("d_1/d_4/d_5")
+        if ret:
+            f = QFile(d.absoluteFilePath("a.txt"))
+            f.open(QIODevice.ReadWrite | QIODevice.Text)
+            text_stream = QTextStream(f)
+            text_stream << \
+"""begin
+new line
+next...
+another...
+end"""
+
+
 if __name__ == "__main__":
     print("case __main__")
     # demo_ui()buttonClicked
@@ -1260,5 +1332,6 @@ if __name__ == "__main__":
     # demo_button_drag_drop()
     # demo_painter()
     # demo_custom_widget()
+    # demo_drop_file()
     # demo_file()
-    demo_drop_file()
+    demo_dir()
