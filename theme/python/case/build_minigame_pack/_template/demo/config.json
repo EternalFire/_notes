@@ -1,0 +1,40 @@
+{
+    "init_cfg":{
+       "isLandscape": true,
+       "isWindowTop": false,
+       "name": "",
+       "width": 1280,
+       "height": 720,
+       "entry": "GameData/src/main.lua",
+       "consolePort": 6050,
+       "uploadPort": 6060,
+	   "_showConsole":false,
+	   "_showAppMenu":true,
+	   "_TFlag":false,
+       "_TReview":false,
+	   "_DeviceHead":"qs",
+	   "_CallPBackFlag":false
+    },
+    "simulator_screen_size": [
+        {
+            "title": "1136x640",
+            "width": 640,
+            "height": 1136
+        },
+        {
+            "title": "1280x720",
+            "width": 720,
+            "height": 1280
+        },
+        {
+            "title": "1218x562",
+            "width": 562,
+            "height": 1218
+        },
+        {
+            "title": "1024x768",
+            "width": 768,
+            "height": 1024
+        }
+    ]
+}
