@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import os
 from PIL import Image
 from helper import *
@@ -12,6 +13,8 @@ import mydl.init as dl
 import matplotlib.pyplot as plt
 from collections import Counter, defaultdict
 import re
+
+import time
 
 def test_rotateHalf():
     name = "sample-01.jpg"
@@ -623,6 +626,7 @@ def test_wx():
 
     return
 
+
 def test_python():
     # list_1 = [[1, -1, 2, 3], [0, 0, 9, 3], [-1, -1, -1, 6]]
     # list_2 = [x if x > 0 else -x for xs in list_1 for x in xs]
@@ -636,11 +640,36 @@ def test_python():
     def f(*args, **kw):
         print(args)
         print(kw)
-        print()
+        print("d: " + str(kw["d"]) if kw.get("d") else "no d")
 
-    f(1, 2, 3, a=0, b=1, c=2)
+    f(1, 2, 3, a=0, b=1, c=2, d=3)
+    # f(1, 2, 3)
 
     return
+
+
+def test_watchdog():
+    from watchdog.observers import Observer
+    from watchdog.events import FileSystemEventHandler
+
+    class MyHandler(FileSystemEventHandler):
+        def on_modified(self, event):
+            print("Got it!")
+
+    event_handler = MyHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path='.', recursive=False)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+
+    observer.join()
+    return
+
 
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
@@ -686,7 +715,8 @@ def main():
     # test_mapReduce()
 
     # test_wx()
-    test_python()
+    # test_python()
+    # test_watchdog()
     return
 
 
