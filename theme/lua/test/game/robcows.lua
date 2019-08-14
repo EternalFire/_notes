@@ -160,7 +160,7 @@ local function CreateRobcows()
     end
 
     ------------------------------------------
-    ---
+    --- 找到可以组成10的倍数的3张牌
     function Robcows:select3Cards(cards)
         if type(cards) == "table" and #cards == 5 then
             local candidates = {}
@@ -282,6 +282,74 @@ local function CreateRobcows()
 
                     table.insert(_cardsWithType[level], _5Cards)
                 end
+            end
+
+            return _cardsWithType
+        end
+
+        if not retSmallCow and not retJQK and not retBomb then
+            _cardsWithType[CardType.Cow0] = { cards }
+        end
+
+        return _cardsWithType
+    end
+
+    function Robcows:makeCardTypeWithSelected(cards, select3Index)
+
+        local _cardsWithType = {}
+
+        local retSmallCow = self:checkSmallCow(cards)
+        if retSmallCow then
+            _cardsWithType[CardType.SmallCow] = { cards }
+        end
+
+        local retJQK = self:checkJQKs(cards)
+        if retJQK then
+            _cardsWithType[CardType.JQKs] = { cards }
+        end
+
+        local retBomb = self:checkBomb(cards)
+        if retBomb then
+            _cardsWithType[CardType.Bomb] = { cards }
+        end
+
+        local candidates = { {} }
+
+        if select3Index and type(select3Index) == "table" then
+            for i = 1, #select3Index do
+                local index = select3Index[i]
+                local card = cards[index]
+                table.insert(candidates[1], card)
+            end
+        end
+
+        if candidates and #candidates > 0 then
+            for _, _3Cards in ipairs(candidates) do
+                local retCowX, level = self:checkCowX(cards, _3Cards)
+                -- if retCowX then
+                    _cardsWithType[level] = _cardsWithType[level] or {}
+
+                    local _5Cards = {}
+                    local mark = {}
+                    for _, v in ipairs(_3Cards) do
+                        mark[self:cv(v)] = true
+                        table.insert(_5Cards, v)
+                    end
+
+                    local _2Cards = {}
+                    for _, v in ipairs(cards) do
+                        if not mark[self:cv(v)] then
+                            table.insert(_2Cards, v)
+                        end
+                    end
+                    table.sort(_2Cards, Robcows.compareCard)
+
+                    for _,v in ipairs(_2Cards) do
+                        table.insert(_5Cards, v)
+                    end
+
+                    table.insert(_cardsWithType[level], _5Cards)
+                -- end
             end
 
             return _cardsWithType

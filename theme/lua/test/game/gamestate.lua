@@ -90,10 +90,11 @@ function gameState:createPlayer(param)
     player.cardType = 0
     player.typeCards = {}
     player.sortedCards = {}
+    player.select3Index = {} -- 选择的牌索引
     player.seatIndex = Seat.Stand
     player.gold = 0
     player.wonGold = 0
-    player.headUrl = ""
+    player.headIconRes = ""
     player.name = ""
     player._tag = ""
 
@@ -121,7 +122,28 @@ function gameState:createPlayer(param)
     return player
 end
 
+function gameState:setRandSeed()
+    local seed = 0
+    local x = 0
+
+    for i = 1, 3 do
+        seed = math.sin((os.time() / math.max(1.2, os.clock()) + 0.0001)) * (os.time() + x)
+        math.randomseed(seed)
+
+        x = math.random(0, os.time())
+    end
+
+    for i = 1, 5 do
+        seed = math.random(os.clock(), os.time())
+    end
+
+    math.randomseed(seed)
+end
+
 function gameState:init()
+    -- set rand seed
+    self:setRandSeed()
+
     -- create players
     print("create players")
     local player = self:createPlayer({ isRobot = false, isUser = true })
@@ -288,4 +310,42 @@ function gameState:deal(player)
     end
 end
 
+function gameState:isBanker(player)
+    return player == self.banker
+end
+
+function gameState:getBanker(tableState)
+    if not tableState then
+        return self.banker
+    end
+end
+
+function gameState:getPlayer(place)
+    if self.seatState and self.seatState[place] and #self.seatState[place] > 0 then
+        return self.seatState[place][1]
+    end
+end
+
+--- 返回和庄家的抢庄倍率一样的玩家
+function gameState:getPlayersWithTheSameBankerRate()
+    local result = {}
+    if self.banker then
+        self:iterateSeat(function(player)
+            if player.rateBanker == self.banker.rateBanker then
+                table.insert(result, player)
+            end
+        end)
+    end
+    return result
+end
+
+function gameState:setPlayerSelectCard(player, select3Index)
+    if player and select3Index then
+        player.select3Index = {}
+
+        for _, v in ipairs(select3Index) do
+            table.insert(player.select3Index, v)
+        end
+    end
+end
 return gameState

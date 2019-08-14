@@ -8,9 +8,9 @@ local gameState
 
 if _UseInGame then
     Robcows = import("game.robcows")
-    StateMachine = import("game.StateMachine")
+    StateMachine = import("game.statemachine")
     poker = import("game.poker")
-    gameState = import("game.gameState")
+    gameState = import("game.gamestate")
 else
     require("__cc")
     Robcows = require("robcows")
@@ -19,9 +19,15 @@ else
     gameState = require("gamestate")
 end
 
-local RobcowsGame = {}
+local RobcowsGame = {
+    _inited = false,
+}
 
 function RobcowsGame:init()
+    if self._inited then
+        return
+    end
+
     local createState, createStateMachine = StateMachine.createState, StateMachine.createStateMachine
 
     local s_turn_start
@@ -52,7 +58,7 @@ function RobcowsGame:init()
     print("create all cards")
     gameState.allCards = Robcows:createAllCards()
 
-    local s_turn_start = createState({
+    s_turn_start = createState({
         name = "s_turn_start",
         transfer = function(s)
             -- print(s.name, s.isEntered, s.isDone)
@@ -65,6 +71,7 @@ function RobcowsGame:init()
             gameState:iterateSeat(function(player)
                 player.cardType = Robcows.CardType.Cow0
                 player.wonGold = 0
+                player.select3Index = {}
             end)
         end,
         onLeave = function(s)end,
@@ -76,7 +83,7 @@ function RobcowsGame:init()
         onInterrupt = function(s)end,
     })
 
-    local s_choose_banker = createState({
+    s_choose_banker = createState({
         name = "s_choose_banker",
         transfer = function(s)
             print(s.name, s.isEntered, s.isDone)
@@ -103,7 +110,7 @@ function RobcowsGame:init()
         onInterrupt = function(s)end,
     })
 
-    local s_add_rate = createState({
+    s_add_rate = createState({
         name = "s_add_rate",
         transfer = function(s)
             print(s.name, s.isEntered, s.isDone)
@@ -134,7 +141,7 @@ function RobcowsGame:init()
         onInterrupt = function(s)end,
     })
 
-    local s_deal = createState({
+    s_deal = createState({
         name = "s_deal",
         transfer = function(s)
             return "s_make_card_type"
@@ -157,7 +164,7 @@ function RobcowsGame:init()
         onInterrupt = function(s)end,
     })
 
-    local s_make_card_type = createState({
+    s_make_card_type = createState({
         name = "s_make_card_type",
         transfer = function(s)
             print(s.name, s.isEntered, s.isDone)
@@ -167,20 +174,34 @@ function RobcowsGame:init()
             gameState:iterateSeat(function(player)
                 print(player._tag)
                 -- poker.printCards(player.cards)
-                local cardsWithType = Robcows:makeCardType(player.cards)
+                local cardsWithType
 
-                for k, list in pairs(cardsWithType) do
-                    player.cardType = k
-                    player.typeCards = list[1]
-                    player.sortedCards = Robcows:sortByCardType(player.typeCards, player.cardType)
-                    ------
-                    print("player.cardType = ", player.cardType)
-                    print("typeCards:")
-                    poker.printCards(player.typeCards)
-                    print("sortedCards:")
-                    poker.printCards(player.sortedCards)
-                    ------
-                    break
+                if player.select3Index and #player.select3Index == 3 then
+                    print("  call makeCardTypeWithSelected")
+                    cardsWithType = Robcows:makeCardTypeWithSelected(player.cards, player.select3Index)
+                else
+                    print("  call makeCardType")
+                    cardsWithType = Robcows:makeCardType(player.cards)
+                end
+
+                -- for k, list in pairs(cardsWithType) do
+                for k = Robcows.CardType.SmallCow, Robcows.CardType.Cow0, -1 do
+                    local list = cardsWithType[k]
+                    if list then
+                        player.cardType = k
+                        player.typeCards = list[1]
+                        player.sortedCards = Robcows:sortByCardType(player.typeCards, player.cardType)
+                        ------
+                        print("    player.cardType = ", player.cardType)
+                        print("    typeCards:")
+                        poker.printCards(player.typeCards)
+                        -- print("sortedCards:")
+                        -- poker.printCards(player.sortedCards)
+                        ------
+
+
+                        break
+                    end
                 end
 
                 -- Robcows:printCardsWithType(cardsWithType)
@@ -200,7 +221,7 @@ function RobcowsGame:init()
         onInterrupt = function(s)end,
     })
 
-    local s_pk = createState({
+    s_pk = createState({
         name = "s_pk",
         transfer = function(s)
             print(s.name, s.isEntered, s.isDone)
@@ -247,7 +268,7 @@ function RobcowsGame:init()
         onInterrupt = function(s)end,
     })
 
-    local s_turn_end = createState({
+    s_turn_end = createState({
         name = "s_turn_end",
         transfer = function(s)
             -- print(s.name, s.isEntered, s.isDone)
@@ -258,6 +279,9 @@ function RobcowsGame:init()
             print("calculate gold in turn")
             gameState:iterateSeat(function(player)
                 player.gold = player.gold + player.wonGold
+                if player.gold < 0 then
+                    player.gold = 0
+                end
                 print(player._tag, player.gold)
             end)
         end,
@@ -289,6 +313,7 @@ function RobcowsGame:init()
     self.machine = sm
     self.gameState = gameState
     self._timer = nil
+    self._inited = true
 end
 
 function RobcowsGame:startByClock()
@@ -317,6 +342,8 @@ function RobcowsGame:startByClock()
 end
 
 function RobcowsGame:startByCC()
+    if self._timer ~= nil then return end
+
     local sm = self.machine
     local function run(dt)
         sm:tick(dt)
@@ -328,6 +355,8 @@ function RobcowsGame:startByCC()
 end
 
 function RobcowsGame:start()
+    print("RobcowsGame:start()")
+
     self.machine:transfer("s_turn_start")
 end
 
@@ -345,6 +374,7 @@ function RobcowsGame:clear()
 end
 
 if _UseInGame then
+    rawset(_G, "_RobCowsGame", RobcowsGame)
 else
     RobcowsGame:init()
     RobcowsGame:startByClock()
