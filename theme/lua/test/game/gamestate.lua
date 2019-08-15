@@ -17,7 +17,8 @@ local gameState = {
 
 --- 下注金额
 local BetGold = {
-    Lv1 = 1,
+    Lv1 = 10000,
+    Lv2 = 20000,
 }
 local BetGolds = {}
 for _, v in pairs(BetGold) do

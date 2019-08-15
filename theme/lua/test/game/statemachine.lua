@@ -131,8 +131,9 @@ local function createStateMachine(param)
                         end
                     end
 
-                    state:enter(cur)
                     self.currentState = state
+                    state:enter(cur)
+                    -- self.currentState = state
                 end
             end,
             tick = function(self, dt)
@@ -147,8 +148,9 @@ local function createStateMachine(param)
 
                         local nextState = stateDict[nextStateName]
                         if nextState then
-                            nextState:enter(cur)
                             self.currentState = nextState
+                            nextState:enter(cur)
+                            -- self.currentState = nextState
                         end
                     end
 
