@@ -152,6 +152,8 @@ function display.setAutoScale(configs)
 
     setDesignResolution(configs, framesize)
 
+    printInfo(string.format("# visible origin = {%.2f, %.2f}", director:getVisibleOrigin().x, director:getVisibleOrigin().y))
+    printInfo(string.format("# visible size = {%.2f, %.2f}", director:getVisibleSize().width, director:getVisibleSize().height))
     printInfo(string.format("# design resolution size       = {width = %0.2f, height = %0.2f}", configs.width, configs.height))
     printInfo(string.format("# design resolution autoscale  = %s", configs.autoscale))
     setConstants()

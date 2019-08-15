@@ -389,13 +389,20 @@ local function case_imgui()
 end
 
 function run()
+    local director = cc.Director:getInstance()
+    local view = director:getOpenGLView()
+
     local scene = display.getRunningScene()
     if not scene then
         print("scene is nil..")
     end
 
     local layer = display.newLayer():addTo(scene)
-    local bgLayer = display.newLayer({r = 100, g = 100, b = 100, a = 200})
+    local bgLayer = display.newLayer({r = 100, g = 100, b = 100, a = 0})
+    -- local bgSprite_4_3 = display.newSprite("res/bg_4_3_1024_768.jpg"):addTo(bgLayer):move(display.cx, display.cy)
+
+    local bgSprite_16_9 = display.newSprite("res/bg_16_9_1280_720.jpg"):addTo(bgLayer):move(display.cx, display.cy)
+    -- bgSprite_16_9:setScale(display.width / bgSprite_16_9:getContentSize().width, display.height / bgSprite_16_9:getContentSize().height)
 
     local emitter = cc.ParticleSystemQuad:create("Particles/LavaFlow.plist")
     local batch = cc.ParticleBatchNode:createWithTexture(emitter:getTexture())
@@ -404,6 +411,16 @@ function run()
     emitter:move(display.center)
 
     display.newSprite("ball.png", display.center.x, display.center.y):addTo(bgLayer)
+        :runAction(cc.RepeatForever:create(cc.JumpBy:create(1, cc.p(0, 0), 100, 2)))
+    display.newSprite("ball.png", display.left_top.x, display.left_top.y):addTo(bgLayer):setColor(display.COLOR_RED)
+    display.newSprite("ball.png", display.right_top.x, display.right_top.y):addTo(bgLayer):setColor(display.COLOR_GREEN)
+    display.newSprite("ball.png", display.right_bottom.x, display.right_bottom.y):addTo(bgLayer):setColor(display.COLOR_BLUE)
+    display.newSprite("ball.png", display.left_bottom.x, display.left_bottom.y):addTo(bgLayer):setColor(cc.c3b(255, 255, 0))
+
+    local a_color_layer = display.newLayer({r = 100, g = 100, b = 100, a = 200}, {width = 500, height = 400})
+    a_color_layer:addTo(bgLayer)
+    a_color_layer:setIgnoreAnchorPointForPosition(false)
+    a_color_layer:align({x=0.5, y=0.5}, display.center.x, display.center.y)
 
     State.scene = scene
     State.layer = layer
@@ -487,7 +504,7 @@ function run()
     local node3 = display.newNode():addTo(State.bgLayer)
     node3:setName("touchNode3")
 
-    display.newSprite("ball.png"):addTo(node):move(0, 0)
+    -- display.newSprite("ball.png"):addTo(node):move(0, 0)
 
     -- createTouchListener(node2, {
     --     debug = true,
@@ -512,7 +529,8 @@ local function main()
     local scene = display.newScene("scene")
     display.runScene(scene--[[, transition, time, more--]])
 
-    case_imgui()
+    imgui.draw = function() end
+    -- case_imgui()
 
     setTimeout(function() run() end, 0)
 end
