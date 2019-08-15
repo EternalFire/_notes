@@ -675,6 +675,16 @@ def test_zipfile():
     import zipfile
     # print(dir(zipfile.ZipFile))  # accessing the 'ZipFile' class
 
+    def addToZip(zf, path, zippath):
+        if os.path.isfile(path):
+            zf.write(path, zippath, zipfile.ZIP_DEFLATED)
+        elif os.path.isdir(path):
+            if zippath:
+                zf.write(path, zippath)
+            for nm in sorted(os.listdir(path)):
+                addToZip(zf,
+                         os.path.join(path, nm), os.path.join(zippath, nm))
+
     def read_zip():
         with zipfile.ZipFile("out/out.zip") as file:
             # ZipFile.infolist() returns a list containing all the members of an archive file
@@ -710,16 +720,6 @@ def test_zipfile():
         archive_name = 'example_file.zip'
         archive_path = os.path.join("out", archive_name)
 
-        def addToZip(zf, path, zippath):
-            if os.path.isfile(path):
-                zf.write(path, zippath, zipfile.ZIP_DEFLATED)
-            elif os.path.isdir(path):
-                if zippath:
-                    zf.write(path, zippath)
-                for nm in sorted(os.listdir(path)):
-                    addToZip(zf,
-                             os.path.join(path, nm), os.path.join(zippath, nm))
-
         # Opening the 'Zip' in writing mode
         with zipfile.ZipFile(archive_path, 'w') as file:
             # write mode overrides all the existing files in the 'Zip.'
@@ -741,9 +741,50 @@ def test_zipfile():
         with zipfile.ZipFile(archive_path, 'r') as file:
             print(file.namelist())
 
+    def backup_file(path, _archive_name=""):
+        # def getCurTimeString():
+        #     """ %Y%m%d_%H%M%S """
+        #     return time.strftime("%Y%m%d_%H%M%S", time.localtime())
+
+        # def getFileExt(filePath):
+        #     """ "b/a.png" => ".png" """
+        #     return os.path.splitext(filePath)[1]
+
+        # def getFileName(filePath):
+        #     ext = getFileExt(filePath)
+        #     return os.path.basename(filePath).split(ext)[0]
+
+        name = _archive_name
+
+        if _archive_name == "":
+            name = path
+
+            if os.path.isfile(path):
+                print("isfile")
+                name = getFileName(path)
+            elif os.path.isdir(path):
+                print("isdir")
+                name = os.path.basename(path)
+
+        s_time = getCurTimeString()
+        archive_name = "%s_%s.zip" % (name, s_time)
+        archive_path = os.path.abspath(os.path.join("out", archive_name))
+        print(archive_name)
+        print(archive_path)
+
+        with zipfile.ZipFile(archive_path, 'w') as file:
+            print("{} is created.".format(archive_name))
+            addToZip(file, path, name)
+
+        print("check archive ...")
+        with zipfile.ZipFile(archive_path, 'r') as file:
+            print(file.namelist())
+
+        return
 
     # read_zip()
-    create_zip()
+    # create_zip()
+    backup_file("/Users/fire/Documents/develop/learnLog/python/advancedpyqt5/examples")
     return
 
 
