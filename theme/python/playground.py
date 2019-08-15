@@ -671,6 +671,82 @@ def test_watchdog():
     return
 
 
+def test_zipfile():
+    import zipfile
+    # print(dir(zipfile.ZipFile))  # accessing the 'ZipFile' class
+
+    def read_zip():
+        with zipfile.ZipFile("out/out.zip") as file:
+            # ZipFile.infolist() returns a list containing all the members of an archive file
+            print(file.infolist())
+
+            # ZipFile.namelist() returns a list containing all the members with names of an archive file
+            print(file.namelist())
+
+            # ZipFile.getinfo(path = filepath) returns the information about a member of Zip file.
+            # It raises a KeyError if it doesn't contain the mentioned file
+            print(file.getinfo(file.namelist()[-1]))
+
+            # ZipFile.open(path = filepath, mode = mode_type, pwd = password) opens the members of an archive file
+            # 'pwd' is optional -> if it has password mention otherwise leave it
+            text_file = file.open(name="folder_1/f1/a.txt", mode='r')
+
+            # 'read()' method of the file prints all the content of the file. You see this method in file handling.
+            # print(text_file.read())
+            # print(str(text_file.read(), encoding="utf-8"))
+            print(str(text_file.read(), encoding="gb2312"))
+
+            # You must close the file if you don't open a file using 'with' keyword
+            # 'close()' method is used to close the file
+            text_file.close()
+
+            # ZipFile.extractall(path = filepath, pwd = password) extracts all the files to current directory
+            # file.extractall(path="out/1")
+
+            # printing all the information of archive file contents using 'printdir' method
+            print(file.printdir())
+
+    def create_zip():
+        archive_name = 'example_file.zip'
+        archive_path = os.path.join("out", archive_name)
+
+        def addToZip(zf, path, zippath):
+            if os.path.isfile(path):
+                zf.write(path, zippath, zipfile.ZIP_DEFLATED)
+            elif os.path.isdir(path):
+                if zippath:
+                    zf.write(path, zippath)
+                for nm in sorted(os.listdir(path)):
+                    addToZip(zf,
+                             os.path.join(path, nm), os.path.join(zippath, nm))
+
+        # Opening the 'Zip' in writing mode
+        with zipfile.ZipFile(archive_path, 'w') as file:
+            # write mode overrides all the existing files in the 'Zip.'
+            print("{} is created.".format(archive_name))
+
+        with zipfile.ZipFile(archive_path, 'a') as file:
+            # append mode adds files to the 'Zip'
+            # file.write("out/folder_temp", "folder_temp")
+            # file.write("out/invert.jpg", "invert.jpg")
+
+            # file.write("out/folder_temp")
+            # file.write("out/invert.jpg")
+
+            addToZip(file, "out/folder_temp", "folder_temp")
+            addToZip(file, "out/invert.jpg", "invert.jpg")
+            print('Files added to the Zip')
+
+        # opening the 'Zip' in reading mode to check
+        with zipfile.ZipFile(archive_path, 'r') as file:
+            print(file.namelist())
+
+
+    # read_zip()
+    create_zip()
+    return
+
+
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
     # saveGrayImage("sample-01.jpg")
@@ -717,6 +793,7 @@ def main():
     # test_wx()
     # test_python()
     # test_watchdog()
+    test_zipfile()
     return
 
 
