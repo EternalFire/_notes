@@ -755,16 +755,17 @@ def test_zipfile():
         #     return os.path.basename(filePath).split(ext)[0]
 
         name = _archive_name
+        file_name = ""
+
+        if os.path.isfile(path):
+            print("isfile")
+            file_name = getFileName(path)
+        elif os.path.isdir(path):
+            print("isdir")
+            file_name = os.path.basename(path)
 
         if _archive_name == "":
-            name = path
-
-            if os.path.isfile(path):
-                print("isfile")
-                name = getFileName(path)
-            elif os.path.isdir(path):
-                print("isdir")
-                name = os.path.basename(path)
+            name = file_name
 
         s_time = getCurTimeString()
         archive_name = "%s_%s.zip" % (name, s_time)
@@ -774,7 +775,8 @@ def test_zipfile():
 
         with zipfile.ZipFile(archive_path, 'w') as file:
             print("{} is created.".format(archive_name))
-            addToZip(file, path, name)
+            # addToZip(file, path, name)
+            addToZip(file, path, file_name)
 
         print("check archive ...")
         with zipfile.ZipFile(archive_path, 'r') as file:
@@ -782,9 +784,58 @@ def test_zipfile():
 
         return
 
+    def schedule_backup_file():
+
+        return
+
     # read_zip()
     # create_zip()
-    backup_file("/Users/fire/Documents/develop/learnLog/python/advancedpyqt5/examples")
+    # backup_file("/Users/fire/Documents/develop/learnLog/python/advancedpyqt5/examples")
+    # backup_file(r"C:\Users\ls\Desktop\tmp\toAlpha", "test_backup_file")
+    return
+
+
+def test_schedule():
+    import schedule
+
+    def job():
+        print("I'm working...", time.time())
+
+    # schedule.every(10).minutes.do(job)  # 每隔10分钟执行一次任务
+    # schedule.every().hour.do(job)  # 每隔一小时执行一次任务
+    # schedule.every().day.at("10:30").do(job)  # 每天10:30执行一次任务
+    # schedule.every(5).to(10).minutes.do(job)
+    # schedule.every().monday.do(job)  # 每周一的这个时候执行一次任务
+    # schedule.every().wednesday.at("13:15").do(job)  # 每周三13:15执行一次任务
+    # schedule.every().minute.at(":17").do(job)
+
+    schedule.every(1).minutes.do(job)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+def test_thread():
+    import threading
+    import time
+    import schedule
+
+    def job():
+        print("I'm running on thread %s" % threading.current_thread())
+        print("is_alive: ", threading.current_thread().is_alive())
+
+    def run_threaded(job_func):
+        job_thread = threading.Thread(target=job_func)
+        job_thread.start()
+        return job_thread
+
+    thread_1 = run_threaded(job)
+    run_threaded(job)
+    run_threaded(job)
+
+    print("")
+    print(thread_1, "is_alive ", thread_1.is_alive())
     return
 
 
@@ -834,7 +885,9 @@ def main():
     # test_wx()
     # test_python()
     # test_watchdog()
-    test_zipfile()
+    # test_zipfile()
+    # test_schedule()
+    test_thread()
     return
 
 
