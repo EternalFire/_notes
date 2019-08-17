@@ -818,8 +818,6 @@ def test_schedule():
 
 def test_thread():
     import threading
-    import time
-    import schedule
 
     def job():
         print("I'm running on thread %s" % threading.current_thread())
@@ -837,6 +835,161 @@ def test_thread():
     print("")
     print(thread_1, "is_alive ", thread_1.is_alive())
     return
+
+
+def test_thread_1():
+    import threading
+    import time
+    import queue
+
+    exitFlag = 0
+    threadLock = threading.Lock()
+
+    def print_time(threadName, delay, counter):
+        while counter:
+            if exitFlag:
+                threading.Thread.exit()
+
+            time.sleep(delay)
+            print("%s: %s" % (threadName, time.ctime(time.time())))
+            counter -= 1
+
+    def test_thread_1_1():
+        class myThread(threading.Thread):  # 继承父类threading.Thread
+            def __init__(self, threadID, name, counter):
+                threading.Thread.__init__(self)
+                self.threadID = threadID
+                self.name = name
+                self.counter = counter
+
+            def run(self):  # 把要执行的代码写到run函数里面 线程在创建后会直接运行run函数
+                print("Starting " + self.name)
+                # threadLock.acquire()
+                print_time(self.name, self.counter, 5)
+                # threadLock.release()
+                print("Exiting " + self.name)
+
+        thread_1 = myThread(1, "Thread_1", 1)
+        thread_2 = myThread(2, "Thread_2", 2)
+        thread_1.start()
+        thread_2.start()
+
+        thread_1.join()
+        thread_2.join()
+        print("\n\nEXIT ", threading.current_thread())
+
+    def test_thread_1_2():
+        threadList = ["Thread-1", "Thread-2", "Thread-3"]
+        nameList = ["One", "Two", "Three", "Four", "Five"]
+        queueLock = threading.Lock()
+        workQueue = queue.Queue(10)
+        threads = []
+        threadID = 1
+        exitFlag = 0
+        local_data = threading.local()  # 维护线程自己的数据
+
+        class myThread(threading.Thread):
+            def __init__(self, threadID, name, q):
+                threading.Thread.__init__(self)
+                self.threadID = threadID
+                self.name = name
+                self.q = q
+
+            def run(self):
+                print("Starting " + self.name)
+                local_data.thread_id = self.threadID
+
+                process_data(self.name, self.q)
+
+                print("Exiting " + self.name)
+
+        def process_data(threadName, q):
+            while not exitFlag:
+                queueLock.acquire()
+                if not workQueue.empty():
+                    data = q.get()
+                    queueLock.release()
+                    print("[%s] %s processing %s" % (local_data.thread_id, threadName, data))
+                else:
+                    queueLock.release()
+                time.sleep(1)
+
+        # 创建新线程
+        for tName in threadList:
+            thread = myThread(threadID, tName, workQueue)
+            thread.start()
+            threads.append(thread)
+            threadID += 1
+
+        # 填充队列
+        queueLock.acquire()
+        for word in nameList:
+            workQueue.put(word)
+        queueLock.release()
+
+        # 等待队列清空
+        while not workQueue.empty():
+            pass
+
+        # 通知线程是时候退出
+        exitFlag = 1
+
+        # 等待所有线程完成
+        for t in threads:
+            t.join()
+
+        print("Exiting Main Thread")
+
+    # test_thread_1_1()
+    test_thread_1_2()
+    return
+
+
+############################################################################
+def test_multiprocessing():
+    from multiprocessing import cpu_count
+    from multiprocessing import Process
+    import os
+    from functools import wraps
+
+    print("cpu count = ", cpu_count())
+
+    # 子进程要执行的代码
+    def run_proc(name):
+        print('Run child process %s (%s)...' % (name, os.getpid()))
+
+    class ProcWorker():
+        def run(self, name):
+            run_proc(name)
+
+    # windows error ?
+    # AttributeError: Can't pickle local object 'test_multiprocessing.<locals>.run_proc'
+    def test_1():
+        print('Parent process %s.' % os.getpid())
+        p = Process(target=run_proc, args="test")
+        print('Process will start')
+        p.start()
+        p.join()
+        print("Process end")
+
+    test_1()
+#
+# windows 下需要这样写:
+# from multiprocessing import Process
+#
+# # 子进程要执行的代码
+# def run_proc(name):
+#     print('Run child process %s (%s)...' % (name, os.getpid()))
+#
+#
+# if __name__ == '__main__':
+#     print('Parent process %s.' % os.getpid())
+#     p = Process(target=run_proc, args=("test",))
+#     print('Process will start')
+#     p.start()
+#     p.join()
+#     print("Process end")
+############################################################################
 
 
 def main():
@@ -887,8 +1040,11 @@ def main():
     # test_watchdog()
     # test_zipfile()
     # test_schedule()
-    test_thread()
+    # test_thread()
+    # test_thread_1()
+    # test_multiprocessing()
     return
 
 
 main()
+
