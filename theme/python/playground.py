@@ -809,7 +809,8 @@ def test_schedule():
     # schedule.every().wednesday.at("13:15").do(job)  # 每周三13:15执行一次任务
     # schedule.every().minute.at(":17").do(job)
 
-    schedule.every(1).minutes.do(job)
+    # schedule.every(1).minutes.do(job)
+    schedule.every(1).seconds.do(job)
 
     while True:
         schedule.run_pending()
@@ -945,51 +946,54 @@ def test_thread_1():
     return
 
 
-############################################################################
-def test_multiprocessing():
-    from multiprocessing import cpu_count
-    from multiprocessing import Process
-    import os
-    from functools import wraps
+def test_logging():
+    import logging
+    from logging.handlers import RotatingFileHandler
 
-    print("cpu count = ", cpu_count())
+    #######################################
+    # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # logger = logging.getLogger(__name__)
+    #
+    #######################################
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level=logging.DEBUG)
+    # logger.setLevel(level=logging.INFO)
 
-    # 子进程要执行的代码
-    def run_proc(name):
-        print('Run child process %s (%s)...' % (name, os.getpid()))
+    # Formatter
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    class ProcWorker():
-        def run(self, name):
-            run_proc(name)
+    # StreamHandler
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setLevel(level=logging.DEBUG)
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
 
-    # windows error ?
-    # AttributeError: Can't pickle local object 'test_multiprocessing.<locals>.run_proc'
-    def test_1():
-        print('Parent process %s.' % os.getpid())
-        p = Process(target=run_proc, args="test")
-        print('Process will start')
-        p.start()
-        p.join()
-        print("Process end")
+    # FileHandler
+    # file_handler = logging.FileHandler('out/output.log', encoding="utf-8")
+    # file_handler.setLevel(level=logging.INFO)
+    # formatter = logging.Formatter('%(asctime)s|%(name)s|%(levelname)s|%(message)s')
+    # file_handler.setFormatter(formatter)
+    # logger.addHandler(file_handler)
 
-    test_1()
-#
-# windows 下需要这样写:
-# from multiprocessing import Process
-#
-# # 子进程要执行的代码
-# def run_proc(name):
-#     print('Run child process %s (%s)...' % (name, os.getpid()))
-#
-#
-# if __name__ == '__main__':
-#     print('Parent process %s.' % os.getpid())
-#     p = Process(target=run_proc, args=("test",))
-#     print('Process will start')
-#     p.start()
-#     p.join()
-#     print("Process end")
-############################################################################
+    # RotatingFileHandler
+    rotating_file_handler = RotatingFileHandler("out/output.log", maxBytes=10, backupCount=10, encoding="utf-8")
+    rotating_file_handler.setLevel(level=logging.INFO)
+    formatter = logging.Formatter('%(asctime)s|%(name)s|%(levelname)s|%(message)s')
+    rotating_file_handler.setFormatter(formatter)
+    logger.addHandler(rotating_file_handler)
+
+    #######################################
+    logger.info('This is a log info')
+    logger.debug('Debugging')
+    logger.warning('Warning exists')
+    logger.info('Finish %s %s ', "", [])
+    # logger.exception("")
+    logger.info("犬瘟热体育 i 哦怕 SD 法国红酒考虑自行车 v 不那么")
+
+    for i in range(1, 1000, 1):
+        logger.info("Hello x%s!", i)
+
+    print("what???!")
 
 
 def main():
@@ -1042,9 +1046,8 @@ def main():
     # test_schedule()
     # test_thread()
     # test_thread_1()
-    # test_multiprocessing()
+    # test_logging()
     return
 
 
 main()
-
