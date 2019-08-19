@@ -49,15 +49,24 @@ def display_absolute_path():
     class SampleWindow(QMainWindow):
         def __init__(self):
             super().__init__()
+            qWidget = QWidget(self)
             widget = DisplayAbsolutePathWidget()
-            self.setCentralWidget(widget)
+
+            box = QHBoxLayout()
+            box.addWidget(widget)
+            box.addWidget(DisplayAbsolutePathWidget())
+
+            qWidget.setLayout(box)
+            # self.layout().addWidget(widget)
+            # self.setCentralWidget(widget)
+            self.setCentralWidget(qWidget)
 
 
     app = QApplication([])
-    widget = DisplayAbsolutePathWidget()
-    widget.show()
-    # window = SampleWindow()
-    # window.show()
+    # widget = DisplayAbsolutePathWidget()
+    # widget.show()
+    window = SampleWindow()
+    window.show()
     sys.exit(app.exec_())
 
     return
