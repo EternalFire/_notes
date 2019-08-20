@@ -16,6 +16,15 @@ from PyQt5.QtWidgets import (QWidget, QToolTip,
 
 
 def display_absolute_path():
+    class FileLineEdit(QLineEdit):
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            for url in e.mimeData().urls():
+                qurl = QUrl(url)
+                file_path = qurl.toLocalFile()
+                self.setText(file_path)
+                self.selectAll()
+                break
+
     class DisplayAbsolutePathWidget(QtWidgets.QWidget):
         def __init__(self):
             super().__init__()
@@ -23,7 +32,7 @@ def display_absolute_path():
 
         def initUI(self):
             label = QLabel("drag file in: ", self)
-            line_edit = QLineEdit("", self)
+            line_edit = FileLineEdit("", self)
             self.line_edit = line_edit
 
             layout = QGridLayout()
@@ -39,12 +48,7 @@ def display_absolute_path():
             e.accept()
 
         def dropEvent(self, e: QtGui.QDropEvent) -> None:
-            for url in e.mimeData().urls():
-                qurl = QUrl(url)
-                file_path = qurl.toLocalFile()
-                self.line_edit.setText(file_path)
-                self.line_edit.selectAll()
-                break
+            self.line_edit.dropEvent(e)
 
     class SampleWindow(QMainWindow):
         def __init__(self):
