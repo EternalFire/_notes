@@ -1,0 +1,65 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "delete_runtime_game",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/delete_runtime_game.py"
+        },
+        {
+            "label": "copy_game_to_runtime",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/copy_game_to_runtime.py"
+        },
+        {
+            "label": "copy_minigame_to_runtime",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/copy_minigame_to_runtime.py",            
+        },
+        {
+            "label": "copy_gamedata_to_runtime",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/copy_gamedata_to_runtime.py",            
+        },        
+        {
+            // 复制(生成)打包需要文件(渠道号,更新url,背景图)
+            "label": "generate_mini_game_project_files",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/generate_mini_game_project_files.py",            
+        },
+        {
+            // 拷贝代码到xcode
+            "label": "copy_to_xcodeproject",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/copy_to_xcodeproject.py",            
+        },
+        {
+            "label": "to_xcode_project",
+            "dependsOrder": "sequence",
+            "dependsOn":["copy_to_xcodeproject", "generate_mini_game_project_files"]
+        },
+        {
+            // 修改 Xcode project file
+            "label": "modify_xcodeproject",
+            "type": "shell",
+            "command": "${workspaceRoot}/tool/run_modify_project"
+        },
+        {
+            "label": "make zip",
+            "type": "shell",
+            "command": "${workspaceRoot}/tool/zip_cmd"
+        },
+        {
+            "label": "copy runtime",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/copy_runtime.py"
+        },
+        {
+            "label": "delete program runtime",
+            "type": "shell",
+            "command": "python -B ${workspaceRoot}/tool/delete_program_runtime.py"
+        }
+    ]
+}
