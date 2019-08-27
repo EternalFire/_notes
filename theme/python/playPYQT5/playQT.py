@@ -1260,6 +1260,7 @@ def demo_file():
     f.close()
     print("f.isOpen() ", f.isOpen())
 
+
 def demo_dir():
     out_path = os.path.abspath("out")
     # out_path = os.path.join(out_path, "d1")
@@ -1316,6 +1317,78 @@ another...
 end"""
 
 
+def drop_display():
+    class FileLineEdit(QLineEdit):
+        drop_signal = pyqtSignal(str)
+
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            for url in e.mimeData().urls():
+                qurl = QUrl(url)
+                file_path = qurl.toLocalFile()
+                self.setText(file_path)
+                self.selectAll()
+                self.drop_signal.emit(file_path)
+                break
+
+    class DisplayAbsolutePathWidget(QtWidgets.QWidget):
+        def __init__(self):
+            super().__init__()
+            self.initUI()
+
+        def initUI(self):
+            label = QLabel("drag file in: ", self)
+            line_edit = FileLineEdit("", self)
+            self.line_edit = line_edit
+
+            layout = QGridLayout()
+            layout.addWidget(label, 0, 0)
+            layout.addWidget(line_edit, 0, 1, 0, 5)
+
+            self.setLayout(layout)
+            self.setAcceptDrops(True)
+            self.setMinimumWidth(567)
+            self.setMaximumHeight(self.sizeHint().height())
+
+        def dragEnterEvent(self, e: QtGui.QDragEnterEvent) -> None:
+            e.accept()
+
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            self.line_edit.dropEvent(e)
+
+    class SampleWindow(QMainWindow):
+        def __init__(self):
+            super().__init__()
+            qWidget = QWidget(self)
+
+            widget = DisplayAbsolutePathWidget()
+            widget.line_edit.drop_signal[str].connect(self.onDrop)
+
+            box = QVBoxLayout()
+            box.addWidget(widget)
+            # box.addWidget(DisplayAbsolutePathWidget())
+
+            self.label = QLabel(self)
+            box.addWidget(self.label)
+
+            qWidget.setLayout(box)
+            # self.layout().addWidget(widget)
+            # self.setCentralWidget(widget)
+            self.setCentralWidget(qWidget)
+
+        def onDrop(self, file_path):
+            self.label.setPixmap(QPixmap(file_path))
+
+
+    app = QApplication([])
+    # widget = DisplayAbsolutePathWidget()
+    # widget.show()
+    window = SampleWindow()
+    window.show()
+    sys.exit(app.exec_())
+
+    return
+
+
 if __name__ == "__main__":
     print("case __main__")
     # demo_ui()buttonClicked
@@ -1334,4 +1407,5 @@ if __name__ == "__main__":
     # demo_custom_widget()
     # demo_drop_file()
     # demo_file()
-    demo_dir()
+    # demo_dir()
+    drop_display()
