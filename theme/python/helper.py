@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
+import os, time, pickle, json
 from PIL import Image
-import time
 from numpy import *
-import pickle
 from scipy.ndimage import filters
 
 ################################################################
@@ -59,6 +57,19 @@ def saveData(filename, value):
 def loadData(filename):
     with open(getOutPath(filename + ".pkl"), "rb") as f:
         return pickle.load(f)
+
+################################################################
+# json
+def saveJson(filename, value):
+
+    pass
+
+def loadJson(filename):
+    with open(filename, "r") as f:
+        content = f.read()
+        data = json.loads(content)
+        return data
+
 
 ################################################################
 

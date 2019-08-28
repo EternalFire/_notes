@@ -996,6 +996,11 @@ def test_logging():
     print("what???!")
 
 
+def test_json():
+    print(loadJson(getOutPath("out.json")))
+    print("...")
+
+
 def main():
     # saveThumbnail("sample-01.jpg", (300, 200))
     # saveGrayImage("sample-01.jpg")
@@ -1047,6 +1052,7 @@ def main():
     # test_thread()
     # test_thread_1()
     # test_logging()
+    test_json()
     return
 
 

@@ -1368,7 +1368,7 @@ def drop_display():
             # box.addWidget(DisplayAbsolutePathWidget())
 
             self.label = QLabel(self)
-            box.addWidget(self.label)
+            box.addWidget(self.label, alignment=Qt.AlignCenter)
 
             qWidget.setLayout(box)
             # self.layout().addWidget(widget)
