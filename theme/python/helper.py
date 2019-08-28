@@ -52,7 +52,7 @@ def getCurTimeString():
 # pickle
 def saveData(filename, value):
     with open(getOutPath(filename + ".pkl"), "wb") as f:
-        pickle.dump(value,f)
+        pickle.dump(value, f)
 
 def loadData(filename):
     with open(getOutPath(filename + ".pkl"), "rb") as f:
@@ -61,8 +61,9 @@ def loadData(filename):
 ################################################################
 # json
 def saveJson(filename, value):
-
-    pass
+    content = json.dumps(value, indent=4)
+    with open(filename, "w") as f:
+        f.write(content)
 
 def loadJson(filename):
     with open(filename, "r") as f:

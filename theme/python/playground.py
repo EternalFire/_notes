@@ -997,7 +997,31 @@ def test_logging():
 
 
 def test_json():
-    print(loadJson(getOutPath("out.json")))
+    # data = loadJson(getOutPath("out.json"))
+    # print(type(data))
+    # print(data)
+
+    # saveJson(getOutPath("out.json"), (100, 200, 300))  # save as array
+    # saveJson(getOutPath("out.json"), [100, 200, 300])  # save as array
+    # saveJson(getOutPath("out.json"), {1: 100, 2: 200, 3: 300})  # save as object
+
+    class Book():
+        TypeName = "Book!"  # 类变量
+
+        def __init__(self):
+            self.ISBN = "xxx-yyy-zzz"
+            self.name = "strength book"
+            self.author = "Mr. Smith"
+
+    book = Book()
+    book2 = Book()
+    print(type(book), book)
+    # print(book.__dict__)
+    # saveJson(getOutPath("out.json"), book.__dict__)
+
+    # Book.TypeName = 1
+    print("Book.TypeName:", book.TypeName, book2.TypeName, Book.TypeName)
+    print(book.__class__)
     print("...")
 
 
@@ -1052,7 +1076,7 @@ def main():
     # test_thread()
     # test_thread_1()
     # test_logging()
-    test_json()
+    # test_json()
     return
 
 

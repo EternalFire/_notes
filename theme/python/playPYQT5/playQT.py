@@ -3,7 +3,7 @@
 # http://zetcode.com/gui/pyqt5/
 #
 
-import sys, random, os
+import sys, random, os, shutil
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import (QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData, \
     QFile, QIODevice, QTextStream, QFileDevice, QUrl, QTextCodec, QDir)
@@ -13,7 +13,8 @@ from PyQt5.QtWidgets import (QWidget, QToolTip,
     QMainWindow, QMenu, QAction, QTextEdit, QLabel, qApp,
     QHBoxLayout, QVBoxLayout, QGridLayout, QLineEdit,
     QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog,
-    QCheckBox, QProgressBar, QCalendarWidget, QSplitter, QComboBox)
+    QCheckBox, QProgressBar, QCalendarWidget, QSplitter, QComboBox, QListView, QListWidget,
+    QListWidgetItem, QScrollArea)
 
 
 def demo_ui():
@@ -1389,6 +1390,121 @@ def drop_display():
     return
 
 
+def replace_res():
+    class FileLineEdit(QLineEdit):
+        drop_signal = pyqtSignal(str)
+
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            for url in e.mimeData().urls():
+                qurl = QUrl(url)
+                file_path = qurl.toLocalFile()
+                self.setText(file_path)
+                self.selectAll()
+                self.drop_signal.emit(file_path)
+                break
+
+    class DisplayAbsolutePathWidget(QtWidgets.QWidget):
+        def __init__(self, index):
+            super().__init__()
+            self.widgetIndex = index
+            self.file_path = ""
+            self.initUI()
+
+        def initUI(self):
+            label = QLabel(str(self.widgetIndex) + " drag file in: ", self)
+            line_edit = FileLineEdit("", self)
+            self.label = label
+            self.line_edit = line_edit
+            self.line_edit.drop_signal[str].connect(self.onDrop)
+
+            layout = QGridLayout()
+            layout.addWidget(label, 0, 0)
+            layout.addWidget(line_edit, 0, 1, 0, 5)
+
+            self.setLayout(layout)
+            self.setAcceptDrops(True)
+            self.setMinimumWidth(200)
+            self.setMaximumHeight(self.sizeHint().height())
+
+        def dragEnterEvent(self, e: QtGui.QDragEnterEvent) -> None:
+            e.accept()
+
+        def dropEvent(self, e: QtGui.QDropEvent) -> None:
+            self.line_edit.dropEvent(e)
+
+        def onDrop(self, file_path):
+            self.file_path = file_path
+            self.label.setPixmap(QPixmap(file_path))
+
+
+    class ToolMain(QMainWindow):
+
+        def __init__(self):
+            super().__init__()
+            self._createIndex = 1
+            self.left = []
+            self.right = []
+
+            self.setWindowTitle("Replace res tool")
+            self.setGeometry(300, 300, 450, 350)
+            self.initUI()
+
+        def initUI(self):
+            self.act_add = QAction('add', self)
+            self.act_add.triggered.connect(self.onClicked)
+
+            self.act_replace = QAction('replace', self)
+            self.act_replace.triggered.connect(self.onReplaced)
+
+            self.toolbar = self.addToolBar('tool')
+            self.toolbar.addAction(self.act_add)
+            self.toolbar.addAction(self.act_replace)
+
+            qWidget = QWidget(self)
+            self.vbox = QVBoxLayout()
+
+            scrollArea = QScrollArea()
+            scrollArea.setWidget(qWidget)
+            scrollArea.setWidgetResizable(True)
+
+            qWidget.setLayout(self.vbox)
+            # self.setCentralWidget(qWidget)
+            self.setCentralWidget(scrollArea)
+
+
+        def onClicked(self):
+            print("on....click")
+            widget = DisplayAbsolutePathWidget(self._createIndex)
+            self._createIndex = self._createIndex + 1
+            self.left.append(widget)
+
+            widget_1 = DisplayAbsolutePathWidget(self._createIndex)
+            self._createIndex = self._createIndex + 1
+            self.right.append(widget_1)
+
+            hbox = QHBoxLayout()
+            hbox.addWidget(widget)
+            hbox.addWidget(widget_1)
+            self.vbox.addLayout(hbox)
+
+        def onReplaced(self):
+            x = 0
+            for widget in self.right:
+                if os.path.exists(widget.file_path):
+                    left_widget = self.left[x]
+                    if left_widget and os.path.exists(left_widget.file_path):
+                        print("left:", left_widget.file_path)
+                        print("right:", widget.file_path)
+                        shutil.copy2(widget.file_path, left_widget.file_path)
+                x = x + 1
+
+
+    app = QApplication([])
+    ex = ToolMain()
+    ex.show()
+    sys.exit(app.exec_())
+
+
 if __name__ == "__main__":
     print("case __main__")
     # demo_ui()buttonClicked
@@ -1408,4 +1524,5 @@ if __name__ == "__main__":
     # demo_drop_file()
     # demo_file()
     # demo_dir()
-    drop_display()
+    # drop_display()
+    replace_res()
