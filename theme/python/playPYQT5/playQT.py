@@ -3,7 +3,7 @@
 # http://zetcode.com/gui/pyqt5/
 #
 
-import sys, random, os, shutil
+import sys, random, os, shutil, json
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import (QDate, QTime, QDateTime, Qt, QTimeZone, pyqtSignal, QObject, QBasicTimer, QMimeData, \
     QFile, QIODevice, QTextStream, QFileDevice, QUrl, QTextCodec, QDir)
@@ -571,7 +571,17 @@ def demo_dialog():
                 print(col.name())
 
         def showFileDialog(self):
-            fname = QFileDialog.getOpenFileName(self, 'Open file', '.')
+            # fname = QFileDialog.getOpenFileName(self, 'Open file', '.')
+
+            file_tuple = QFileDialog.getOpenFileNames(self, 'Open files', '.')
+            fname = file_tuple[0]
+            print(type(fname))
+            print(fname)
+            # fname_sorted = sorted(fname, key=lambda x: x)
+            # print("1 ", fname)
+            # print("2 ", fname_sorted)
+            return
+
             if fname[0]:
                 f = open(fname[0], 'r')
 
@@ -1391,17 +1401,40 @@ def drop_display():
 
 
 def replace_res():
+    def saveJson(filename, value):
+        content = json.dumps(value, indent=4)
+        with open(filename, "w") as f:
+            f.write(content)
+
+    def loadJson(filename):
+        with open(filename, "r") as f:
+            content = f.read()
+            data = json.loads(content)
+            return data
+
+    def getFileExt(filePath):
+        """ "b/a.png" => ".png" """
+        return os.path.splitext(filePath)[1]
+
     class FileLineEdit(QLineEdit):
         drop_signal = pyqtSignal(str)
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
 
         def dropEvent(self, e: QtGui.QDropEvent) -> None:
             for url in e.mimeData().urls():
                 qurl = QUrl(url)
                 file_path = qurl.toLocalFile()
-                self.setText(file_path)
+                self.setDropFilePath(file_path)
                 self.selectAll()
-                self.drop_signal.emit(file_path)
                 break
+
+        def setDropFilePath(self, file_path):
+            if file_path != "" and os.path.exists(file_path):
+                self.setText(file_path)
+                self.drop_signal.emit(file_path)
+
 
     class DisplayAbsolutePathWidget(QtWidgets.QWidget):
         def __init__(self, index):
@@ -1411,20 +1444,23 @@ def replace_res():
             self.initUI()
 
         def initUI(self):
-            label = QLabel(str(self.widgetIndex) + " drag file in: ", self)
+            self._default_text = "%s drag file in: " % self.widgetIndex
+            label = QLabel(self._default_text, self)
             line_edit = FileLineEdit("", self)
             self.label = label
             self.line_edit = line_edit
             self.line_edit.drop_signal[str].connect(self.onDrop)
+            self.line_edit.returnPressed.connect(self.onReturnPressed)
 
             layout = QGridLayout()
-            layout.addWidget(label, 0, 0)
-            layout.addWidget(line_edit, 0, 1, 0, 5)
+            layout.addWidget(label, 0, 0, 1, 2)
+            layout.addWidget(line_edit, 0, 2, 1, 5)
 
             self.setLayout(layout)
             self.setAcceptDrops(True)
-            self.setMinimumWidth(200)
-            self.setMaximumHeight(self.sizeHint().height())
+            self.setMinimumWidth(300)
+            # self.setMaximumHeight(self.sizeHint().height())
+            # self.setFixedHeight(layout.sizeHint().height())
 
         def dragEnterEvent(self, e: QtGui.QDragEnterEvent) -> None:
             e.accept()
@@ -1434,7 +1470,14 @@ def replace_res():
 
         def onDrop(self, file_path):
             self.file_path = file_path
-            self.label.setPixmap(QPixmap(file_path))
+            pixmap = QPixmap(file_path)
+            pixmap = pixmap.scaled(120, 100, Qt.KeepAspectRatio)
+            self.label.setPixmap(pixmap)
+
+        def onReturnPressed(self):
+            # print("return pressed", self.line_edit.text())
+            if self.line_edit.text() == "":
+                self.label.setText(self._default_text)
 
 
     class ToolMain(QMainWindow):
@@ -1446,19 +1489,36 @@ def replace_res():
             self.right = []
 
             self.setWindowTitle("Replace res tool")
-            self.setGeometry(300, 300, 450, 350)
+            self.setGeometry(300, 300, 750, 680)
             self.initUI()
 
         def initUI(self):
-            self.act_add = QAction('add', self)
+            self.act_add = QAction('add empty', self)
             self.act_add.triggered.connect(self.onClicked)
+
+            self.act_add_files = QAction('add by files', self)
+            self.act_add_files.triggered.connect(self.showFileDialog)
 
             self.act_replace = QAction('replace', self)
             self.act_replace.triggered.connect(self.onReplaced)
 
+            self.act_save = QAction('save', self)
+            self.act_save.triggered.connect(self.showFileDialogForSaveConfig)
+
+            self.act_load = QAction('load', self)
+            self.act_load.triggered.connect(self.showFileDialogForLoadConfig)
+
+            self.act_quick_save = QAction('quick save', self)
+            self.act_quick_save.triggered.connect(self.quickSave)
+            self.act_quick_save.setShortcut("CTRL+S")
+
             self.toolbar = self.addToolBar('tool')
+            self.toolbar.addAction(self.act_quick_save)
             self.toolbar.addAction(self.act_add)
+            self.toolbar.addAction(self.act_add_files)
             self.toolbar.addAction(self.act_replace)
+            self.toolbar.addAction(self.act_save)
+            self.toolbar.addAction(self.act_load)
 
             qWidget = QWidget(self)
             self.vbox = QVBoxLayout()
@@ -1471,14 +1531,14 @@ def replace_res():
             # self.setCentralWidget(qWidget)
             self.setCentralWidget(scrollArea)
 
-
-        def onClicked(self):
-            print("on....click")
+        def addDropWidgets(self, left_path="", right_path=""):
             widget = DisplayAbsolutePathWidget(self._createIndex)
+            widget.line_edit.setDropFilePath(left_path)
             self._createIndex = self._createIndex + 1
             self.left.append(widget)
 
             widget_1 = DisplayAbsolutePathWidget(self._createIndex)
+            widget_1.line_edit.setDropFilePath(right_path)
             self._createIndex = self._createIndex + 1
             self.right.append(widget_1)
 
@@ -1487,17 +1547,93 @@ def replace_res():
             hbox.addWidget(widget_1)
             self.vbox.addLayout(hbox)
 
+        def onClicked(self):
+            self.addDropWidgets()
+
         def onReplaced(self):
             x = 0
             for widget in self.right:
                 if os.path.exists(widget.file_path):
                     left_widget = self.left[x]
                     if left_widget and os.path.exists(left_widget.file_path):
-                        print("left:", left_widget.file_path)
-                        print("right:", widget.file_path)
+                        # print("left:", left_widget.file_path)
+                        # print("right:", widget.file_path)
                         shutil.copy2(widget.file_path, left_widget.file_path)
                 x = x + 1
 
+        def showFileDialog(self):
+            file_tuple = QFileDialog.getOpenFileNames(self, 'Open files', '.')
+            fnames = file_tuple[0]
+
+            if fnames and len(fnames) > 0:
+                for i, x in enumerate(fnames):
+                    try:
+                        widget = self.left[i]
+                        widget.line_edit.setDropFilePath(x)
+                    except IndexError:
+                        self.addDropWidgets(left_path=x)
+
+        def saveConfig(self, filepath):
+            root = {}
+            res_list = []
+            root["res"] = res_list
+
+            for i, widget in enumerate(self.left):
+                file_object = {
+                    "name": os.path.basename(widget.file_path),
+                    "path": widget.file_path,
+                    "replace_path": ""
+                }
+                res_list.append(file_object)
+
+            for i, widget in enumerate(self.right):
+                try:
+                    file_object = res_list[i]
+                    file_object["replace_path"] = widget.file_path
+                except BaseException:
+                    pass
+                finally:
+                    pass
+
+            # saveJson("out/replace_config.json", root)
+            saveJson(filepath, root)
+
+        def loadConfig(self, filepath):
+            try:
+                root = loadJson(filepath)
+                res_list = root["res"]
+                for i, file_object in enumerate(res_list):
+                    try:
+                        widget = self.left[i]
+                        widget.line_edit.setDropFilePath(file_object["path"])
+                    except IndexError:
+                        self.addDropWidgets(file_object["path"], file_object["replace_path"])
+            except BaseException:
+                pass
+            finally:
+                pass
+
+        def showFileDialogForLoadConfig(self):
+            file_tuple = QFileDialog.getOpenFileName(self, 'Load config', '.', filter="*.json")
+            try:
+                filepath = file_tuple[0]
+                self.loadConfig(filepath)
+            except BaseException:
+                pass
+            finally:
+                pass
+
+        def showFileDialogForSaveConfig(self):
+            file_tuple = QFileDialog.getSaveFileName(self, 'Save config', '.', filter="*.json")
+            print(file_tuple)
+            file_path = file_tuple[0]
+            if file_path != "":
+                file_ext = getFileExt(file_path)
+                print("file_ext = ", file_ext)
+                self.saveConfig(file_path)
+
+        def quickSave(self):
+            self.saveConfig("out/replace_config_temp.json")
 
     app = QApplication([])
     ex = ToolMain()
