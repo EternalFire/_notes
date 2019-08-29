@@ -1,0 +1,61 @@
+{
+    "project_dir": "/Volumes/D/temp/_replace_res/fqzs_asset/animation",
+    "version": 1,
+    "res": [
+        {
+            "name": "ziti.png",
+            "path": "ok20180413/cocosstudio/Raptor/Character/ziti.png",
+            "replace_path": ""
+        },
+        {
+            "name": "shay.png",
+            "path": "ok20180413/cocosstudio/Raptor/GoldShark/shay.png",
+            "replace_path": ""
+        },
+        {
+            "name": "laoy.png",
+            "path": "ok20180413/cocosstudio/Raptor/Hawk/laoy.png",
+            "replace_path": ""
+        },
+        {
+            "name": "tuz.png",
+            "path": "ok20180413/cocosstudio/Raptor/Lion/tuz.png",
+            "replace_path": ""
+        },
+        {
+            "name": "xiongm.png",
+            "path": "ok20180413/cocosstudio/Raptor/Panda/xiongm.png",
+            "replace_path": ""
+        },
+        {
+            "name": "z_kongquefeiqin.png",
+            "path": "ok20180413/cocosstudio/Raptor/Peacock/z_kongquefeiqin.png",
+            "replace_path": ""
+        },
+        {
+            "name": "gez.png",
+            "path": "ok20180413/cocosstudio/Raptor/Pigeon/gez.png",
+            "replace_path": ""
+        },
+        {
+            "name": "yinshayu.png",
+            "path": "ok20180413/cocosstudio/Raptor/Shark/yinshayu.png",
+            "replace_path": ""
+        },
+        {
+            "name": "houzi.png",
+            "path": "ok20180413/cocosstudio/Raptor/Simian/houzi.png",
+            "replace_path": ""
+        },
+        {
+            "name": "yanzi.png",
+            "path": "ok20180413/cocosstudio/Raptor/Swallow/yanzi.png",
+            "replace_path": ""
+        },
+        {
+            "name": "tuzi.png",
+            "path": "ok20180413/cocosstudio/Raptor/White/tuzi.png",
+            "replace_path": ""
+        }
+    ]
+}
