@@ -163,11 +163,12 @@ function createTouchListener(node, option)
                         return true
                     end
                 else
-                    if debug then
-                        print("check default ", positionInNode.x, positionInNode.y)
-                    end
-
                     local s = node:getContentSize()
+                    
+                    if debug then
+                        print("check default ", positionInNode.x, positionInNode.y, s.width, s.height)
+                    end
+                    
                     if s.width == 0 or s.height == 0 then
                         if op_checkZeroSize then
                             local min = 10
@@ -244,7 +245,7 @@ function createTouchListener(node, option)
             touchComplete()
 
             if endedCB then
-                endedCB(_isInSide)
+                endedCB(_isInSide, touch)
             end
         end
 

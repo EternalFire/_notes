@@ -1,0 +1,16 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build(os x)",
+            "type": "shell",
+            "command": "cp -r ${workspaceRoot}/src ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources;cp -r ${workspaceRoot}/res ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources;open ${workspaceRoot}/runtime/mac/gameOne-desktop.app",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

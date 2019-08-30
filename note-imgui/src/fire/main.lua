@@ -3,6 +3,7 @@ local State = {
     scene = nil,
     layer = nil,
     bgLayer = nil,
+    bgSprite = nil,
     emitter = nil,
     rt = nil,
     clipper = nil,
@@ -13,8 +14,11 @@ local State = {
     moveStep = 10,
     useClip = false,
     clipInvert = false,
-    alphaThreshold = 0
+    alphaThreshold = 0,
+    touchLocation = { x = 0, y = 0 },
 }
+
+rawset(_G, "State", State)
 
 --[[
     set environment:
@@ -402,7 +406,7 @@ function run()
     -- local bgSprite_4_3 = display.newSprite("res/bg_4_3_1024_768.jpg"):addTo(bgLayer):move(display.cx, display.cy)
 
     local bgSprite_16_9 = display.newSprite("res/bg_16_9_1280_720.jpg"):addTo(bgLayer):move(display.cx, display.cy)
-    -- bgSprite_16_9:setScale(display.width / bgSprite_16_9:getContentSize().width, display.height / bgSprite_16_9:getContentSize().height)
+    -- bgSprite_16_9:setScale(display.width / bgSprite_16_9:getContentSize().width, display.height / bgSprite_16_9:getContentSize().height)    
 
     local emitter = cc.ParticleSystemQuad:create("Particles/LavaFlow.plist")
     local batch = cc.ParticleBatchNode:createWithTexture(emitter:getTexture())
@@ -426,6 +430,7 @@ function run()
     State.layer = layer
     State.bgLayer = bgLayer
     State.emitter = emitter
+    State.bgSprite = bgSprite_16_9
 
     State.processUp = function()
         local target = State.emitter
@@ -513,13 +518,18 @@ function run()
     -- })
 
     local option = {
-        isTouchMove = true,
+        -- debug = true,
+        -- isTouchMove = true,
         -- boxOrRadius = cc.rect(0,0, 100, 100),
         -- checkZeroSize = true
-        boxOrRadius = 200,
-        isSwallow = false
+        -- boxOrRadius = 200,
+        isSwallow = false,
+        endedCB = function(_isInSide, touch)
+            State.touchLocation = touch:getLocation()
+            print(State.touchLocation.x, State.touchLocation.y)
+        end
     }
-    createTouchListener(node, option)
+    createTouchListener(State.bgLayer, option)
 
     -- createMatTestView(State.bgLayer)
     _test()
@@ -537,9 +547,11 @@ end
 
 function _test()
     -- print("FireAction.test() start")
-    FireAction.test()
+    -- FireAction.test()
 
     -- test_ccs_v2_skeleton_animation()
+
+    fire.createShaderTestView()
 end
 
 function test_ccs_v2_skeleton_animation()
