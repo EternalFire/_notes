@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import (QWidget, QToolTip,
     QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog,
     QCheckBox, QProgressBar, QCalendarWidget, QSplitter, QComboBox, QListView, QListWidget,
     QListWidgetItem, QScrollArea,QGraphicsScene, QGraphicsView, QGraphicsItemGroup, QGraphicsItem,
-    QGraphicsSceneMouseEvent)
+    QGraphicsSceneMouseEvent, QGraphicsPixmapItem)
 
 
 def demo_ui():
@@ -1433,9 +1433,11 @@ def demo_graphicsview():
             self._view = view
 
         def initScene(self):
-            self.r1 = self.addRect(120, 150, 120, 50)
-            self.r1.setFlag(QGraphicsItem.ItemIsMovable)
-            self.r1.setFlag(QGraphicsItem.ItemIsSelectable, True)
+            # 初始化的坐标是(0,0)的时候, 后面的setPos()才会生效
+            # self.r1 = self.addRect(120, 248, 100, 50)
+            self.r1 = self.addRect(0, 0, 100, 50)
+            # self.r1.setFlag(QGraphicsItem.ItemIsMovable)
+            # self.r1.setFlag(QGraphicsItem.ItemIsSelectable, True)
 
             self.r2 = self.addRect(0, 0, 50, 50)
             self.r2.setFlag(QGraphicsItem.ItemIsMovable)
@@ -1445,20 +1447,26 @@ def demo_graphicsview():
             self.c.setFlag(QGraphicsItem.ItemIsMovable)
             self.c.setFlag(QGraphicsItem.ItemIsSelectable, True)
 
-            self.l = self.addLine(0.0, 0.0, 1000.0, 0.0, QPen(QColor("#ee8090"), 2.0, Qt.DashLine, Qt.RoundCap))
+            self.l = self.addLine(2.0, 2.0, 1000.0, 0.0, QPen(QColor("#ee8090"), 2.0, Qt.DashLine, Qt.RoundCap))
+            self.addRect(self.r2.rect().width() + 2, 2, 50, 50)
 
-            # p0 = self._view.mapToScene(0, 0)
-            self.r2.setPos(0, 0)
-            print(self.r2.rect().width(), self.r2.rect().height())
+            self.r2.setPos(2, 2)
+            bottomRight = self.r2.rect().bottomRight()
+            print(int(bottomRight.x()), int(bottomRight.y()))
 
+            p0 = self.r2.mapToParent(int(bottomRight.x()), int(bottomRight.y()))
+            p0 = self.r2.mapToParent(50, 50)
+            print("p0 = ", p0.x(), p0.y())
+            # setPos() 需要传入 parent 坐标系内的坐标
+            self.r1.setPos(p0)
 
-        # def mouseMoveEvent(self, e):
-        #     # p = e.pos()
-        #     print(self.r2.x(), self.r2.y())
-        #     p0 = self.r2.mapToScene(self.r2.pos())
-        #     print(p0.x(), p0.y())
-        #     p = e.scenePos()
-        #     self.l.setLine(p0.x(), p0.y(), p.x(), p.y())
+            # self.addRect(p0.x(), p0.y(), 150, 150)
+
+        def mouseMoveEvent(self, e):
+            p0 = self.r2.mapToScene(self.r2.pos())
+            p = e.scenePos()
+            self.r1.setPos(p)
+            self.l.setLine(p0.x(), p0.y(), p.x(), p.y())
 
 
     class View(QGraphicsView):
@@ -1466,7 +1474,7 @@ def demo_graphicsview():
         def __init__(self):
             super().__init__()
 
-            self.setGeometry(300, 300, 300, 300)
+            self.setGeometry(0, 0, 300, 300)
 
             policy = Qt.ScrollBarAlwaysOff
 
@@ -1477,8 +1485,8 @@ def demo_graphicsview():
 
             self.init()
 
-        def init(self):
 
+        def init(self):
             self.group = None
             self.scene = Scene()
             self.scene.setGraphicsView(self)
@@ -1525,18 +1533,19 @@ def demo_graphicsview():
             self.initUI()
 
         def initUI(self):
-            hbox = QHBoxLayout()
+            # hbox = QHBoxLayout()
             self.view = View()
-            btn = QPushButton("show/hide", self)
-            btn.clicked.connect(self.onClicked)
+            # btn = QPushButton("show/hide", self)
+            # btn.clicked.connect(self.onClicked)
 
-            hbox.addWidget(btn)
-            hbox.addWidget(self.view)
-            hbox.addStretch(1)
+            # hbox.addWidget(btn)
+            # hbox.addWidget(self.view)
+            # hbox.addStretch(1)
 
-            self.setLayout(hbox)
+            # self.setLayout(hbox)
+            self.view.setParent(self)
             self.setWindowTitle("Grouping")
-            # self.setGeometry(250, 150, 600, 400)
+            self.setGeometry(250, 150, 300, 300)
 
         def onClicked(self):
             print(self.view.isVisible())
