@@ -14,7 +14,8 @@ from PyQt5.QtWidgets import (QWidget, QToolTip,
     QHBoxLayout, QVBoxLayout, QGridLayout, QLineEdit,
     QLCDNumber, QSlider, QInputDialog, QColorDialog, QFrame, QFileDialog, QFontDialog,
     QCheckBox, QProgressBar, QCalendarWidget, QSplitter, QComboBox, QListView, QListWidget,
-    QListWidgetItem, QScrollArea,QGraphicsScene, QGraphicsView, QGraphicsItemGroup, QGraphicsItem, )
+    QListWidgetItem, QScrollArea,QGraphicsScene, QGraphicsView, QGraphicsItemGroup, QGraphicsItem,
+    QGraphicsSceneMouseEvent)
 
 
 def demo_ui():
@@ -1413,9 +1414,10 @@ def demo_graphicsview():
         def paint(self, painter, option, widget):
             painter.setRenderHint(QPainter.Antialiasing)
 
-            brush = QBrush(QColor("#333333"))
-            pen = QPen(brush, 0.5)
+            brush = QBrush(QColor("#33EE33"))
+            pen = QPen(brush, 1.0)
             pen.setStyle(Qt.DotLine)
+            # pen.setStyle(Qt.SolidLine)
             painter.setPen(pen)
 
             if self.isSelected():
@@ -1427,20 +1429,37 @@ def demo_graphicsview():
         def __init__(self):
             super().__init__()
 
-            self.initScene()
+        def setGraphicsView(self, view: QGraphicsView):
+            self._view = view
 
         def initScene(self):
-            self.r1 = self.addRect(20, 50, 120, 50)
+            self.r1 = self.addRect(120, 150, 120, 50)
             self.r1.setFlag(QGraphicsItem.ItemIsMovable)
             self.r1.setFlag(QGraphicsItem.ItemIsSelectable, True)
 
-            self.r2 = self.addRect(150, 100, 50, 50)
+            self.r2 = self.addRect(0, 0, 50, 50)
             self.r2.setFlag(QGraphicsItem.ItemIsMovable)
             self.r2.setFlag(QGraphicsItem.ItemIsSelectable, True)
 
             self.c = self.addEllipse(30, 150, 60, 60)
             self.c.setFlag(QGraphicsItem.ItemIsMovable)
             self.c.setFlag(QGraphicsItem.ItemIsSelectable, True)
+
+            self.l = self.addLine(0.0, 0.0, 1000.0, 0.0, QPen(QColor("#ee8090"), 2.0, Qt.DashLine, Qt.RoundCap))
+
+            # p0 = self._view.mapToScene(0, 0)
+            self.r2.setPos(0, 0)
+            print(self.r2.rect().width(), self.r2.rect().height())
+
+
+        # def mouseMoveEvent(self, e):
+        #     # p = e.pos()
+        #     print(self.r2.x(), self.r2.y())
+        #     p0 = self.r2.mapToScene(self.r2.pos())
+        #     print(p0.x(), p0.y())
+        #     p = e.scenePos()
+        #     self.l.setLine(p0.x(), p0.y(), p.x(), p.y())
+
 
     class View(QGraphicsView):
 
@@ -1462,8 +1481,11 @@ def demo_graphicsview():
 
             self.group = None
             self.scene = Scene()
+            self.scene.setGraphicsView(self)
+            self.scene.initScene()
             self.setSceneRect(0, 0, 300, 300)
             self.setScene(self.scene)
+
 
         def keyPressEvent(self, event):
 
@@ -1514,7 +1536,7 @@ def demo_graphicsview():
 
             self.setLayout(hbox)
             self.setWindowTitle("Grouping")
-            self.setGeometry(250, 150, 300, 300)
+            # self.setGeometry(250, 150, 600, 400)
 
         def onClicked(self):
             print(self.view.isVisible())
