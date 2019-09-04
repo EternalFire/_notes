@@ -538,9 +538,23 @@ def networking_echo_server():
         def __init__(self, port):
             super().__init__()
 
-            print("Starting Echo Server")
+            local_host_name = QtNetwork.QHostInfo.localHostName()
+            print(local_host_name)
+            host_addresses = QtNetwork.QHostInfo.fromName(local_host_name).addresses()
+            host_ip = ""
+            print(len(host_addresses))
+
+            print("\n".join(address.toString() for address in host_addresses))
+
+            if len(host_addresses) > 0:
+                host_ip = host_addresses[0].toString()
+                print("host_ip = ", host_ip)
+
+
+            print("Starting Echo Server", QtNetwork.QHostAddress(QtNetwork.QHostAddress.LocalHost).toString())
             print("Listening on port:", port)
-            self.listen(QtNetwork.QHostAddress.LocalHost, port)
+            # self.listen(QtNetwork.QHostAddress.LocalHost, port)
+            self.listen(QtNetwork.QHostAddress(host_ip), port)
 
         def incomingConnection(self, socket):
             self.es = EchoSocket(self)
@@ -622,5 +636,5 @@ if __name__ == "__main__":
     # networking_fetch_favicon()
     # networking_block()
     # networking_nonblock()
-    # networking_echo_server()
-    networking_echo_client()
+    networking_echo_server()
+    # networking_echo_client()
