@@ -161,10 +161,14 @@ local function Node(param)
     local object = {}
     function object:init(param)
         local p_type = param.type
-        local p_onTick = param.p_onTick
+        local p_text = param.text
+        local p_onTick = param.onTick
+        local p_onEnter = param.onEnter
+        local p_onDone = param.onDone
 
         self.id = _genNodeID()
         self.name = string.format("Node_%s", self.id)
+        self.text = p_text
         self.type = p_type
         self.in_edge_ids = {}
         self.out_edge_ids = {}
@@ -172,6 +176,8 @@ local function Node(param)
             ret = NodeActRet.Failure
         }
         self.onTick = p_onTick
+        self.onEnter = p_onEnter
+        self.onDone = p_onDone
     end
     function object:addEdge(isIn, edge_id)
         if isIn then            
@@ -193,7 +199,7 @@ local function Edge(param)
         local p_type = param.type
         -- local p_in_node_id = param.in_node_id
         -- local p_out_node_id = param.out_node_id
-        local p_transfer = param.transfer
+        local p_checkCondition = param.checkCondition
         local p_condition = param.condition
 
         self.id = _genEdgeID()
@@ -201,8 +207,12 @@ local function Edge(param)
         self.type = p_type
         self.in_node_id = nil
         self.out_node_id = nil
-        self.transfer = p_transfer
-        self.condition = p_condition or NodeActRet.GoodJob
+        self.checkCondition = p_checkCondition
+        self.condition = p_condition
+
+        if p_condition == nil then
+            self.condition = NodeActRet.GoodJob
+        end
     end
 
     object:init(param)
@@ -250,6 +260,11 @@ local function FlowStateMachine(flow)
             onEnter = function(s)
                 -- synchronous
                 local node = s.data
+                if node.onEnter then
+                    node:onEnter(s)
+                end
+
+                local node = s.data
                 if node.type == NodeType.Start or node.type == NodeType.End or node.type == NodeType.SyncAction then
                     s:done()
                 end
@@ -266,6 +281,10 @@ local function FlowStateMachine(flow)
             onDone = function(s)
                 local node = s.data
                 node.state.ret = NodeActRet.GoodJob
+
+                if node.onDone then
+                    node:onDone(s)
+                end
             end,
             onPause = function(s)end,
             onResume = function(s)end,
@@ -278,19 +297,26 @@ local function FlowStateMachine(flow)
             for i, edge_id in ipairs(node.out_edge_ids) do
                 local edge = self.flow.edgeDict[edge_id]
                 if edge then
-                    print("_transferState", edge.type, node.state.ret)
+                    print("_transferState", edge.type, node.state.ret, edge.condition)
+                    local ret_condition = false
 
                     if edge.type == EdgeType.AutoNodeRet then
                         -- check node ret
                         if node.state.ret == edge.condition then
-                            local next_node = self.flow.nodeDict[edge.out_node_id]
-                            if next_node then
-                                return next_node.name
-                            end
+                            ret_condition = true
                         end
                     elseif edge.type == EdgeType.Custom then
                         -- check custom
+                        if type(edge.checkCondition) == "function" then
+                            ret_condition = edge:checkCondition()
+                        end
+                    end
 
+                    if ret_condition then
+                        local next_node = self.flow.nodeDict[edge.out_node_id]
+                        if next_node then
+                            return next_node.name
+                        end
                     end
                 end
             end
@@ -315,17 +341,6 @@ local function FlowStateMachine(flow)
     return object
 end
 
--- --- run by start node
--- --- execute node
--- --- when node done, execute next node
--- --- if node is end, end flow
--- local function execFlow(flow)
---     if flow then
---         local start_node = flow.nodeDict[flow.start_node_id]
---         local end_node = flow.nodeDict[flow.end_node_id]
-        
---     end
--- end
 
 local function runFlow()
     local flow = Flow()
@@ -339,13 +354,56 @@ local function runFlow()
     -- set start node
     -- set end node
     local nodeA = Node{type = NodeType.Start}
-    local nodeB = Node{type = NodeType.End}
+    local nodeB = Node{type = NodeType.End}    
+    local nodeC = Node{
+        text = "node C",
+        type = NodeType.SyncAction,
+        onEnter = function(node, s)
+            node.state.data = 100
+            print("nodeC ..... ")
+        end,
+        onDone = function(node, s)
+            node.state.ret = node.state.data
+        end
+    }
+    local nodeD = Node{
+        text = "node D",
+        type = NodeType.SyncAction,
+        onEnter = function(node, s)
+            node.state.data = "okok"
+            print("nodeD ..... ")
+        end,
+        onDone = function(node, s)
+            node.state.ret = node.state.data
+        end
+    }
+    local nodeE = Node{
+        text = "node E",
+        type = NodeType.SyncAction,
+        onEnter = function(node, s)
+            -- node.state.data = "okok"
+            -- print("nodeD ..... ")
+        end,
+        onDone = function(node, s)
+            -- node.state.ret = node.state.data
+        end
+    }
+
     local edgeE = Edge{type = EdgeType.AutoNodeRet}
+    local edgeE_1 = Edge{type = EdgeType.AutoNodeRet}
+    local edgeE_2 = Edge{type = EdgeType.AutoNodeRet}
+    local edge_1 = Edge{type = EdgeType.AutoNodeRet, condition = 100}
+    local edge_2 = Edge{type = EdgeType.AutoNodeRet, condition = "okok"}
+    local edge_3 = Edge{type = EdgeType.AutoNodeRet, condition = 200}
 
     -- dump(nodeA)
     -- dump(nodeB)
     -- dump(edgeE)
-    flow:connect(nodeA, nodeB, edgeE)
+    flow:connect(nodeA, nodeC, edgeE)
+    flow:connect(nodeC, nodeD, edge_1)
+    flow:connect(nodeC, nodeE, edge_3)
+    flow:connect(nodeE, nodeB, edgeE_1)
+    flow:connect(nodeD, nodeB, edge_2)
     flow:setStart(nodeA)
     flow:setEnd(nodeB)
 
@@ -377,7 +435,7 @@ local function runFlow()
             t1 = os.clock()
             dt = 0
 
-            if cnt == 3 then
+            if cnt == 2 then
                 break
             end
             
