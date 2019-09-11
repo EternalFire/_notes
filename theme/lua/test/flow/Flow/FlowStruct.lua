@@ -22,7 +22,9 @@ local function Flow(param)
         self.name = string.format("Flow_%s", self.id)
         self.nodes = {}
         self.edges = {}
-        self.state = {}
+        self.state = {
+            ret = NodeActRet.Failure
+        }
         self.in_out_map = {}  -- self.in_out_map[InNodeID][OutNodeID] = {EdgeID, ...}
         self.nodeDict = {}
         self.edgeDict = {}
@@ -61,10 +63,10 @@ local function Flow(param)
 
             edge.in_node_id = from_node.id
             edge.out_node_id = to_node.id
-            
+
             from_node:addEdge(false, edge.id)
             to_node:addEdge(true, edge.id)
-            
+
             self.in_out_map[from_node.id] = self.in_out_map[from_node.id] or {}
             self.in_out_map[from_node.id][to_node.id] = self.in_out_map[from_node.id][to_node.id] or {}
             uniqueInsert(self.in_out_map[from_node.id][to_node.id], edge.id)
@@ -82,7 +84,7 @@ local function Flow(param)
     function object:delNode(node_id)
         -- todo
     end
-    
+
     object:init(param)
     return object
 end

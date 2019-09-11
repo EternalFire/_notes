@@ -6,7 +6,7 @@ local EdgeType = {
 
 local NodeType = {
     Start = 1,
-    End = 2, 
+    End = 2,
     SyncAction = 3,
     ASyncAction = 4,
 }
@@ -14,11 +14,11 @@ local NodeType = {
 --- Node执行后的返回值
 local NodeActRet = {
     GoodJob = true,
-    Failure = false,    
+    Failure = false,
 }
 
 return {
-    EdgeType = EdgeType, 
-    NodeType = NodeType, 
+    EdgeType = EdgeType,
+    NodeType = NodeType,
     NodeActRet = NodeActRet
 }

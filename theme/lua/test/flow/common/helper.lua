@@ -4,3 +4,27 @@ function uniqueInsert(t, v)
         table.insert(t, v)
     end
 end
+
+function getValueByChainStr(chain_str, root)
+    root = root or _G
+    chain_str = chain_str or ""
+
+    if chain_str == "" then
+        return root
+    end
+
+    local chain = string.split(chain_str, ".")
+    local object = root
+
+    for i = 1, #chain do
+        local key = chain[i]
+        if type(object[key]) == "table" then
+            object = object[key]
+        elseif type(object[key]) == "nil" then
+            return nil
+        end
+    end
+
+    return object
+end
+

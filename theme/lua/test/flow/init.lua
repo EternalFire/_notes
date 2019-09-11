@@ -3,7 +3,7 @@
 -- environment
 
 package.path = table.concat({
-    package.path, 
+    package.path,
     "lib/?.lua",
     "flow/?.lua",
     "flow/Flow/?.lua",
@@ -21,7 +21,6 @@ _flow_ = {
 require "game.__cc"
 require "helper"
 
-local json = require "lib.lunajson"
 local StateMachine = require "StateMachine"
 local saveFlow = require "saveFlow"
 local loadFlow = require "loadFlow"
@@ -38,6 +37,8 @@ local NodeType = Type.NodeType
 local NodeActRet = Type.NodeActRet
 
 local ActType = require "ActType"
+-- local ActTypeEX = require "ActTypeEX"
+
 local Node = require "Node"
 local Edge = require "Edge"
 local Flow = require "FlowStruct"
@@ -70,53 +71,53 @@ dump(_flow_.edge_create_map, "_flow_.edge_create_map")
 ------------------------------------------
 
 local _doc = [[
-Flow tool:
+    Flow tool:
 
-- Flow
-    - id
-    - name
-    - Nodes
-    - Edges
-    - state
-    - in_out_map
-    - nodeDict
-    - edgeDict
-    - start_node_id
-    - end_node_id
+        - Flow
+            - id
+            - name
+            - Nodes
+            - Edges
+            - state
+            - in_out_map
+            - nodeDict
+            - edgeDict
+            - start_node_id
+            - end_node_id
 
-- Node
-    - id
-    - name
-    - text
-    - type
-    - actType
-    - in_edge_ids
-    - out_edge_ids
-    - state
-        - ret
-        - data
-    - onTick()
-    - onEnter()
-    - onDone()
+        - Node
+            - id
+            - name
+            - text
+            - type
+            - actType
+            - in_edge_ids
+            - out_edge_ids
+            - state
+                - ret
+                - data
+            - onTick()
+            - onEnter()
+            - onDone()
 
-- Edge
-    - id
-    - name
-    - type
-    - type: auto / custom
-    - input_node_id(node id)
-    - output_node_id(node id)
-    - condition
-    - checkCondition()
+        - Edge
+            - id
+            - name
+            - type
+            - type: auto / custom
+            - input_node_id(node id)
+            - output_node_id(node id)
+            - condition
+            - checkCondition()
 
-- FlowStateMachine
-    - flow
-    - stateMachine
-    - buildStateMachine()
-    - createState()
-    - _transferState()
-    - start()
-    - isFinish()
+        - FlowStateMachine
+            - flow
+            - stateMachine
+            - buildStateMachine()
+            - createState()
+            - _transferState()
+            - start()
+            - isFinish()
 ]]
 
 ------------------------------------------
@@ -142,7 +143,7 @@ local function FlowStateMachine(flow)
             local sm = StateMachine.create{ states = states }
             self.stateMachine = sm
         else
-            -- ...
+            print("state machine is created")
         end
     end
     function object:createState(node)
@@ -154,7 +155,7 @@ local function FlowStateMachine(flow)
             data = node,
             transfer = function(s)
                 -- return "next_node_name"
-                local node = s.data                
+                local node = s.data
                 local next_node_name = self:_transferState(s, node)
                 -- print("transfer:", s.name, s.isEntered, s.isDone, next_node_name)
                 return next_node_name
@@ -169,6 +170,9 @@ local function FlowStateMachine(flow)
                 local node = s.data
                 if node.type == NodeType.Start or node.type == NodeType.End or node.type == NodeType.SyncAction then
                     s:done()
+
+                    -- SyncAction, transfer to next node
+                    self.stateMachine:tick(0)
                 end
             end,
             onLeave = function(s)end,
@@ -217,6 +221,11 @@ local function FlowStateMachine(flow)
                     if ret_condition then
                         local next_node = self.flow.nodeDict[edge.out_node_id]
                         if next_node then
+                            if next_node.id == self.flow.end_node_id then
+                                self.flow.state.ret = node.state.ret
+                                dump(self.flow.state.ret, "flow result")
+                            end
+
                             return next_node.name
                         end
                     end
@@ -238,11 +247,17 @@ local function FlowStateMachine(flow)
         end
         return false
     end
+    function object:clearStateMachine()
+        if self.stateMachine then
+            self.stateMachine:clear()
+        end
+    end
 
     object:init(flow)
     return object
 end
 
+------------------------------------------
 
 local function createFlow()
     local flow = Flow()
@@ -287,7 +302,7 @@ local function createFlow()
     local edge_1 = Edge{type = EdgeType.AutoNodeRet, condition = 100}
     local edge_2 = createEdge{condition = "okok"} --Edge{type = EdgeType.AutoNodeRet, condition = "okok"}
     -- local edge_2 = createEdge{
-    --     type = EdgeType.Custom, 
+    --     type = EdgeType.Custom,
     --     checkCondition = function(edge, state, preState, node)
     --         if node.state.ret == "okok" then
     --             print("call edge_2 checkCondition ")
@@ -319,7 +334,7 @@ local function runFlow(flow)
     -- simple engine
     local sm = flowSM.stateMachine
     local t1 = os.clock()
-    local dt = 1
+    local dt = 0
     local delta = 0.1
     local cnt = 1
 
@@ -337,10 +352,10 @@ local function runFlow(flow)
             if cnt == 2 then
                 break
             end
-            
+
             if flowSM:isFinish() then
                 cnt = cnt + 1
-                print("\n--------------==========------\n")
+                print("\n--------------==========--------------\n")
                 -- flowSM:start()
                 -- saveFlow(flow, "tmp_finish.json")
                 break
@@ -361,7 +376,15 @@ local function main()
     -- loadFlow(flow, "tmp.json")
     -- saveFlow(flow, "tmp_new.json")
     -- loadFlow(flow, "tmp_new.json")
-    -- runFlow(flow)    
+    -- runFlow(flow)
+
+    ---------------------------------------
+    -- dump(_G["_flow_.type_create_map"])
+    -- print("/////////")
+    -- local chain_str = "_flow_.type_create_map"
+    -- local object = getValueByChainStr(chain_str)
+    -- dump(object, chain_str)
+    -- print("........")
 end
 
 main()

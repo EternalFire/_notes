@@ -21,6 +21,7 @@ local function WaitForSeconds(param)
         node.state.ret = NodeActRet.GoodJob
     end
     _param.onTick = function(node, state, dt)
+        -- print(node.text, "wait ", state.tickedTime, node.state.data)
         if state.tickedTime >= node.state.data then
             state:done()
         end

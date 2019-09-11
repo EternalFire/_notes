@@ -13,6 +13,7 @@ local function createState(param)
             onResume = param["onResume"],
             onInterrupt = param["onInterrupt"],
             onDone = param["onDone"],
+            onClear = param["onClear"],
             data = param["data"], -- other data
 
             isDone = false,
@@ -110,6 +111,19 @@ local function createState(param)
                     self:onInterrupt()
                 end
             end,
+            clear = function(self)
+                self.isDone = false
+                self.isEntered = false
+                self.isPaused = false
+                self.isTicking = false
+                self.tickedCount = 0
+                self.tickedTime = 0
+                self.preState = nil
+
+                if type(self.onClear) == "function" then
+                    self:onClear()
+                end
+            end,
         }
 
         return state
@@ -178,6 +192,15 @@ local function createStateMachine(param)
                     cur:resume()
                 end
             end,
+            clear = function(self)
+                for _, state in pairs(self.stateDict or {}) do
+                    if state then
+                        state:clear()
+                    end
+                end
+
+                self.currentState = nil
+            end
         }
 
         if type(param.states) == "table" then
