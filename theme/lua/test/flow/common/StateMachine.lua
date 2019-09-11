@@ -21,6 +21,7 @@ local function createState(param)
             isTicking = false,
             tickedCount = 0,
             tickedTime = 0,
+            preState = nil,
 
             done = function(self)
                 if _debug_state then
@@ -45,6 +46,7 @@ local function createState(param)
                 self.isPaused = false
                 self.tickedCount = 0
                 self.tickedTime = 0
+                self.preState = preState
 
                 if type(self.onEnter) == "function" then
                     self:onEnter(preState)

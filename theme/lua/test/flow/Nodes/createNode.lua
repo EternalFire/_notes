@@ -20,7 +20,7 @@ local function createNode(param)
         if p_act_type ~= nil then
             local act_method_name = type_create_map[p_act_type]
             if not act_method_name then
-                print("-X- act method is null . p_act_type = ", p_act_type)
+                print("-X- act_method_name is null . p_act_type = ", p_act_type)
             else
                 method_name = act_method_name
             end
@@ -31,6 +31,8 @@ local function createNode(param)
 
             if type(method) == "function" then
                 return method(param)
+            else
+                print("-X- no create node method. method_name = ", method_name)
             end
         end
     end

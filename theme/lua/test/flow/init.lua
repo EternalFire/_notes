@@ -6,20 +6,25 @@ package.path = table.concat({
     package.path, 
     "lib/?.lua",
     "flow/?.lua",
+    "flow/Flow/?.lua",
+    "flow/common/?.lua",
+    "flow/Nodes/?.lua",
+    "flow/Edges/?.lua",
 }, ";")
 
 --- flow namespace
 _flow_ = {
     type_create_map = nil,
+    edge_create_map = nil,
 }
 
 require "game.__cc"
 require "helper"
 
 local json = require "lib.lunajson"
-local StateMachine = require "flow.StateMachine"
-local saveFlow = require "flow.saveFlow"
-local loadFlow = require "flow.loadFlow"
+local StateMachine = require "StateMachine"
+local saveFlow = require "saveFlow"
+local loadFlow = require "loadFlow"
 
 local inState = require "_in_state"
 local _in_state = inState._in_state
@@ -37,18 +42,30 @@ local Node = require "Node"
 local Edge = require "Edge"
 local Flow = require "FlowStruct"
 local createNode = require "createNode"
+local createEdge = require "createEdge"
 
+-- Node
 local type_create_map = {
     [NodeType.Start] = "StartNode",
     [NodeType.End] = "EndNode",
 }
 
+-- other Nodes
 for key, types in pairs(ActType) do
     type_create_map[key] = types.actType
 end
 
 _flow_.type_create_map = type_create_map
 dump(_flow_.type_create_map, "_flow_.type_create_map")
+
+-- edge
+local edge_create_map = {
+    [EdgeType.AutoNodeRet] = "AutoEdge",
+    [EdgeType.Custom] = "CustomEdge",
+}
+
+_flow_.edge_create_map = edge_create_map
+dump(_flow_.edge_create_map, "_flow_.edge_create_map")
 
 ------------------------------------------
 
@@ -113,7 +130,7 @@ local function FlowStateMachine(flow)
                 -- return "next_node_name"
                 local node = s.data                
                 local next_node_name = self:_transferState(s, node)
-                print("transfer:", s.name, s.isEntered, s.isDone, next_node_name)
+                -- print("transfer:", s.name, s.isEntered, s.isDone, next_node_name)
                 return next_node_name
             end,
             onEnter = function(s, pre_s)
@@ -167,7 +184,7 @@ local function FlowStateMachine(flow)
                     elseif edge.type == EdgeType.Custom then
                         -- check custom
                         if type(edge.checkCondition) == "function" then
-                            ret_condition = edge:checkCondition()
+                            ret_condition = edge:checkCondition(s, s.preState, node)
                         end
                     end
 
@@ -211,41 +228,21 @@ local function createFlow()
     -- add A, B, E to flow
     -- set start node
     -- set end node
-    -- local nodeA = Node{type = NodeType.Start}
-    -- local nodeB = Node{type = NodeType.End}
     local nodeA = createNode{type = NodeType.Start}
     local nodeB = createNode{type = NodeType.End}
-    -- local nodeC = Node{
-    --     text = "node C",
-    --     -- type = NodeType.SyncAction,
-    --     type = NodeType.ASyncAction,
+    local nodeC = createNode{actType = "WaitForSeconds", data = 2, text="wait 2 sec"}
+    -- local nodeD = Node{
+    --     text = "node D",
+    --     type = NodeType.SyncAction,
     --     onEnter = function(node, s, pre_s)
-    --         node.state.data = 100
-    --         -- node.state.data = 200
-    --         print("nodeC ..... ")
+    --         node.state.data = "okok"
+    --         print(node.text, "pre.data.state.ret =", pre_s.data.state.ret)
     --     end,
     --     onDone = function(node, s)
     --         node.state.ret = node.state.data
-    --     end,
-    --     onTick = function(node, s, dt)
-    --         -- print(node.text, "tick time =", s.tickedTime)
-    --         if s.tickedTime >= 2 then
-    --             s:done()
-    --         end
-    --     end,
+    --     end
     -- }
-    local nodeC = createNode{actType = "WaitForSeconds", data = 5}
-    local nodeD = Node{
-        text = "node D",
-        type = NodeType.SyncAction,
-        onEnter = function(node, s, pre_s)
-            node.state.data = "okok"
-            print(node.text, "pre.data.state.ret =", pre_s.data.state.ret)
-        end,
-        onDone = function(node, s)
-            node.state.ret = node.state.data
-        end
-    }
+    local nodeD = createNode{actType = "EchoNode", data = "okok"}
     local nodeE = Node{
         text = "node E",
         type = NodeType.SyncAction,
@@ -257,18 +254,27 @@ local function createFlow()
         end
     }
 
-    local edgeE = Edge{type = EdgeType.AutoNodeRet}
-    local edgeE_1 = Edge{type = EdgeType.AutoNodeRet}
-    local edgeE_2 = Edge{type = EdgeType.AutoNodeRet}
-    local edgeE_3 = Edge{type = EdgeType.AutoNodeRet}
+    local edgeE = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
+    local edgeE_1 = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
+    local edgeE_2 = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
+    local edgeE_3 = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
     local edge_1 = Edge{type = EdgeType.AutoNodeRet, condition = 100}
-    local edge_2 = Edge{type = EdgeType.AutoNodeRet, condition = "okok"}
+    local edge_2 = createEdge{condition = "okok"} --Edge{type = EdgeType.AutoNodeRet, condition = "okok"}
+    -- local edge_2 = createEdge{
+    --     type = EdgeType.Custom, 
+    --     checkCondition = function(edge, state, preState, node)
+    --         if node.state.ret == "okok" then
+    --             print("call edge_2 checkCondition ")
+    --             return true
+    --         end
+    --     end
+    -- }
     local edge_3 = Edge{type = EdgeType.AutoNodeRet, condition = 200}
 
     flow:connect(nodeA, nodeC, edgeE)
-    flow:connect(nodeC, nodeD, edge_1)
+    flow:connect(nodeC, nodeD, edgeE_3)
     -- flow:connect(nodeC, nodeE, edge_3)
-    flow:connect(nodeC, nodeE, edgeE_3)
+    flow:connect(nodeC, nodeE, edge_1)
     flow:connect(nodeE, nodeB, edgeE_1)
     flow:connect(nodeD, nodeB, edge_2)
     flow:setStart(nodeA)
@@ -289,7 +295,6 @@ local function runFlow(flow)
     local t1 = os.clock()
     local dt = 1
     local delta = 0.1
-
     local cnt = 1
 
     while 1 do
@@ -311,6 +316,7 @@ local function runFlow(flow)
                 cnt = cnt + 1
                 print("\n--------------==========------\n")
                 -- flowSM:start()
+                -- saveFlow(flow, "tmp_finish.json")
                 break
             end
         else
@@ -322,14 +328,14 @@ end
 local function main()
     -- print(_doc)
     -- dump(_doc)
-    local flow = createFlow()
+    -- local flow = createFlow()
     -- saveFlow(flow, "tmp.json")
 
-    -- local flow = Flow()
-    -- loadFlow(flow, "tmp.json")
+    local flow = Flow()
+    loadFlow(flow, "tmp.json")
     -- saveFlow(flow, "tmp_new.json")
     -- loadFlow(flow, "tmp_new.json")
-    runFlow(flow)
+    runFlow(flow)    
 end
 
 main()

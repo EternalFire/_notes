@@ -12,8 +12,8 @@ local ActType = require "ActType"
 local function WaitForSeconds(param)
     local _param = clone(param)
 
-    _param.type = NodeType.ASyncAction
-    _param.actType = ActType.waitForSeconds
+    _param.type = ActType.WaitForSeconds.type
+    _param.actType = ActType.WaitForSeconds.actType
     _param.onEnter = function(node, state, pre_state)
         --
     end

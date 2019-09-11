@@ -1,5 +1,5 @@
 
-local json = require "lib.lunajson"
+local json = require "lunajson"
 
 local function buildFlowObject(flow)
     local object = {}
@@ -14,14 +14,16 @@ local function buildFlowObject(flow)
         object.end_node_id = flow.end_node_id
 
         for i, node in ipairs(flow.nodes) do
-            local state = node.state or { ret = false }
-            local nodeObject = {
-                node.id,
-                node.name or "",
-                node.text or "",
-                node.type,
-                state,
-            }
+            -- local state = node.state or { ret = false }
+            -- local nodeObject = {
+            --     node.id,         -- 1
+            --     node.name or "", -- 2
+            --     node.text or "", -- 3
+            --     node.type,       -- 4
+            --     node.actType,    -- 5
+            --     state,           -- 6
+            -- }
+            
             -- nodeObject.id = node.id
             -- nodeObject.name = node.name
             -- nodeObject.text = node.text
@@ -29,6 +31,8 @@ local function buildFlowObject(flow)
             -- -- nodeObject.in_edge_ids = node.in_edge_ids
             -- -- nodeObject.out_edge_ids = node.out_edge_ids
             -- nodeObject.state = node.state
+
+            local nodeObject = node.nodeObject
             table.insert(object.nodes, nodeObject)
         end
 

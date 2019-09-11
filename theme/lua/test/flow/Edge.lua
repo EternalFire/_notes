@@ -24,7 +24,13 @@ local function Edge(param)
         self.type = p_type
         self.in_node_id = nil
         self.out_node_id = nil
+
+        --- custom check function
+        --- @param (edge, state, preState, node)
+        --- @return {boolean}
         self.checkCondition = p_checkCondition
+
+        --- auto check ret value
         self.condition = p_condition
 
         if p_condition == nil then
@@ -33,7 +39,7 @@ local function Edge(param)
     end
 
     object:init(param)
-    return object    
+    return object
 end
 
 return Edge

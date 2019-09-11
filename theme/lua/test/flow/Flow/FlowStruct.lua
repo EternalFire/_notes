@@ -77,10 +77,10 @@ local function Flow(param)
         self:connect(from_node, to_node, edge)
     end
     function object:delEdge(edge_id)
-
+        -- todo
     end
     function object:delNode(node_id)
-        
+        -- todo
     end
     
     object:init(param)
