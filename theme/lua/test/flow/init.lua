@@ -8,6 +8,11 @@ package.path = table.concat({
     "flow/?.lua",
 }, ";")
 
+--- flow namespace
+_flow_ = {
+    type_create_map = nil,
+}
+
 require "game.__cc"
 require "helper"
 
@@ -27,9 +32,23 @@ local EdgeType = Type.EdgeType
 local NodeType = Type.NodeType
 local NodeActRet = Type.NodeActRet
 
+local ActType = require "ActType"
 local Node = require "Node"
 local Edge = require "Edge"
 local Flow = require "FlowStruct"
+local createNode = require "createNode"
+
+local type_create_map = {
+    [NodeType.Start] = "StartNode",
+    [NodeType.End] = "EndNode",
+}
+
+for key, types in pairs(ActType) do
+    type_create_map[key] = types.actType
+end
+
+_flow_.type_create_map = type_create_map
+dump(_flow_.type_create_map, "_flow_.type_create_map")
 
 ------------------------------------------
 
@@ -192,27 +211,30 @@ local function createFlow()
     -- add A, B, E to flow
     -- set start node
     -- set end node
-    local nodeA = Node{type = NodeType.Start}
-    local nodeB = Node{type = NodeType.End}    
-    local nodeC = Node{
-        text = "node C",
-        -- type = NodeType.SyncAction,
-        type = NodeType.ASyncAction,
-        onEnter = function(node, s, pre_s)
-            node.state.data = 100
-            -- node.state.data = 200
-            print("nodeC ..... ")
-        end,
-        onDone = function(node, s)
-            node.state.ret = node.state.data
-        end,
-        onTick = function(node, s, dt)
-            -- print(node.text, "tick time =", s.tickedTime)
-            if s.tickedTime >= 2 then
-                s:done()
-            end
-        end,
-    }
+    -- local nodeA = Node{type = NodeType.Start}
+    -- local nodeB = Node{type = NodeType.End}
+    local nodeA = createNode{type = NodeType.Start}
+    local nodeB = createNode{type = NodeType.End}
+    -- local nodeC = Node{
+    --     text = "node C",
+    --     -- type = NodeType.SyncAction,
+    --     type = NodeType.ASyncAction,
+    --     onEnter = function(node, s, pre_s)
+    --         node.state.data = 100
+    --         -- node.state.data = 200
+    --         print("nodeC ..... ")
+    --     end,
+    --     onDone = function(node, s)
+    --         node.state.ret = node.state.data
+    --     end,
+    --     onTick = function(node, s, dt)
+    --         -- print(node.text, "tick time =", s.tickedTime)
+    --         if s.tickedTime >= 2 then
+    --             s:done()
+    --         end
+    --     end,
+    -- }
+    local nodeC = createNode{actType = "WaitForSeconds", data = 5}
     local nodeD = Node{
         text = "node D",
         type = NodeType.SyncAction,
@@ -238,22 +260,21 @@ local function createFlow()
     local edgeE = Edge{type = EdgeType.AutoNodeRet}
     local edgeE_1 = Edge{type = EdgeType.AutoNodeRet}
     local edgeE_2 = Edge{type = EdgeType.AutoNodeRet}
+    local edgeE_3 = Edge{type = EdgeType.AutoNodeRet}
     local edge_1 = Edge{type = EdgeType.AutoNodeRet, condition = 100}
     local edge_2 = Edge{type = EdgeType.AutoNodeRet, condition = "okok"}
     local edge_3 = Edge{type = EdgeType.AutoNodeRet, condition = 200}
 
-    -- dump(nodeA)
-    -- dump(nodeB)
-    -- dump(edgeE)
     flow:connect(nodeA, nodeC, edgeE)
     flow:connect(nodeC, nodeD, edge_1)
-    flow:connect(nodeC, nodeE, edge_3)
+    -- flow:connect(nodeC, nodeE, edge_3)
+    flow:connect(nodeC, nodeE, edgeE_3)
     flow:connect(nodeE, nodeB, edgeE_1)
     flow:connect(nodeD, nodeB, edge_2)
     flow:setStart(nodeA)
     flow:setEnd(nodeB)
 
-    dump(flow, "flow", 4)
+    -- dump(flow, "flow", 4)
     return flow
 end
 

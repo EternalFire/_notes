@@ -14,6 +14,7 @@ local function Node(param)
     function object:init(param)
         local p_id = param.id
         local p_type = param.type
+        local p_act_type = param.actType
         local p_text = param.text
         local p_data = param.data
         local p_onTick = param.onTick
@@ -24,6 +25,7 @@ local function Node(param)
         self.name = string.format("Node_%s", self.id)
         self.text = p_text or ""
         self.type = p_type
+        self.actType = p_act_type
         self.in_edge_ids = {}
         self.out_edge_ids = {}
         self.state = { 

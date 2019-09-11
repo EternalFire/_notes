@@ -1,6 +1,6 @@
 
 local EdgeType = {
-    AutoNodeRet = 1,
+    AutoNodeRet = 1,  -- 根据返回值判断条件是否通过
     Custom = 10,
 }
 
@@ -11,6 +11,7 @@ local NodeType = {
     ASyncAction = 4,
 }
 
+--- Node执行后的返回值
 local NodeActRet = {
     GoodJob = true,
     Failure = false,    
