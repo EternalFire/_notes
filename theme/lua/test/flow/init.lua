@@ -73,24 +73,50 @@ local _doc = [[
 Flow tool:
 
 - Flow
+    - id
+    - name
     - Nodes
     - Edges
     - state
+    - in_out_map
+    - nodeDict
+    - edgeDict
+    - start_node_id
+    - end_node_id
 
 - Node
     - id
-    - inputs(edge id)
-    - outputs(edge id)
+    - name
+    - text
     - type
+    - actType
+    - in_edge_ids
+    - out_edge_ids
+    - state
+        - ret
+        - data
+    - onTick()
+    - onEnter()
+    - onDone()
 
 - Edge
     - id
+    - name
+    - type
+    - type: auto / custom
     - input_node_id(node id)
     - output_node_id(node id)
-    - type: auto / custom
-    - transfer()
-    - auto_transfer(by action node ret, by node state, by flow state, by global state...)
+    - condition
+    - checkCondition()
 
+- FlowStateMachine
+    - flow
+    - stateMachine
+    - buildStateMachine()
+    - createState()
+    - _transferState()
+    - start()
+    - isFinish()
 ]]
 
 ------------------------------------------
@@ -331,11 +357,11 @@ local function main()
     -- local flow = createFlow()
     -- saveFlow(flow, "tmp.json")
 
-    local flow = Flow()
-    loadFlow(flow, "tmp.json")
+    -- local flow = Flow()
+    -- loadFlow(flow, "tmp.json")
     -- saveFlow(flow, "tmp_new.json")
     -- loadFlow(flow, "tmp_new.json")
-    runFlow(flow)    
+    -- runFlow(flow)    
 end
 
 main()
