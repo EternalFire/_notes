@@ -12,9 +12,11 @@ local ActType = {
 }
 
 -- todo
--- wait for signal
+-- wait for signal, check flow.state.signals
 -- parallel and
 -- parallel or
 -- sequence
+
+-- state contain flow
 
 return ActType
