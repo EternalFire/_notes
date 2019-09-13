@@ -70,55 +70,7 @@ dump(_flow_.edge_create_map, "_flow_.edge_create_map")
 
 ------------------------------------------
 
-local _doc = [[
-    Flow tool:
-
-        - Flow
-            - id
-            - name
-            - Nodes
-            - Edges
-            - state
-            - in_out_map
-            - nodeDict
-            - edgeDict
-            - start_node_id
-            - end_node_id
-
-        - Node
-            - id
-            - name
-            - text
-            - type
-            - actType
-            - in_edge_ids
-            - out_edge_ids
-            - state
-                - ret
-                - data
-            - onTick()
-            - onEnter()
-            - onDone()
-
-        - Edge
-            - id
-            - name
-            - type
-            - type: auto / custom
-            - input_node_id(node id)
-            - output_node_id(node id)
-            - condition
-            - checkCondition()
-
-        - FlowStateMachine
-            - flow
-            - stateMachine
-            - buildStateMachine()
-            - createState()
-            - _transferState()
-            - start()
-            - isFinish()
-]]
+local _doc = require "flowDoc"
 
 ------------------------------------------
 
@@ -221,6 +173,7 @@ local function FlowStateMachine(flow)
                     if ret_condition then
                         local next_node = self.flow.nodeDict[edge.out_node_id]
                         if next_node then
+                            -- set flow result
                             if next_node.id == self.flow.end_node_id then
                                 self.flow.state.ret = node.state.ret
                                 dump(self.flow.state.ret, "flow result")
@@ -367,7 +320,7 @@ local function runFlow(flow)
 end
 
 local function main()
-    -- print(_doc)
+    print(_doc)
     -- dump(_doc)
     -- local flow = createFlow()
     -- saveFlow(flow, "tmp.json")
