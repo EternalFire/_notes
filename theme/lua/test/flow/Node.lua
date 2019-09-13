@@ -21,6 +21,7 @@ local function Node(param)
         local p_onTick = param.onTick
         local p_onEnter = param.onEnter
         local p_onDone = param.onDone
+        local p_flow_sm = param.flow_sm
 
         self.id = p_id or _genNodeID()
         self.name = p_name or string.format("Node_%s", self.id)
@@ -32,11 +33,23 @@ local function Node(param)
         self.state = { 
             ret = NodeActRet.Failure,
             data = p_data,
-            flow_sm = nil,
+            flow_sm = p_flow_sm,
         }
         self.onTick = p_onTick
         self.onEnter = p_onEnter
         self.onDone = p_onDone
+
+        local state_bak = {
+            ret = clone(self.state.ret),
+            data = clone(self.state.data),
+            flow_id = nil,
+        }
+
+        if p_flow_sm then
+            if p_flow_sm.flow then
+                state_bak.flow_id = p_flow_sm.flow.id
+            end
+        end
 
         self.nodeObject = {
             self.id,         -- 1
@@ -44,7 +57,7 @@ local function Node(param)
             self.text or "", -- 3
             self.type,       -- 4
             self.actType,    -- 5
-            clone(self.state),-- 6
+            state_bak,       -- 6            
         }
     end
     function object:addEdge(isIn, edge_id)
@@ -53,6 +66,9 @@ local function Node(param)
         else
             uniqueInsert(self.out_edge_ids, edge_id)
         end
+    end
+    function object:clear()
+        -- todo
     end
 
     object:init(param)

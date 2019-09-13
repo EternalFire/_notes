@@ -106,29 +106,28 @@ local function FlowStateMachine(flow)
             name = node.name,
             data = node,
             transfer = function(s)
-                -- return "next_node_name"
                 local node = s.data
                 local next_node_name = self:_transferState(s, node)
                 -- print("transfer:", s.name, s.isEntered, s.isDone, next_node_name)
-                return next_node_name
+                return next_node_name -- string
             end,
             onEnter = function(s, pre_s)
                 -- synchronous
-                local node = s.data
-                if node.state.flow_sm then
-                    if type(node.state.flow_sm.buildStateMachine) == "function" then
-                        node.state.flow_sm:buildStateMachine()
-                    end                                    
-                end
+                local node = s.data                
 
                 if node.onEnter then
                     node:onEnter(s, pre_s)
                 end
 
                 if node.state.flow_sm then
+                    if type(node.state.flow_sm.buildStateMachine) == "function" then
+                        node.state.flow_sm:buildStateMachine()
+                    end
+                end
+
+                if node.state.flow_sm then
                     if type(node.state.flow_sm.start) == "function" then
-                        node.state.flow_sm:start()
-                        -- node.state.flow_sm:tick(0) ?
+                        node.state.flow_sm:start()                        
                     end
                 end
                 
@@ -136,15 +135,17 @@ local function FlowStateMachine(flow)
                     local is_done = false
 
                     if node.state.flow_sm then
+                        node.state.flow_sm:tick(0)
+
                         if node.state.flow_sm:isFinish() then
                             is_done = true
-
                         end
                     else
                         is_done = true                        
                     end
 
                     if is_done then
+                        -- finish node, goto next node
                         s:done()
 
                         -- SyncAction, transfer to next node
@@ -159,6 +160,17 @@ local function FlowStateMachine(flow)
                 if node.onTick then
                     node:onTick(s, dt)
                 end
+
+                if node.state.flow_sm then
+                    if type(node.state.flow_sm.tick) == "function" then
+                        node.state.flow_sm:tick(dt)
+
+                        if node.state.flow_sm:isFinish() then
+                            s:done()
+                        end
+                    end
+                end
+
                 -- s:done()
             end,
             onDone = function(s)
@@ -167,6 +179,10 @@ local function FlowStateMachine(flow)
 
                 if node.onDone then
                     node:onDone(s)
+                end
+
+                if node.state.flow_sm then
+                    node.state.ret = node.state.flow_sm.flow.state.ret
                 end
             end,
             onPause = function(s)end,
@@ -345,16 +361,16 @@ local function runFlow(flow)
 end
 
 local function main()
-    print(_doc)
+    -- print(_doc)
     -- dump(_doc)
-    -- local flow = createFlow()
+    local flow = createFlow()
     -- saveFlow(flow, "tmp.json")
 
     -- local flow = Flow()
     -- loadFlow(flow, "tmp.json")
     -- saveFlow(flow, "tmp_new.json")
     -- loadFlow(flow, "tmp_new.json")
-    -- runFlow(flow)
+    runFlow(flow)
 
     ---------------------------------------
     -- dump(_G["_flow_.type_create_map"])
