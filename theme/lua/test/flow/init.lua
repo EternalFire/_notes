@@ -115,16 +115,41 @@ local function FlowStateMachine(flow)
             onEnter = function(s, pre_s)
                 -- synchronous
                 local node = s.data
+                if node.state.flow_sm then
+                    if type(node.state.flow_sm.buildStateMachine) == "function" then
+                        node.state.flow_sm:buildStateMachine()
+                    end                                    
+                end
+
                 if node.onEnter then
                     node:onEnter(s, pre_s)
                 end
 
-                local node = s.data
+                if node.state.flow_sm then
+                    if type(node.state.flow_sm.start) == "function" then
+                        node.state.flow_sm:start()
+                        -- node.state.flow_sm:tick(0) ?
+                    end
+                end
+                
                 if node.type == NodeType.Start or node.type == NodeType.End or node.type == NodeType.SyncAction then
-                    s:done()
+                    local is_done = false
 
-                    -- SyncAction, transfer to next node
-                    self.stateMachine:tick(0)
+                    if node.state.flow_sm then
+                        if node.state.flow_sm:isFinish() then
+                            is_done = true
+
+                        end
+                    else
+                        is_done = true                        
+                    end
+
+                    if is_done then
+                        s:done()
+
+                        -- SyncAction, transfer to next node
+                        self.stateMachine:tick(0)
+                    end
                 end
             end,
             onLeave = function(s)end,

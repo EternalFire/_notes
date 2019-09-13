@@ -32,6 +32,7 @@ local function Node(param)
         self.state = { 
             ret = NodeActRet.Failure,
             data = p_data,
+            flow_sm = nil,
         }
         self.onTick = p_onTick
         self.onEnter = p_onEnter
