@@ -31,7 +31,7 @@ local function buildFlowInstance(flow, object)
         table.sort(object.edges, function(a, b)
             return a[1] < b[1]
         end)
-        
+
         for i, nodeObject in ipairs(object.nodes) do
             local state = nodeObject[6]
             local param = {
@@ -46,16 +46,20 @@ local function buildFlowInstance(flow, object)
                 param.data = state.data
             end
 
+            if state and state.flow_id then
+                param.flow_id = state.flow_id
+            end
+
             local node
             node = createNode(param)
 
             if node then
                 nodeDict[node.id] = node
-                
+
                 _in_state.next_node_id = math.max(_in_state.next_node_id, node.id + 1)
             end
         end
-        
+
         for i, edgeObject in ipairs(object.edges) do
             local param = {
                 id = edgeObject[1],

@@ -84,6 +84,11 @@ local function Flow(param)
     function object:delNode(node_id)
         -- todo
     end
+    function object:clear()
+        for i, node in ipairs(self.nodes) do
+            node:clear()
+        end
+    end
 
     object:init(param)
     return object

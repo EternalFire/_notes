@@ -11,12 +11,4 @@ local ActType = {
     WaitForSeconds = {type = NodeType.ASyncAction, actType = "WaitForSeconds"},
 }
 
--- todo
--- wait for signal, check flow.state.signals
--- parallel and
--- parallel or
--- sequence
-
--- state contain flow
-
 return ActType

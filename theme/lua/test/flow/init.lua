@@ -87,7 +87,7 @@ local function FlowStateMachine(flow)
             for i, node in ipairs(self.flow.nodes) do
                 local _state = self:createState(node)
                 if _state then
-                    print(string.format("create state [%s]", _state.name))
+                    print(string.format("create state [%s][%s]", _state.name, node.text))
                     table.insert(states, _state)
                 end
             end
@@ -96,6 +96,7 @@ local function FlowStateMachine(flow)
             self.stateMachine = sm
         else
             print("state machine is created")
+            self:clear()
         end
     end
     function object:createState(node)
@@ -113,10 +114,16 @@ local function FlowStateMachine(flow)
             end,
             onEnter = function(s, pre_s)
                 -- synchronous
-                local node = s.data                
+                local node = s.data
 
                 if node.onEnter then
                     node:onEnter(s, pre_s)
+                end
+
+                if not node.state.flow_sm and node.state.flow_id then
+                    -- todo
+                    -- find flow object
+                    -- build flow state machine
                 end
 
                 if node.state.flow_sm then
@@ -126,22 +133,22 @@ local function FlowStateMachine(flow)
                 end
 
                 if node.state.flow_sm then
-                    if type(node.state.flow_sm.start) == "function" then
-                        node.state.flow_sm:start()                        
-                    end
+                    node.state.flow_sm:start()
                 end
-                
+
                 if node.type == NodeType.Start or node.type == NodeType.End or node.type == NodeType.SyncAction then
                     local is_done = false
 
                     if node.state.flow_sm then
-                        node.state.flow_sm:tick(0)
+                        if node.state.flow_sm.stateMachine then
+                            node.state.flow_sm.stateMachine:tick(0)
+                        end
 
                         if node.state.flow_sm:isFinish() then
                             is_done = true
                         end
                     else
-                        is_done = true                        
+                        is_done = true
                     end
 
                     if is_done then
@@ -162,12 +169,12 @@ local function FlowStateMachine(flow)
                 end
 
                 if node.state.flow_sm then
-                    if type(node.state.flow_sm.tick) == "function" then
-                        node.state.flow_sm:tick(dt)
+                    if node.state.flow_sm.stateMachine then
+                        node.state.flow_sm.stateMachine:tick(dt)
+                    end
 
-                        if node.state.flow_sm:isFinish() then
-                            s:done()
-                        end
+                    if node.state.flow_sm:isFinish() then
+                        s:done()
                     end
                 end
 
@@ -228,6 +235,7 @@ local function FlowStateMachine(flow)
         end
     end
     function object:start()
+        self:clear()
         local start_node = self.flow.nodeDict[self.flow.start_node_id]
         self.stateMachine:transfer(start_node.name)
     end
@@ -241,7 +249,11 @@ local function FlowStateMachine(flow)
         end
         return false
     end
-    function object:clearStateMachine()
+    function object:clear()
+        if self.flow then
+            self.flow:clear()
+        end
+
         if self.stateMachine then
             self.stateMachine:clear()
         end
@@ -319,6 +331,20 @@ local function createFlow()
     return flow
 end
 
+local function createFlow_1()
+    local flow = Flow()
+    local nodeA = createNode{type = NodeType.Start}
+    local nodeB = createNode{type = NodeType.End}
+    local nodeC = createNode{type = NodeType.ASyncAction, flow_sm = FlowStateMachine(createFlow())}
+    local e1 = createEdge()
+    local e2 = createEdge({condition = "okok"})
+    flow:connect(nodeA, nodeC, e1)
+    flow:connect(nodeC, nodeB, e2)
+    flow:setStart(nodeA)
+    flow:setEnd(nodeB)
+    return flow
+end
+
 local function runFlow(flow)
     local flowSM
     flowSM = FlowStateMachine(flow)
@@ -363,7 +389,8 @@ end
 local function main()
     -- print(_doc)
     -- dump(_doc)
-    local flow = createFlow()
+    -- local flow = createFlow()
+    local flow = createFlow_1()
     -- saveFlow(flow, "tmp.json")
 
     -- local flow = Flow()

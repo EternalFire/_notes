@@ -1,4 +1,13 @@
 
+-- todo
+-- wait for signal, check flow.state.signals
+-- parallel and
+-- parallel or
+-- sequence
+-- [x] state contain flow
+-- flow manager
+
+
 local _doc = [[
     Flow tool:
 
@@ -26,6 +35,7 @@ local _doc = [[
             - state
                 - ret
                 - data
+                - flow_sm
             - onTick()
             - onEnter()
             - onDone()

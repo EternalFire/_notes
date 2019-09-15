@@ -4,6 +4,7 @@ local EdgeType = Type.EdgeType
 local NodeType = Type.NodeType
 local NodeActRet = Type.NodeActRet
 
+local Node = require "Node"
 -- local type_create_map = {
 --     [NodeType.Start] = "StartNode",
 --     [NodeType.End] = "EndNode",
@@ -15,8 +16,8 @@ local function createNode(param)
         local type_create_map = _flow_.type_create_map
         local p_type = param.type
         local p_act_type = param.actType
-
         local method_name = type_create_map[p_type]
+
         if p_act_type ~= nil then
             local act_method_name = type_create_map[p_act_type]
             if not act_method_name then
@@ -33,8 +34,11 @@ local function createNode(param)
                 return method(param)
             else
                 print("-X- no create node method. method_name = ", method_name)
+                return
             end
         end
+
+        return Node(param)
     end
 end
 
