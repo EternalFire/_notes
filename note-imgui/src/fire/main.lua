@@ -551,7 +551,8 @@ function _test()
 
     -- test_ccs_v2_skeleton_animation()
 
-    fire.createShaderTestView()
+    -- fire.createShaderTestView()
+    fire.testSocket()
 end
 
 function test_ccs_v2_skeleton_animation()
