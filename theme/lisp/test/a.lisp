@@ -81,4 +81,58 @@
 (dotimes (i 5 'i))
 (dotimes (i 5 'done) (print "1"))
 
+(defun get-fourth (x)
+  (car (cdr (cdr (cdr x))))
+)
+(get-fourth '(1 2 3 4 5 6))
+(get-fourth '(a b c r t y u))
+
+(car (
+    x ; car
+    (cdr '(a (b c) d) ; '((b c) d)
+    )
+  ) 
+) ; b
+
+(or 13 (/ 1 0)) ; 13
+
+(apply #'list 1 nil) ; (1)
+
+(funcall #'list 1 nil) ; (1 nil)
+
+(defun our-atom (x) (not (consp x)))
+
+(eql (cons 'a nil) (cons 'a nil)) ; nil
+(equal (cons 'a nil) (cons 'a nil)) ; t
+
+(setf x '(a bird cat dog))
+(setf z (copy-list x))
+
+(nth 0 '(a b c))
+(nthcdr 2 '(a b c d e f))
+
+(maplist #'(lambda (x) x) '(a b c))
+
+(mapcar #'(lambda (x) (+ x 10))
+          '(1 2 3))
+
+(mapcar #'(lambda (x y) (+ x 10 y))
+          '(1 2 3)
+          '(1 2 3))
+
+(mapcar #'list
+          '(a b c)
+          '(1 2 3 4))
+
+(subst 'abc 'ccc '(ccc 789))
+
+; 替换表达式中的 x
+(subst 'y 'x '(and (integerp x) (zerop (mod x 2))))
+; (AND (INTEGERP Y) (ZEROP (MOD Y 2)))
+
+
+(member '(a) '((a) (z)) :test #'equal)
+(member '(z) '((a) (z)) :test #'equal) ; (Z)
+(member 'ac '((a b) (ac d)) :key #'car)
+
 
