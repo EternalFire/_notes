@@ -134,5 +134,41 @@
 (member '(a) '((a) (z)) :test #'equal)
 (member '(z) '((a) (z)) :test #'equal) ; (Z)
 (member 'ac '((a b) (ac d)) :key #'car)
+(member-if #'oddp '(2 3 4))
+
+(adjoin 'b '(a b c))
+
+(union '(a b c) '(c b s))
+(intersection '(a b c) '(b b c))
+(set-difference '(a b c d e) '(b e))
+
+(length '(a b c))
+(subseq '(a b c d) 2) ; (C D)
+(subseq '(a b c d) 0 2) ; (A B)
+(reverse '(a b c))
+
+(sort '(0 2 1 3 8) #'>)
+(every #'oddp '(1 3 5))
+(some #'evenp '(1 2 3))
+
+(setf x '(b))
+(push 'a x)
+(pop x)
+
+ (let ((x '(a b)))
+     (pushnew 'c x)
+     (pushnew 'a x)
+     x)
+
+(cons 'a 'b)
+(car (cons 'a 'b))
+(cdr (cons 'a 'b))
+
+(let ((trans '((+ . "add") (- . "subtract"))))
+  (print (assoc '- trans))
+  (print (assoc '/ trans))
+  (print (assoc '+ trans))
+  )
+
 
 
