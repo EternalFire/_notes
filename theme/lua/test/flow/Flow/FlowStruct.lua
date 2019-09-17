@@ -85,6 +85,8 @@ local function Flow(param)
         -- todo
     end
     function object:clear()
+        self.state.ret = NodeActRet.Failure
+
         for i, node in ipairs(self.nodes) do
             node:clear()
         end

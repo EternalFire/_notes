@@ -15,7 +15,11 @@ package.path = table.concat({
 --- flow namespace
 _flow_ = {
     type_create_map = nil,
-    edge_create_map = nil,
+    edge_create_map = nil,    
+    FlowStateMachine = nil,
+    addActType = function(self, key, actType)
+        self.type_create_map[key] = actType
+    end,
 }
 
 require "game.__cc"
@@ -50,13 +54,13 @@ local type_create_map = {
     [NodeType.Start] = "StartNode",
     [NodeType.End] = "EndNode",
 }
+_flow_.type_create_map = type_create_map
 
 -- other Nodes
 for key, types in pairs(ActType) do
-    type_create_map[key] = types.actType
+    _flow_:addActType(key, types.actType)
 end
 
-_flow_.type_create_map = type_create_map
 dump(_flow_.type_create_map, "_flow_.type_create_map")
 
 -- edge
@@ -203,7 +207,7 @@ local function FlowStateMachine(flow)
             for i, edge_id in ipairs(node.out_edge_ids) do
                 local edge = self.flow.edgeDict[edge_id]
                 if edge then
-                    print("_transferState", edge.type, node.state.ret, edge.condition)
+                    -- print("_transferState", edge.type, node.state.ret, edge.condition)
                     local ret_condition = false
 
                     if edge.type == EdgeType.AutoNodeRet then
@@ -227,6 +231,11 @@ local function FlowStateMachine(flow)
                                 dump(self.flow.state.ret, "flow result")
                             end
 
+                            print(string.format("[%s][%s] => [%s][%s] via [%s]", 
+                                s.name, node.actType or node.type, 
+                                next_node.name, next_node.actType or next_node.type, 
+                                edge.name))
+
                             return next_node.name
                         end
                     end
@@ -236,6 +245,7 @@ local function FlowStateMachine(flow)
     end
     function object:start()
         self:clear()
+
         local start_node = self.flow.nodeDict[self.flow.start_node_id]
         self.stateMachine:transfer(start_node.name)
     end
@@ -263,149 +273,5 @@ local function FlowStateMachine(flow)
     return object
 end
 
+_flow_.FlowStateMachine = FlowStateMachine
 ------------------------------------------
-
-local function createFlow()
-    local flow = Flow()
-
-    -- create node A
-    -- create node B
-    -- create edge E
-    -- connect A and B with E
-    -- add A, B, E to flow
-    -- set start node
-    -- set end node
-    local nodeA = createNode{type = NodeType.Start}
-    local nodeB = createNode{type = NodeType.End}
-    local nodeC = createNode{actType = "WaitForSeconds", data = 2, text="wait 2 sec"}
-    -- local nodeD = Node{
-    --     text = "node D",
-    --     type = NodeType.SyncAction,
-    --     onEnter = function(node, s, pre_s)
-    --         node.state.data = "okok"
-    --         print(node.text, "pre.data.state.ret =", pre_s.data.state.ret)
-    --     end,
-    --     onDone = function(node, s)
-    --         node.state.ret = node.state.data
-    --     end
-    -- }
-    local nodeD = createNode{actType = "EchoNode", data = "okok"}
-    local nodeE = Node{
-        text = "node E",
-        type = NodeType.SyncAction,
-        onEnter = function(node, s, pre_s)
-            print(node.text, "pre.data.state.ret =", pre_s.data.state.ret)
-        end,
-        onDone = function(node, s)
-            -- node.state.ret = node.state.data
-        end
-    }
-
-    local edgeE = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
-    local edgeE_1 = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
-    local edgeE_2 = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
-    local edgeE_3 = createEdge() -- Edge{type = EdgeType.AutoNodeRet}
-    local edge_1 = Edge{type = EdgeType.AutoNodeRet, condition = 100}
-    local edge_2 = createEdge{condition = "okok"} --Edge{type = EdgeType.AutoNodeRet, condition = "okok"}
-    -- local edge_2 = createEdge{
-    --     type = EdgeType.Custom,
-    --     checkCondition = function(edge, state, preState, node)
-    --         if node.state.ret == "okok" then
-    --             print("call edge_2 checkCondition ")
-    --             return true
-    --         end
-    --     end
-    -- }
-    local edge_3 = Edge{type = EdgeType.AutoNodeRet, condition = 200}
-
-    flow:connect(nodeA, nodeC, edgeE)
-    flow:connect(nodeC, nodeD, edgeE_3)
-    -- flow:connect(nodeC, nodeE, edge_3)
-    flow:connect(nodeC, nodeE, edge_1)
-    flow:connect(nodeE, nodeB, edgeE_1)
-    flow:connect(nodeD, nodeB, edge_2)
-    flow:setStart(nodeA)
-    flow:setEnd(nodeB)
-
-    -- dump(flow, "flow", 4)
-    return flow
-end
-
-local function createFlow_1()
-    local flow = Flow()
-    local nodeA = createNode{type = NodeType.Start}
-    local nodeB = createNode{type = NodeType.End}
-    local nodeC = createNode{type = NodeType.ASyncAction, flow_sm = FlowStateMachine(createFlow())}
-    local e1 = createEdge()
-    local e2 = createEdge({condition = "okok"})
-    flow:connect(nodeA, nodeC, e1)
-    flow:connect(nodeC, nodeB, e2)
-    flow:setStart(nodeA)
-    flow:setEnd(nodeB)
-    return flow
-end
-
-local function runFlow(flow)
-    local flowSM
-    flowSM = FlowStateMachine(flow)
-    flowSM:buildStateMachine()
-    flowSM:start()
-
-    -- simple engine
-    local sm = flowSM.stateMachine
-    local t1 = os.clock()
-    local dt = 0
-    local delta = 0.1
-    local cnt = 1
-
-    while 1 do
-        if dt >= delta then
-            -- print(dt, os.clock())
-
-            if sm and type(sm.tick) == "function" then
-                sm:tick(dt)
-            end
-
-            t1 = os.clock()
-            dt = 0
-
-            if cnt == 2 then
-                break
-            end
-
-            if flowSM:isFinish() then
-                cnt = cnt + 1
-                print("\n--------------==========--------------\n")
-                -- flowSM:start()
-                -- saveFlow(flow, "tmp_finish.json")
-                break
-            end
-        else
-            dt = os.clock() - t1
-        end
-    end
-end
-
-local function main()
-    -- print(_doc)
-    -- dump(_doc)
-    -- local flow = createFlow()
-    local flow = createFlow_1()
-    -- saveFlow(flow, "tmp.json")
-
-    -- local flow = Flow()
-    -- loadFlow(flow, "tmp.json")
-    -- saveFlow(flow, "tmp_new.json")
-    -- loadFlow(flow, "tmp_new.json")
-    runFlow(flow)
-
-    ---------------------------------------
-    -- dump(_G["_flow_.type_create_map"])
-    -- print("/////////")
-    -- local chain_str = "_flow_.type_create_map"
-    -- local object = getValueByChainStr(chain_str)
-    -- dump(object, chain_str)
-    -- print("........")
-end
-
-main()

@@ -5,7 +5,7 @@ function uniqueInsert(t, v)
     end
 end
 
-function getValueByChainStr(chain_str, root)
+function chain(chain_str, root)
     root = root or _G
     chain_str = chain_str or ""
 
