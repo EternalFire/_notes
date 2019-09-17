@@ -364,6 +364,25 @@ local function case_imgui()
         end
     end
 
+    local _testSocketPanel_buf = ""
+    local function testSocketPanel()
+        imgui.begin("TestSocket Panel")
+
+        _, _testSocketPanel_buf = imgui.inputText("input:", _testSocketPanel_buf, 256)        
+
+        if imgui.button("Send") then
+            fire.testSocket(_testSocketPanel_buf)
+        end
+
+        if imgui.button("disconnect") then
+            -- setTimeout(function()
+                fire.breakConnect()
+            -- end, 0.02)
+        end
+
+        imgui.endToLua()
+    end
+
 
     -- draw
     imgui.draw = function()
@@ -384,6 +403,8 @@ local function case_imgui()
         creatorPanel()
 
         showLoadPanel()
+
+        testSocketPanel()
 
     end -- end of imgui.draw
 
@@ -482,24 +503,24 @@ function run()
     --------------------
     layer:addChild(bgLayer)
     ----------------------------------------
-    keyboard(
-        function(keyCode)
-            -- pressed
-            if keyCode == cc.KeyCode.KEY_LEFT_ARROW then
-                State.processLeft()
-            elseif keyCode == cc.KeyCode.KEY_RIGHT_ARROW then
-                State.processRight()
-            elseif keyCode == cc.KeyCode.KEY_UP_ARROW then
-                State.processUp()
-            elseif keyCode == cc.KeyCode.KEY_DOWN_ARROW then
-                State.processDown()
-            end
-        end,
-        function(keyCode)
-            -- released
-            print("doKeyReleased: ", keyCode)
-        end
-    )
+    -- keyboard(
+    --     function(keyCode)
+    --         -- pressed
+    --         if keyCode == cc.KeyCode.KEY_LEFT_ARROW then
+    --             State.processLeft()
+    --         elseif keyCode == cc.KeyCode.KEY_RIGHT_ARROW then
+    --             State.processRight()
+    --         elseif keyCode == cc.KeyCode.KEY_UP_ARROW then
+    --             State.processUp()
+    --         elseif keyCode == cc.KeyCode.KEY_DOWN_ARROW then
+    --             State.processDown()
+    --         end
+    --     end,
+    --     function(keyCode)
+    --         -- released
+    --         print("doKeyReleased: ", keyCode)
+    --     end
+    -- )
     ---------------------------------------------------------
 
     local node = display.newNode():addTo(State.bgLayer)
@@ -552,7 +573,7 @@ function _test()
     -- test_ccs_v2_skeleton_animation()
 
     -- fire.createShaderTestView()
-    fire.testSocket()
+    -- fire.testSocket()
 end
 
 function test_ccs_v2_skeleton_animation()
