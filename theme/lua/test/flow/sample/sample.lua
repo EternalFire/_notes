@@ -255,34 +255,47 @@ local function case_seq_actions()
     local n_echo_0 = createNode{actType = "EchoNode", data = "0000"}
     local n_echo_1 = createNode{actType = "EchoNode", data = "1111"}
 
-    local e1 = createEdge()
-    local e2 = createEdge()
-    local e3 = createEdge()
-    local e4 = createEdge()
-    local e5 = createEdge()
-    local e6 = createEdge{condition = "0"}
-    local e7 = createEdge{condition = "1"}
-    local e7_1 = createEdge{condition = "a"}
-    local e7_2 = createEdge{condition = "b"}
-    local e8 = createEdge{condition = "0000"}
-    local e9 = createEdge{condition = "1111"}
+    -- local e1 = createEdge()
+    -- local e2 = createEdge()
+    -- local e3 = createEdge()
+    -- local e4 = createEdge()
+    -- local e5 = createEdge()
+    -- local e6 = createEdge{condition = "0"}
+    -- local e7 = createEdge{condition = "1"}
+    -- local e7_1 = createEdge{condition = "a"}
+    -- local e7_2 = createEdge{condition = "b"}
+    -- local e8 = createEdge{condition = "0000"}
+    -- local e9 = createEdge{condition = "1111"}
 
-    f:connect(n1, n_wait_1, e1)
-    f:connect(n_wait_1, n_atk_1, e2)
-    f:connect(n_atk_1, n_atk_2, e3)
-    f:connect(n_atk_2, n_wait_2, e4)
-    f:connect(n_wait_2, n_input_1, e5)
-    f:connect(n_input_1, n_echo_0, e6)
-    f:connect(n_input_1, n_echo_1, e7)
-    f:connect(n_input_1, n_echo_0, e7_1)
-    f:connect(n_input_1, n_echo_1, e7_2)
-    f:connect(n_echo_0, n2, e8)
-    f:connect(n_echo_1, n2, e9)
+    -- f:connect(n1, n_wait_1, e1)
+    -- f:connect(n_wait_1, n_atk_1, e2)
+    -- f:connect(n_atk_1, n_atk_2, e3)
+    -- f:connect(n_atk_2, n_wait_2, e4)
+    -- f:connect(n_wait_2, n_input_1, e5)
+    -- f:connect(n_input_1, n_echo_0, e6)
+    -- f:connect(n_input_1, n_echo_1, e7)
+    -- f:connect(n_input_1, n_echo_0, e7_1)
+    -- f:connect(n_input_1, n_echo_1, e7_2)
+    -- f:connect(n_echo_0, n2, e8)
+    -- f:connect(n_echo_1, n2, e9)
+
+    f:con(n1, n_wait_1)
+    f:con(n_wait_1, n_atk_1)
+    f:con(n_atk_1, n_atk_2)
+    f:con(n_atk_2, n_wait_2)
+    f:con(n_wait_2, n_input_1)
+    f:con(n_input_1, n_echo_0, "0")
+    f:con(n_input_1, n_echo_1, "1")
+    f:con(n_input_1, n_echo_0, "a")
+    f:con(n_input_1, n_echo_1, "b")
+    f:con(n_echo_0, n2, "0000")
+    f:con(n_echo_1, n2, "1111")
 
     f:setStart(n1)
     f:setEnd(n2)
 
-    runFlowAsync(f, 1)
+    -- runFlowAsync(f, 1)
+    f:printFlow()
 end
 
 local function main()
