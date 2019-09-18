@@ -7,7 +7,7 @@
 -- [x] state contain flow
 -- flow manager
 -- [x] print flow
-
+-- ActType.lua write property { xxx, property = { other param, data = {} | [] | value } }
 
 local _doc = [[
     Flow tool:
