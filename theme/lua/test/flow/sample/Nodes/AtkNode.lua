@@ -11,8 +11,8 @@ local ActType = require "SampleAction" --
 local function AtkNode(param)
     local _param = clone(param)
 
-    _param.type = ActType.AtkNode.type
-    _param.actType = ActType.AtkNode.actType    
+    _param.type = ActType.AtkNode.type -- 
+    _param.actType = ActType.AtkNode.actType -- 
 
     _param.onEnter = function(node, state, pre_state)
         --

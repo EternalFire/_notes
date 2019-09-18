@@ -6,7 +6,7 @@
 -- sequence
 -- [x] state contain flow
 -- flow manager
--- print flow
+-- [x] print flow
 
 
 local _doc = [[

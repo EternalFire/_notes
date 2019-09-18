@@ -255,6 +255,10 @@ local function case_seq_actions()
     local n_echo_0 = createNode{actType = "EchoNode", data = "0000"}
     local n_echo_1 = createNode{actType = "EchoNode", data = "1111"}
 
+    local n_wait_3 = createNode{actType = "WaitForSeconds", data = 1, text="n_wait_3"}
+    local n_atk_3 = createNode{actType = "AtkNode", data = { x = 0, y = 0, damage = 100 }}
+    local n_atk_4 = createNode{actType = "AtkNode", data = { x = 0, y = 0, damage = 1000 }}
+
     -- local e1 = createEdge()
     -- local e2 = createEdge()
     -- local e3 = createEdge()
@@ -289,13 +293,16 @@ local function case_seq_actions()
     f:con(n_input_1, n_echo_0, "a")
     f:con(n_input_1, n_echo_1, "b")
     f:con(n_echo_0, n2, "0000")
-    f:con(n_echo_1, n2, "1111")
+    f:con(n_echo_1, n_wait_3, "1111")
+    f:con(n_wait_3, n_atk_3)
+    f:con(n_atk_3, n_atk_4)
+    f:con(n_atk_4, n2)
 
     f:setStart(n1)
     f:setEnd(n2)
-
-    -- runFlowAsync(f, 1)
     f:printFlow()
+    
+    runFlowAsync(f, 1)
 end
 
 local function main()
