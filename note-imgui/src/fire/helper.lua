@@ -3,12 +3,12 @@ local _timerIDs = {}
 
 function setTimeout(callback, sec)
     local id
-    local function _runSchedule()
+    local function _runSchedule(...)
         clearTimer(id)
         id = nil
 
         if callback then
-            callback()
+            callback(...)
         end
     end
 
@@ -24,9 +24,9 @@ end
 
 function setInterval(callback, sec)
     local id
-    local function _runSchedule()
+    local function _runSchedule(...)
         if callback then
-            callback()
+            callback(...)
         end
     end
 
