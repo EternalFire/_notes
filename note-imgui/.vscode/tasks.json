@@ -6,7 +6,7 @@
         {
             "label": "build(os x)",
             "type": "shell",
-            "command": "cp -r ${workspaceRoot}/src ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources;cp -r ${workspaceRoot}/res ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources;open ${workspaceRoot}/runtime/mac/gameOne-desktop.app",
+            "command": "cp -r ${workspaceRoot}/src ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources;cp -r ${workspaceRoot}/../theme/lua/test/flow ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources/src;cp -r ${workspaceRoot}/../theme/lua/test/lib ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources/src;cp -r ${workspaceRoot}/res ${workspaceRoot}/runtime/mac/gameOne-desktop.app/Contents/Resources;open ${workspaceRoot}/runtime/mac/gameOne-desktop.app",
             "group": {
                 "kind": "build",
                 "isDefault": true

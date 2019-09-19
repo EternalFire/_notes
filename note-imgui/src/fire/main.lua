@@ -574,6 +574,8 @@ function _test()
 
     -- fire.createShaderTestView()
     -- fire.testSocket()
+
+    fire.init_flow_()
 end
 
 function test_ccs_v2_skeleton_animation()

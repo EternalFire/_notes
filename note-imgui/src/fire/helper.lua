@@ -1,3 +1,6 @@
+
+local _timerIDs = {}
+
 function setTimeout(callback, sec)
     local id
     local function _runSchedule()
@@ -11,13 +14,12 @@ function setTimeout(callback, sec)
 
     sec = sec or 0
     id = cc.Director:getInstance():getScheduler():scheduleScriptFunc(_runSchedule, sec, false)
-    return id
-end
 
-function clearTimer(id)
-    if id then
-        cc.Director:getInstance():getScheduler():unscheduleScriptEntry(id)
+    if not _timerIDs[id] then
+        _timerIDs[id] = true
     end
+
+    return id
 end
 
 function setInterval(callback, sec)
@@ -30,7 +32,28 @@ function setInterval(callback, sec)
 
     sec = sec or 0
     id = cc.Director:getInstance():getScheduler():scheduleScriptFunc(_runSchedule, sec, false)
+    
+    if not _timerIDs[id] then
+        _timerIDs[id] = true
+    end
+    
     return id
+end
+
+function clearTimer(id)
+    if id then
+        cc.Director:getInstance():getScheduler():unscheduleScriptEntry(id)
+
+        if _timerIDs[id] then
+            _timerIDs[id] = nil
+        end
+    end
+end
+
+function clearTimersInHelper()
+    for id, v in pairs(_timerIDs) do
+        if v then clearTimer(id) end
+    end
 end
 
 function captureNode(renderTexture, node, fileBasename, isRGBA)

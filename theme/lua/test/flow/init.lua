@@ -22,7 +22,9 @@ _flow_ = {
     end,
 }
 
-require "game.__cc"
+if not cc then
+    require "game.__cc"
+end
 require "helper"
 
 local StateMachine = require "StateMachine"

@@ -9,10 +9,12 @@ FireAction = require("fire.action")
 local main = require("fire.main")
 local createShaderTestView = require("fire.shaderTestView")
 local testSocket, breakConnect = unpack(require("fire.testSocket"))
+local init_flow_ = require("fire.test_flow_")
 
 fire.createShaderTestView = createShaderTestView
 fire.testSocket = testSocket
 fire.breakConnect = breakConnect
+fire.init_flow_ = init_flow_
 
 rawset(_G, "fire", fire)
 
