@@ -1,9 +1,40 @@
 
+local function createColorButton(text, size, callback, color)
+    local node = cc.Node:create()
+    node:setName("ColorBtn")
+    node:setContentSize(size)
+
+    local option = {
+        isSwallow = true,
+        endedCB = function()
+            if callback then callback() end
+        end,
+    }
+    createTouchListener(node, option)
+
+    local bgColor
+    if color then
+        bgColor = color
+    else
+        bgColor = cc.c4b(20, 20, 20, 255)
+    end
+
+    local tileBg = cc.LayerColor:create(bgColor, size.width * 0.98, size.height * 0.98)
+    node:addChild(tileBg)
+
+    local label = cc.Label:create()
+    label:setPosition(cc.p(size.width / 2, size.height / 2))
+    node:addChild(label)
+    label:setString(text)
+
+    return node
+end
+
 local function init_flow_()
     dump(package.path, "package.path")
-    
+
     require "flow.init"
-    
+
     ------------------------------------------
     package.path = table.concat({
         package.path,
@@ -37,7 +68,7 @@ local function init_flow_()
         if fsm then
             fsm:buildStateMachine()
             fsm:start()
-    
+
             if fsm:isFinish() then
                 print("runFlowSM_sync finished!")
             end
@@ -51,7 +82,7 @@ local function init_flow_()
 
         flowSM = FlowStateMachine(flow)
         flowSM:buildStateMachine()
-        flowSM:start()    
+        flowSM:start()
         sm = flowSM.stateMachine
 
         timer_id = setInterval(function(dt)
@@ -73,6 +104,31 @@ local function init_flow_()
         end, 0.1)
     end
 
+    local function WaitForClick(param)
+        local _param = clone(param)
+
+        _param.type = NodeType.ASyncAction -- ActType.InputNode.type --
+        _param.actType = "WaitForClick" -- ActType.InputNode.actType  --
+
+        _param.onEnter = function(node, state, pre_state)
+            --
+            print("Enter WaitForClick:\n")
+            node.state.data = node.state.data or {}
+            node.state.data.clicked = false
+        end
+
+        _param.onDone = function(node, state)
+            node.state.ret = NodeActRet.GoodJob
+        end
+        _param.onTick = function(node, state, dt)
+            if node.state.data.clicked then
+                state:done()
+            end
+        end
+
+        return Node(_param)
+    end
+
     local function case_seq_actions()
         local f = Flow()
         local n1 = createNode{type = NodeType.Start}
@@ -89,6 +145,15 @@ local function init_flow_()
         local n_atk_3 = createNode{actType = "AtkNode", data = { x = 0, y = 0, damage = 100 }}
         local n_atk_4 = createNode{actType = "AtkNode", data = { x = 0, y = 0, damage = 1000 }}
 
+        local n_wait_click_1 = WaitForClick{data = {}}
+
+        local btn = createColorButton("click!", cc.size(100, 80), function()
+            n_wait_click_1.state.data.clicked = true
+            print("click => ", n_wait_click_1.state.data.clicked)
+        end)
+        btn:setPosition(cc.p(100, 100))
+        State.bgLayer:addChild(btn)
+
         f:con(n1, n_wait_1)
         f:con(n_wait_1, n_atk_1)
         f:con(n_atk_1, n_atk_2)
@@ -102,13 +167,14 @@ local function init_flow_()
         f:con(n_wait_2, n_echo_1)
         f:con(n_echo_1, n_wait_3, "1111")
         f:con(n_wait_3, n_atk_3)
-        f:con(n_atk_3, n_atk_4)
+        f:con(n_atk_3, n_wait_click_1)
+        f:con(n_wait_click_1, n_atk_4)
         f:con(n_atk_4, n2)
 
         f:setStart(n1)
         f:setEnd(n2)
         f:printFlow()
-        
+
         runFlowAsync(f, 1)
     end
 
