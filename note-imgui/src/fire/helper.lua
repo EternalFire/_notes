@@ -32,11 +32,11 @@ function setInterval(callback, sec)
 
     sec = sec or 0
     id = cc.Director:getInstance():getScheduler():scheduleScriptFunc(_runSchedule, sec, false)
-    
+
     if not _timerIDs[id] then
         _timerIDs[id] = true
     end
-    
+
     return id
 end
 
@@ -187,11 +187,11 @@ function createTouchListener(node, option)
                     end
                 else
                     local s = node:getContentSize()
-                    
+
                     if debug then
                         print("check default ", positionInNode.x, positionInNode.y, s.width, s.height)
                     end
-                    
+
                     if s.width == 0 or s.height == 0 then
                         if op_checkZeroSize then
                             local min = 10
@@ -281,7 +281,7 @@ function createTouchListener(node, option)
             touchComplete()
 
             if cancelledCB then
-                cancelledCB()
+                cancelledCB(_isInSide)
             end
         end
 

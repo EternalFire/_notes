@@ -104,6 +104,7 @@ local function init_flow_()
         end, 0.1)
     end
 
+    -- custom node
     local function WaitForClick(param)
         local _param = clone(param)
 
@@ -146,10 +147,11 @@ local function init_flow_()
         local n_atk_4 = createNode{actType = "AtkNode", data = { x = 0, y = 0, damage = 1000 }}
 
         local n_wait_click_1 = WaitForClick{data = {}}
+        local n_wait_click_2 = WaitForClick{data = {}}
 
         local btn = createColorButton("click!", cc.size(100, 80), function()
             n_wait_click_1.state.data.clicked = true
-            print("click => ", n_wait_click_1.state.data.clicked)
+            n_wait_click_2.state.data.clicked = true
         end)
         btn:setPosition(cc.p(100, 100))
         State.bgLayer:addChild(btn)
@@ -168,7 +170,8 @@ local function init_flow_()
         f:con(n_echo_1, n_wait_3, "1111")
         f:con(n_wait_3, n_atk_3)
         f:con(n_atk_3, n_wait_click_1)
-        f:con(n_wait_click_1, n_atk_4)
+        f:con(n_wait_click_1, n_wait_click_2)
+        f:con(n_wait_click_2, n_atk_4)
         f:con(n_atk_4, n2)
 
         f:setStart(n1)

@@ -368,7 +368,7 @@ local function case_imgui()
     local function testSocketPanel()
         imgui.begin("TestSocket Panel")
 
-        _, _testSocketPanel_buf = imgui.inputText("input:", _testSocketPanel_buf, 256)        
+        _, _testSocketPanel_buf = imgui.inputText("input:", _testSocketPanel_buf, 256)
 
         if imgui.button("Send") then
             fire.testSocket(_testSocketPanel_buf)
@@ -427,7 +427,7 @@ function run()
     -- local bgSprite_4_3 = display.newSprite("res/bg_4_3_1024_768.jpg"):addTo(bgLayer):move(display.cx, display.cy)
 
     local bgSprite_16_9 = display.newSprite("res/bg_16_9_1280_720.jpg"):addTo(bgLayer):move(display.cx, display.cy)
-    -- bgSprite_16_9:setScale(display.width / bgSprite_16_9:getContentSize().width, display.height / bgSprite_16_9:getContentSize().height)    
+    -- bgSprite_16_9:setScale(display.width / bgSprite_16_9:getContentSize().width, display.height / bgSprite_16_9:getContentSize().height)
 
     local emitter = cc.ParticleSystemQuad:create("Particles/LavaFlow.plist")
     local batch = cc.ParticleBatchNode:createWithTexture(emitter:getTexture())
@@ -547,7 +547,7 @@ function run()
         isSwallow = false,
         endedCB = function(_isInSide, touch)
             State.touchLocation = touch:getLocation()
-            print(State.touchLocation.x, State.touchLocation.y)
+            printf("touchLocation %.2f, %.2f", State.touchLocation.x, State.touchLocation.y)
         end
     }
     createTouchListener(State.bgLayer, option)
@@ -575,7 +575,8 @@ function _test()
     -- fire.createShaderTestView()
     -- fire.testSocket()
 
-    fire.init_flow_()
+    -- fire.init_flow_()
+    fire.test_ui()
 end
 
 function test_ccs_v2_skeleton_animation()
