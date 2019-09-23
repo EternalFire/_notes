@@ -3,6 +3,7 @@
 -- action
 -- style
 
+local ui_config = require("fire.ui.config")
 local Button = {}
 
 function Button.new(param)
@@ -14,19 +15,15 @@ function Button.new(param)
         self.layerColor = nil
         self.label = nil
 
-        self.text = "text"
+        self.text = "button"
         self.size = cc.size(80, 60)
         self.bgColor = cc.c4b(20, 20, 20, 255)
         self.callback = nil
 
-        local text = self.text
-        local size = self.size
-        local bgColor = self.bgColor
-
         -- update with param
         if param then
             if param.text then
-                text = param.text
+                self.text = param.text
             end
 
             if type(param.callback) == "function" then
@@ -34,6 +31,11 @@ function Button.new(param)
             end
             -- ...
         end
+
+        local text = self.text
+        local size = self.size
+        local bgColor = self.bgColor
+        local fontSize = ui_config.default.fontSize
 
         -- init ui
         local node = cc.Node:create()
@@ -46,6 +48,7 @@ function Button.new(param)
             local label = cc.Label:create()
             label:setPosition(cc.p(size.width / 2, size.height / 2))
             label:setString(text)
+            label:setSystemFontSize(fontSize)
             node:addChild(label)
 
         -- touch listener

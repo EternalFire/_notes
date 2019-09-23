@@ -9,7 +9,18 @@ local function test_ui()
     btn.node:addTo(State.bgLayer)
     btn.node:move(110,110)
 
-    -- btn.text11 = "100"
+    local InputText = require("fire.ui.InputText")
+    local inputText = InputText.new{
+        endCallback = function(changed, before, after)
+            print("endCallback =>", changed, before, after)
+        end
+    }
+    inputText.node:addTo(State.bgLayer)
+    inputText.node:move(210,210)
+
+    setTimeout(function()
+        inputText.text = "93489023748923"
+    end, 3)
 end
 
 return test_ui
