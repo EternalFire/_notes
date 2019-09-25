@@ -221,7 +221,8 @@ function createTouchListener(node, option)
         end
 
         local function _onTouchBegan(touch, event)
-            local positionInNode = node:convertToNodeSpace(touch:getLocation())
+            local touchLocation = touch:getLocation()
+            local positionInNode = node:convertToNodeSpace(touchLocation)
             local target = event:getCurrentTarget()
             isInside = _checkInside(positionInNode)
 
@@ -230,7 +231,7 @@ function createTouchListener(node, option)
             end
 
             if beganCB then
-                return beganCB(isInside)
+                return beganCB(isInside, touchLocation, positionInNode)
             else
                 if isInside then
                     return true
@@ -298,9 +299,9 @@ function createTouchListener(node, option)
     end
 end
 
----get cell position in grid
+---get cell info in grid
 ---@param param.size cc.Size grid node's contentSize
-function getCellPos(param)
+function calcCellInfo(param)
     param = param or {}
     local size = param.size
     local maxCol = param.maxCol or 1
