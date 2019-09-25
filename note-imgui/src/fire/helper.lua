@@ -298,3 +298,54 @@ function createTouchListener(node, option)
     end
 end
 
+---get cell position in grid
+---@param param.size cc.Size grid node's contentSize
+function getCellPos(param)
+    param = param or {}
+    local size = param.size
+    local maxCol = param.maxCol or 1
+    local maxRow = param.maxRow or 1
+    local col = param.col or 1
+    local row = param.row or 1
+    local spanCol = param.spanCol or 0
+    local spanRow = param.spanRow or 0
+
+    local result = {
+        cellSize = nil,
+        expandedCellSize = nil,
+        col = 1,
+        row = 1,
+        x = 0,
+        y = 0,
+    }
+
+    if size then
+        local x, y = 0, 0
+        local cellSize = cc.size(size.width / maxCol, size.height / maxRow)
+        result.cellSize = cellSize
+
+        col = math.min(math.max(col, 1), maxCol)
+        row = math.min(math.max(row, 1), maxRow)
+        result.col, result.row = col, row
+
+        local expandedCol = math.min(math.max(col + spanCol, 1), maxCol)
+        local expandedRow = math.min(math.max(row + spanRow, 1), maxRow)
+        local expandedCellSize = cc.size(cellSize.width * (expandedCol - col + 1), cellSize.height * (expandedRow - row + 1))
+        result.expandedCellSize = expandedCellSize
+
+        if spanCol == 0 then
+            x = cellSize.width * (col - 1) + 0.5 * cellSize.width
+        else
+            x = cellSize.width * (col - 1) + 0.5 * expandedCellSize.width
+        end
+
+        if spanRow == 0 then
+            y = size.height - (cellSize.height * (row - 1) + 0.5 * cellSize.height)
+        else
+            y = size.height - (cellSize.height * (row - 1) + 0.5 * expandedCellSize.height)
+        end
+
+        result.x, result.y = x, y
+        return result
+    end
+end

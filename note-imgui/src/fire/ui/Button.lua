@@ -18,6 +18,7 @@ function Button.new(param)
         self.text = "button"
         self.size = cc.size(80, 60)
         self.bgColor = cc.c4b(20, 20, 20, 255)
+        self.fontSize = ui_config.default.fontSize
         self.callback = nil
 
         -- update with param
@@ -35,7 +36,7 @@ function Button.new(param)
         local text = self.text
         local size = self.size
         local bgColor = self.bgColor
-        local fontSize = ui_config.default.fontSize
+        local fontSize = self.fontSize
 
         -- init ui
         local node = cc.Node:create()

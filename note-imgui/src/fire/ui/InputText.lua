@@ -13,6 +13,7 @@ function InputText.new(param)
         self.text = "input"
         self.size = cc.size(80, 60)
         self.bgColor = cc.c4b(20, 20, 20, 255)
+        self.fontSize = ui_config.default.fontSize
         self.endCallback = nil
 
         if param then
@@ -27,7 +28,7 @@ function InputText.new(param)
         local bgSize = cc.size(size.width * 0.98, size.height * 0.98)
         local bgColor = self.bgColor
         local res = ""
-        local fontSize = ui_config.default.fontSize
+        local fontSize = self.fontSize
 
         local function editboxEventHandler(eventType)
             if eventType == "began" then
@@ -37,18 +38,18 @@ function InputText.new(param)
                 local changed = self.text ~= self.editBox:getText()
                 local before = self.text
                 local after = self.editBox:getText()
-                
+
                 if changed then
                     self.text = after
                 end
 
-                if self.endCallback then                                                
+                if self.endCallback then
                     self.endCallback(changed, before, after)
                 end
             elseif eventType == "changed" then
-                -- triggered when the edit box text was changed.                
+                -- triggered when the edit box text was changed.
             elseif eventType == "return" then
-                -- triggered when the return button was pressed or the outside area of keyboard was touched.                
+                -- triggered when the return button was pressed or the outside area of keyboard was touched.
                 -- useless
             end
         end
@@ -68,7 +69,7 @@ function InputText.new(param)
             editBox:setFontSize(fontSize)
             editBox:registerScriptEditBoxHandler(editboxEventHandler)
             node:addChild(editBox)
-                            
+
         self.node = node
         self.layerColor = layerColor
         self.editBox = editBox
