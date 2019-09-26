@@ -221,6 +221,10 @@ function createTouchListener(node, option)
         end
 
         local function _onTouchBegan(touch, event)
+            if not node:isVisible() then
+                return false
+            end
+
             local touchLocation = touch:getLocation()
             local positionInNode = node:convertToNodeSpace(touchLocation)
             local target = event:getCurrentTarget()
@@ -256,7 +260,7 @@ function createTouchListener(node, option)
 
             if movedCB then
                 local touchLocation = touch:getLocation()
-                movedCB(touchLocation)
+                movedCB(touchLocation, touch)
             end
         end
 
@@ -265,11 +269,14 @@ function createTouchListener(node, option)
                 print("onTouchEnded", os.clock())
             end
 
-            local _isInSide = isInside
+            local _isInside = isInside
             touchComplete()
 
             if endedCB then
-                endedCB(_isInSide, touch)
+                local touchLocation = touch:getLocation()
+                local positionInNode = node:convertToNodeSpace(touchLocation)
+                _isInside = _checkInside(positionInNode)
+                endedCB(_isInside, touchLocation, positionInNode, touch)
             end
         end
 
@@ -278,11 +285,11 @@ function createTouchListener(node, option)
                 print("onTouchCancelled", os.clock())
             end
 
-            local _isInSide = isInside
+            local _isInside = isInside
             touchComplete()
 
             if cancelledCB then
-                cancelledCB(_isInSide)
+                cancelledCB(_isInside)
             end
         end
 

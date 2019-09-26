@@ -545,9 +545,9 @@ function run()
         -- checkZeroSize = true
         -- boxOrRadius = 200,
         isSwallow = false,
-        endedCB = function(_isInSide, touch)
-            State.touchLocation = touch:getLocation()
-            printf("touchLocation %.2f, %.2f", State.touchLocation.x, State.touchLocation.y)
+        endedCB = function(_isInSide, touchLocation, positionInNode, touch)
+            -- State.touchLocation = touch:getLocation()
+            -- printf("touchLocation %.2f, %.2f", State.touchLocation.x, State.touchLocation.y)
         end
     }
     createTouchListener(State.bgLayer, option)
