@@ -31,7 +31,7 @@ function Edge:ctor(param)
     self.beganPos = nil
     self.movedPos = nil
     self.color = cc.c4f(math.random(0,1), math.random(0,1), math.random(0,1))
-    self.color = cc.c4f(0, 0, 0, 1.0)
+    self.color = cc.c4f(0.8, 0, 0, 1.0)
     self.lineWidth = 4
     self.size = cc.size(10, 10)
 
@@ -41,6 +41,11 @@ function Edge:ctor(param)
     if param then
         if type(param.callback) == "function" then
             self.callback = param.callback
+        end
+
+        if param.size then
+            self.size.width = param.size.width
+            self.size.height = param.size.height
         end
     end
 
@@ -77,6 +82,7 @@ function Edge:ctor(param)
     local option = {
         isSwallow = true,
         -- isTouchMove = true,
+        boxOrRadius = math.max(size.height, size.width) * 2,
         beganCB = function(isInside, touchLocation, positionInNode)
             if isInside then
                 self.beganPos = cc.p(size.width / 2, size.height / 2)
@@ -89,8 +95,8 @@ function Edge:ctor(param)
             self:drawArrow(self.beganPos, self.movedPos)
         end,
         endedCB = function(isInSide, touchLocation, positionInNode, touch)
-            self.movedPos = positionInNode
-            self:drawArrow(self.beganPos, self.movedPos)
+            -- self.movedPos = positionInNode
+            -- self:drawArrow(self.beganPos, self.movedPos)
 
             if self.callback then
                 self.callback(touchLocation)
@@ -126,7 +132,7 @@ function Edge:drawArrow(from_pos, to_pos, isWorldSpace)
         local array = {}
         local arrow_array = {}
         local arrow_array_1 = {}
-        local arrow_color = cc.c4f(0, 0, 0, 1)
+        local arrow_color = cc.c4f(0.9, 0, 0, 1)
         local arrow_border_color = cc.c4f(0, 0, 0, 0)
 
         line:clear()

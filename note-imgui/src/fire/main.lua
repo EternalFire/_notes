@@ -560,8 +560,10 @@ local function main()
     local scene = display.newScene("scene")
     display.runScene(scene--[[, transition, time, more--]])
 
-    imgui.draw = function() end
-    -- case_imgui()
+    if imgui then
+        imgui.draw = function() end
+        -- case_imgui()
+    end
 
     setTimeout(function() run() end, 0)
 end

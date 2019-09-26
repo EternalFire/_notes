@@ -27,10 +27,12 @@
 #include "cocos2d.h"
 #include "scripting/lua-bindings/manual/lua_module_register.h"
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include "imgui/CCIMGUIGLViewImpl.h"
 #include "imgui/CCImGuiLayer.h"
 #include "imgui/CCIMGUI.h"
 #include "imgui/imgui_lua.hpp"
+#endif
 
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -105,7 +107,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     //register custom function
     //LuaStack* stack = engine->getLuaStack();
     //register_custom_function(stack->getLuaState());
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     luaopen_imgui(L);
+#endif
 
 #if CC_64BITS
     FileUtils::getInstance()->addSearchPath("src/64bit");
@@ -120,6 +124,7 @@ bool AppDelegate::applicationDidFinishLaunching()
         return false;
     }
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     Director::getInstance()->getScheduler()->schedule([=](float dt)
     {
         auto runningScene = Director::getInstance()->getRunningScene();
@@ -128,8 +133,7 @@ bool AppDelegate::applicationDidFinishLaunching()
             runningScene->addChild(ImGuiLayer::create(), INT_MAX, "ImGUILayer");
         }
     }, this, 0, false, "checkIMGUI");
-
-	//auto p = new ActionInterval();
+#endif
 
     return true;
 }

@@ -67,52 +67,52 @@ local function test_ui()
     local Slot = require("fire.ui.Slot")
     local Edge = require("fire.ui.Edge")
     do
-        -- local slot
+        local slot
 
-        -- local e1 = Edge.new{
-        --     callback = function(touchLocation)
-        --         if slot then
-        --             slot.posToCheck = touchLocation
-        --         end
-        --     end
-        -- }
-        -- e1.node:addTo(layer):move(200, 500)
+        local e1 = Edge.new{
+            callback = function(touchLocation)
+                if slot then
+                    slot.posToCheck = touchLocation
+                end
+            end
+        }
+        e1.node:addTo(layer):move(200, 500)
 
-        -- local e2 = Edge.new()
-        -- e2.node:addTo(layer):move(200, 300)
+        local e2 = Edge.new()
+        e2.node:addTo(layer):move(200, 300)
 
-        -- local isInSlot = false
-        -- slot = Slot.new{
-        --     radius = 20,
-        --     callback = function(isInside, per)
-        --         isInSlot = isInside
-        --         print(per, " in slot ?  ", isInSlot)
-        --     end
-        -- }
-        -- slot.node:addTo(layer):move(50, 300)
+        local isInSlot = false
+        slot = Slot.new{
+            radius = 20,
+            callback = function(isInside, per)
+                isInSlot = isInside
+                print(per, " in slot ?  ", isInSlot)
+            end
+        }
+        slot.node:addTo(layer):move(50, 300)
 
-        -- local option = {
-        --     isSwallow = true,
-        --     isTouchMove = true,
-        --     beganCB = function(isInside, touchLocation, positionInNode)
-        --         if isInside then
+        local option = {
+            isSwallow = true,
+            isTouchMove = true,
+            beganCB = function(isInside, touchLocation, positionInNode)
+                if isInside then
 
-        --         end
-        --         return isInside
-        --     end,
-        --     movedCB = function(touchLocation, touch)
-        --         if isInSlot then
-        --             e1:drawArrow(nil, touchLocation, true)
-        --         end
-        --     end,
-        --     endedCB = function(isInside)
+                end
+                return isInside
+            end,
+            movedCB = function(touchLocation, touch)
+                if isInSlot then
+                    e1:drawArrow(nil, touchLocation, true)
+                end
+            end,
+            endedCB = function(isInside)
 
-        --     end,
-        --     cancelledCB = function()
+            end,
+            cancelledCB = function()
 
-        --     end,
-        -- }
-        -- createTouchListener(slot.node, option)
+            end,
+        }
+        createTouchListener(slot.node, option)
 
         -- setTimeout(function()
         --     slot.node:removeFromParent()
