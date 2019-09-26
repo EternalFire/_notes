@@ -69,29 +69,55 @@ function Slot:ctor(param)
     self.layerColor = layerColor
 
     -- check pos whether inside slot
-    setInterval(function(dt)
+    local timer_id = setInterval(function(dt)
         if self.posToCheck then
-            local p = self.node:convertToNodeSpaceAR(self.posToCheck)
-            local per = cc.pGetLength(p) / math.max(1, self.radius)
-            local isInside = false
-
-            if per <= 1 then
-                isInside = true
-            end
-
-            if self.callback then
-                self.callback(isInside, 1 - per)
-            end
-
+            self:checkPos(self.posToCheck, self.callback)
             self.posToCheck = nil
         end
     end, 0.1)
+
+    -- self.node:onNodeEvent("enter", function()
+    --     -- print("onNodeEvent [enter]")
+    -- end)
+
+    self.node:onNodeEvent("exit", function()
+        -- print("onNodeEvent [exit]")
+        clearTimer(timer_id)
+    end)
+
+    -- self.node:onNodeEvent("enterTransitionFinish", function()
+    --     -- print("onNodeEvent [enterTransitionFinish]")
+    -- end)
+
+    -- self.node:onNodeEvent("exitTransitionStart", function()
+    --     -- print("onNodeEvent [exitTransitionStart]")
+    -- end)
+
+    -- self.node:onNodeEvent("cleanup", function()
+    --     -- print("onNodeEvent [cleanup]")
+    -- end)
 end
 
 function Slot:setRadius(r)
     self.radius = r
     self.size.width = math.max(10, self.radius * 2)
     self.size.height = self.size.width
+end
+
+function Slot:checkPos(worldPos, callback)
+    local p = self.node:convertToNodeSpaceAR(worldPos)
+    local per = cc.pGetLength(p) / math.max(1, self.radius)
+    local isInside = false
+
+    if per <= 1 then
+        isInside = true
+    end
+
+    if callback then
+        callback(isInside, 1 - per)
+    end
+
+    return isInside
 end
 
 return Slot

@@ -306,6 +306,13 @@ function createTouchListener(node, option)
     end
 end
 
+function removeTouchListener(node, listener)
+    if node and listener then
+        local eventDispatcher = node:getEventDispatcher()
+        eventDispatcher:removeEventListener(listener)
+    end
+end
+
 ---get cell info in grid
 ---@param param.size cc.Size grid node's contentSize
 function calcCellInfo(param)

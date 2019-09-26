@@ -6,3 +6,19 @@ local ui_config = {
 }
 
 return ui_config
+
+--[[
+todo:
+
+- [ ] ui manager
+- [ ] event manager
+- [ ] toggle
+- [ ] toggle button
+- [ ] combobox
+- [ ] slider
+- [ ] drag input
+- [ ] dialog
+- [ ] action unit panel
+- [ ] flow panel
+- [ ] menu
+]]
