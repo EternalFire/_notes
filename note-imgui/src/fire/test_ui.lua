@@ -58,6 +58,7 @@ local function test_ui()
             btn1.node:move(result.x, result.y)
         end
 
+        -- test calcCellInfo()
         -- local result = calcCellInfo{size = panel.size, maxCol = 4, maxRow = 4, col = 2, row = 4, spanCol = 1, spanRow = 0}
         -- btn.node:setPosition(btn.node:getParent():convertToNodeSpace(panel.node:convertToWorldSpace(cc.p(result.x, result.y))))
 
@@ -120,11 +121,48 @@ local function test_ui()
     end
     -------------------------------------------
 
+    -- local ToggleButton = require("fire.ui.ToggleButton")
+    -- local toggleButton = ToggleButton.new{
+    --     callback = function(isOn)
+    --         print("toggle:", isOn)
+    --     end
+    -- }
+    -- toggleButton.node:addTo(layer):move(700, 40)
+
+    -------------------------------------------
+    local Toggle = require("fire.ui.Toggle")
+    local toggle = Toggle.new{
+        isHorizontal = false,
+        callback = function(isOn, index)
+            print("toggle callback ", isOn, index)
+        end,
+        interval = 2,
+        data = {
+            {
+                text = "t1",
+                size = cc.size(40, 40),
+                callback = function(isOn)
+                    print("toggle t1 !", isOn)
+                end
+            },
+            {
+                text = "t2",
+                size = cc.size(40, 40),
+                callback = function(isOn)
+                    print("toggle t2 !", isOn)
+                end
+            },
+            {
+                text = "t3",
+                size = cc.size(40, 40),
+                callback = function(isOn)
+                    print("toggle t3 !", isOn)
+                end
+            },
+        }
+    }
+    toggle.node:addTo(layer):move(900, 400)
 
 end
 
 return test_ui
-
-
-
-

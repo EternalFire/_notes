@@ -13,7 +13,7 @@ todo:
 - [ ] ui manager
 - [ ] event manager
 - [ ] toggle
-- [ ] toggle button
+- [x] toggle button
 - [ ] combobox
 - [ ] slider
 - [ ] drag input
