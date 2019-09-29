@@ -12,9 +12,10 @@ todo:
 
 - [ ] ui manager
 - [ ] event manager
-- [ ] toggle
+- [x] toggle
 - [x] toggle button
-- [ ] combobox
+- [x] combobox
+- [x] combobox item
 - [ ] slider
 - [ ] drag input
 - [ ] dialog

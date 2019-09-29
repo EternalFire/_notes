@@ -131,37 +131,70 @@ local function test_ui()
 
     -------------------------------------------
     local Toggle = require("fire.ui.Toggle")
-    local toggle = Toggle.new{
-        isHorizontal = false,
-        callback = function(isOn, index)
-            print("toggle callback ", isOn, index)
+    do
+        -- local toggle = Toggle.new{
+        --     isHorizontal = false,
+        --     callback = function(isOn, index)
+        --         print("toggle callback ", isOn, index)
+        --     end,
+        --     interval = 2,
+        --     data = {
+        --         {
+        --             text = "t1",
+        --             size = cc.size(40, 40),
+        --             callback = function(isOn)
+        --                 print("toggle t1 !", isOn)
+        --             end
+        --         },
+        --         {
+        --             text = "t2",
+        --             size = cc.size(40, 40),
+        --             callback = function(isOn)
+        --                 print("toggle t2 !", isOn)
+        --             end
+        --         },
+        --         {
+        --             text = "t3",
+        --             size = cc.size(40, 40),
+        --             callback = function(isOn)
+        --                 print("toggle t3 !", isOn)
+        --             end
+        --         },
+        --     }
+        -- }
+        -- toggle.node:addTo(layer):move(900, 400)
+    end
+    -------------------------------------------
+    local Combobox = require("fire.ui.Combobox")
+    local combobox = Combobox.new{
+        callback = function(index)
+            print("option [", index, "]")
         end,
-        interval = 2,
         data = {
             {
-                text = "t1",
-                size = cc.size(40, 40),
-                callback = function(isOn)
-                    print("toggle t1 !", isOn)
+                text = "option 1",
+                size = cc.size(80, 40),
+                callback = function()
+                    print("select option1 !")
                 end
             },
             {
-                text = "t2",
-                size = cc.size(40, 40),
-                callback = function(isOn)
-                    print("toggle t2 !", isOn)
+                text = "option 2",
+                size = cc.size(80, 40),
+                callback = function()
+                    print("select option2 !")
                 end
             },
             {
-                text = "t3",
-                size = cc.size(40, 40),
-                callback = function(isOn)
-                    print("toggle t3 !", isOn)
-                end
+                text = "option 3",
+                size = cc.size(80, 40),
+                -- callback = function()
+                --     print("select option3")
+                -- end
             },
         }
     }
-    toggle.node:addTo(layer):move(900, 400)
+    combobox.node:addTo(layer):move(900, 100)
 
 end
 

@@ -1,9 +1,9 @@
 
 local ui_config = require("fire.ui.config")
-local Edge = {}
+local Edge = { classname = "Edge" }
 
 function Edge.new(param)
-    local edge = { classname = "Edge" }
+    local edge = {}
 
     local meta_edge = {}
     meta_edge.__index = Edge

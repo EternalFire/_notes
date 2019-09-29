@@ -1,9 +1,9 @@
 
 local ui_config = require("fire.ui.config")
-local ToggleButton = {}
+local ToggleButton = { classname = "ToggleButton" }
 
 function ToggleButton.new(param)
-    local toggleButton = { classname = "ToggleButton" }
+    local toggleButton = {}
     setmetatable(toggleButton, { __index = ToggleButton })
 
     toggleButton:ctor(param)

@@ -1,53 +1,38 @@
 
--- type
--- action
--- style
-
 local ui_config = require("fire.ui.config")
-local Button = { classname = "Button" }
+local ComboboxItem = { classname = "ComboboxItem" }
 
-function Button.new(param)
-    local btn = {}
+function ComboboxItem.new(param)
+    local comboboxItem = {}
+    setmetatable(comboboxItem, { __index = ComboboxItem })
 
-    local meta_button = {
-        __index = Button
-    }
-    setmetatable(btn, meta_button)
-
-    btn:ctor(param)
-
-    -- update ui by property
-    local meta = {}
-    meta.__index = btn
-    meta.__newindex = function(t, key, value)
-        btn[key] = value
-
-        if key == "text" then
-            if btn.label then
-                btn.label:setString(btn.text)
-            end
-        end
-    end
+    comboboxItem:ctor(param)
 
     local proxy = {}
-    setmetatable(proxy, meta)
+    setmetatable(proxy, {
+        __index = comboboxItem,
+        __newindex = function(t, key, value)
+            comboboxItem[key] = value
 
+            if key == "text" then
+                comboboxItem.label:setString(value)
+            end
+        end
+    })
     return proxy
 end
 
-function Button:ctor(param)
-    -- property
+function ComboboxItem:ctor(param)
     self.node = nil
     self.layerColor = nil
     self.label = nil
 
-    self.text = "button"
+    self.text = "item"
     self.size = cc.size(80, 60)
     self.bgColor = cc.c4b(20, 20, 20, 255)
     self.fontSize = ui_config.default.fontSize
     self.callback = nil
 
-    -- update with param
     if param then
         if param.text then
             self.text = param.text
@@ -55,6 +40,11 @@ function Button:ctor(param)
 
         if type(param.callback) == "function" then
             self.callback = param.callback
+        end
+
+        if param.size then
+            self.size.width = param.size.width
+            self.size.height = param.size.height
         end
         -- ...
     end
@@ -85,22 +75,13 @@ function Button:ctor(param)
     -- touch listener
     local option = {
         isSwallow = true,
-        -- isTouchMove = true,
-        beganCB = function(isInside)
-            if isInside then
-                self.node:runAction(cc.ScaleTo:create(0.1, 1.1))
-            end
-            return isInside
-        end,
         endedCB = function(isInside)
-            self.node:runAction(cc.ScaleTo:create(0.05, 1))
             if self.callback then self.callback(isInside) end
-        end,
-        cancelledCB = function()
-            self.node:runAction(cc.ScaleTo:create(0.05, 1))
         end,
     }
     createTouchListener(node, option)
 end
 
-return Button
+
+
+return ComboboxItem

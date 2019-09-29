@@ -1,9 +1,9 @@
 
 local ui_config = require("fire.ui.config")
-local Slot = {}
+local Slot = { classname = "Slot" }
 
 function Slot.new(param)
-    local slot = { classname = "Slot" }
+    local slot = { }
     local meta_slot = {
         __index = Slot
     }
