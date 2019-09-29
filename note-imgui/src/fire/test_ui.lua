@@ -20,13 +20,31 @@ local function test_ui()
     -- inputText
     local InputText = require("fire.ui.InputText")
     do
-        -- local inputText = InputText.new{
-        --     endCallback = function(changed, before, after)
-        --         print("endCallback =>", changed, before, after)
-        --     end
-        -- }
-        -- inputText.node:addTo(layer)
-        -- inputText.node:move(210,210)
+        local inputText = InputText.new{
+            endCallback = function(changed, before, after)
+                print("endCallback =>", changed, before, after)
+            end
+        }
+        inputText.node:addTo(layer)
+        inputText.node:move(210,210)
+
+        local inputText1 = InputText.new{
+            mode = "Number",
+            endCallback = function(changed, before, after)
+                print("endCallback =>", changed, before, after)
+            end
+        }
+        inputText1.node:addTo(layer)
+        inputText1.node:move(130,210)
+
+        local inputText2 = InputText.new{
+            mode = "Integer",
+            endCallback = function(changed, before, after)
+                print("endCallback =>", changed, before, after)
+            end
+        }
+        inputText2.node:addTo(layer)
+        inputText2.node:move(40,210)
     end
 
     -------------------------------------------
