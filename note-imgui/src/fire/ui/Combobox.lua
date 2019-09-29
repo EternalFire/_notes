@@ -29,8 +29,9 @@ function Combobox:ctor(param)
     self.interval = 2
     self.displayItem = nil
     self.isShowOption = false
-    self.defaultIndex = 1
-    self.selectedIndex = 1
+    self.defaultIndex = 1  -- 默认项
+    self.selectedIndex = 1 -- 选中项
+    self.bgColor = cc.c4b(20, 20, 20, 200)
 
     if param then
         if type(param.data) == "table" then
@@ -42,6 +43,8 @@ function Combobox:ctor(param)
 
     local size = self.size
     local interval = self.interval
+    local bgColor = self.bgColor
+    local itemSize = cc.size(0, 0)
     local _createCallback = function(index, itemParam)
         return function()
             self:selectOption(index)
@@ -66,6 +69,14 @@ function Combobox:ctor(param)
         size.width = math.max(size.width, comboboxItem.size.width)
         size.height = size.height + comboboxItem.size.height
 
+        if itemSize.width == 0 then
+            itemSize.width = comboboxItem.size.width
+        end
+
+        if itemSize.height == 0 then
+            itemSize.height = comboboxItem.size.height
+        end
+
         -- make space for display item
         if i == 1 then
             size.height = size.height + comboboxItem.size.height
@@ -81,12 +92,19 @@ function Combobox:ctor(param)
     node:setContentSize(size)
     node:setAnchorPoint(cc.p(0.5, 0.5))
 
+        local layerColor = cc.LayerColor:create(bgColor, size.width * 1.05, size.height * 1.05)
+        layerColor:setAnchorPoint(cc.p(0.5, 0.5))
+        layerColor:setIgnoreAnchorPointForPosition(false)
+        layerColor:setPosition(cc.p(size.width / 2, size.height / 2))
+        node:addChild(layerColor)
+
         for i, item in ipairs(self.items) do
             local result = calcCellInfo{size = size, maxCol = 1, maxRow = #self.items + 1, col = 1, row = i + 1, spanCol = 0, spanRow = 0}
             item.node:addTo(node):move(result.x, result.y)
         end
 
         local displayItem = ComboboxItem.new({
+            size = itemSize,
             callback = function()
                 self:switchDisplayOptions()
             end

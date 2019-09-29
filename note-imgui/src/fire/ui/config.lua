@@ -16,7 +16,7 @@ todo:
 - [x] toggle button
 - [x] combobox
 - [x] combobox item
-- [ ] slider
+- [x] slider
 - [ ] drag input
 - [ ] dialog
 - [ ] action unit panel

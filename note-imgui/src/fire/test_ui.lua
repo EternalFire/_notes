@@ -1,6 +1,7 @@
 
 local function test_ui()
     local layer = State.bgLayer
+    local bgSprite = State.bgSprite
 
     -- button
     local Button = require("fire.ui.Button")
@@ -166,36 +167,47 @@ local function test_ui()
     end
     -------------------------------------------
     local Combobox = require("fire.ui.Combobox")
-    local combobox = Combobox.new{
-        callback = function(index)
-            print("option [", index, "]")
-        end,
-        data = {
-            {
-                text = "option 1",
-                size = cc.size(80, 40),
-                callback = function()
-                    print("select option1 !")
-                end
-            },
-            {
-                text = "option 2",
-                size = cc.size(80, 40),
-                callback = function()
-                    print("select option2 !")
-                end
-            },
-            {
-                text = "option 3",
-                size = cc.size(80, 40),
-                -- callback = function()
-                --     print("select option3")
-                -- end
-            },
+    do
+        local combobox = Combobox.new{
+            callback = function(index)
+                print("option [", index, "]")
+            end,
+            data = {
+                {
+                    text = "option 1",
+                    size = cc.size(80, 40),
+                    callback = function()
+                        print("select option1 !")
+                    end
+                },
+                {
+                    text = "option 2",
+                    size = cc.size(80, 40),
+                    callback = function()
+                        print("select option2 !")
+                    end
+                },
+                {
+                    text = "option 3",
+                    size = cc.size(80, 40),
+                    -- callback = function()
+                    --     print("select option3")
+                    -- end
+                },
+            }
         }
-    }
-    combobox.node:addTo(layer):move(900, 100)
-
+        combobox.node:addTo(layer):move(900, 100)
+    end
+    -------------------------------------------
+    local Slider = require("fire.ui.Slider")
+    do
+        local slider = Slider.new{
+            callback = function(per)
+                bgSprite:setScale(0.5 + 1.5 * per)
+            end
+        }
+        slider.node:addTo(layer):move(400, 600)
+    end
 end
 
 return test_ui
