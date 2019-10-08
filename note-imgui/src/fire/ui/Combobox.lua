@@ -21,6 +21,8 @@ end
 
 function Combobox:ctor(param)
     self.node = nil
+    self.displayItem = nil
+    self.layerColor = nil
 
     self.size = cc.size(0, 0)
     self.data = nil
@@ -39,6 +41,10 @@ function Combobox:ctor(param)
         end
 
         if param.callback then self.callback = param.callback end
+
+        if param.defaultIndex then
+            self.defaultIndex = param.defaultIndex
+        end
     end
 
     local size = self.size
@@ -114,7 +120,7 @@ function Combobox:ctor(param)
 
     self.node = node
     self.displayItem = displayItem
-
+    self.layerColor = layerColor
 
     self:selectOption(self.defaultIndex)
 end
@@ -125,6 +131,8 @@ function Combobox:showOptions()
     for i, item in ipairs(self.items) do
         item.node:setVisible(true)
     end
+
+    self.layerColor:setVisible(true)
 end
 
 function Combobox:hideOptions()
@@ -133,6 +141,8 @@ function Combobox:hideOptions()
     for i, item in ipairs(self.items) do
         item.node:setVisible(false)
     end
+
+    self.layerColor:setVisible(false)
 end
 
 function Combobox:switchDisplayOptions()

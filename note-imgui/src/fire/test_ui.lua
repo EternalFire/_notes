@@ -151,37 +151,39 @@ local function test_ui()
     -------------------------------------------
     local Toggle = require("fire.ui.Toggle")
     do
-        -- local toggle = Toggle.new{
-        --     isHorizontal = false,
-        --     callback = function(isOn, index)
-        --         print("toggle callback ", isOn, index)
-        --     end,
-        --     interval = 2,
-        --     data = {
-        --         {
-        --             text = "t1",
-        --             size = cc.size(40, 40),
-        --             callback = function(isOn)
-        --                 print("toggle t1 !", isOn)
-        --             end
-        --         },
-        --         {
-        --             text = "t2",
-        --             size = cc.size(40, 40),
-        --             callback = function(isOn)
-        --                 print("toggle t2 !", isOn)
-        --             end
-        --         },
-        --         {
-        --             text = "t3",
-        --             size = cc.size(40, 40),
-        --             callback = function(isOn)
-        --                 print("toggle t3 !", isOn)
-        --             end
-        --         },
-        --     }
-        -- }
-        -- toggle.node:addTo(layer):move(900, 400)
+        local toggle = Toggle.new{
+            isHorizontal = false,
+            callback = function(isOn, index)
+                print("toggle callback ", isOn, index)
+            end,
+            interval = 2,
+            data = {
+                {
+                    text = "t1",
+                    size = cc.size(40, 40),
+                    callback = function(isOn)
+                        print("toggle t1 !", isOn)
+                    end
+                },
+                {
+                    text = "t2",
+                    size = cc.size(40, 40),
+                    callback = function(isOn)
+                        print("toggle t2 !", isOn)
+                    end
+                },
+                {
+                    text = "t3",
+                    size = cc.size(40, 40),
+                    callback = function(isOn)
+                        print("toggle t3 !", isOn)
+                    end
+                },
+            }
+        }
+        toggle.node:addTo(layer):move(900, 100)
+
+        markIt{ worldPos = cc.p(900, 100) }
     end
     -------------------------------------------
     local Combobox = require("fire.ui.Combobox")
@@ -212,7 +214,8 @@ local function test_ui()
                     --     print("select option3")
                     -- end
                 },
-            }
+            },
+            defaultIndex = 3,
         }
         combobox.node:addTo(layer):move(900, 100)
     end
@@ -225,6 +228,33 @@ local function test_ui()
             end
         }
         slider.node:addTo(layer):move(400, 600)
+
+        markIt{ worldPos = cc.p(400, 600) }
+    end
+    -------------------------------------------
+    local Progressbar = require("fire.ui.Progressbar")
+    do
+        local progressbar = Progressbar.new{
+            callback = function(per)
+                -- print("progress = ", per)
+            end
+        }
+        progressbar.node:addTo(layer):move(300, 100)
+
+        local plus = true
+        setInterval(function()
+            if plus then
+                progressbar.percent = progressbar.percent + 0.1
+            else
+                progressbar.percent = progressbar.percent - 0.1
+            end
+
+            if math.abs(progressbar.percent - 1.0) <= 0.01 then
+                plus = false
+            elseif progressbar.percent - 0 <= 0.01 then
+                plus = true
+            end
+        end, 0.1)
     end
 end
 

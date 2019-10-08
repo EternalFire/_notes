@@ -28,7 +28,7 @@ function Toggle:ctor(param)
     self.toggleBtns = {}
     self.isHorizontal = true
     self.bgColor = cc.c4b(20, 20, 20, 200)
-    self.interval = 10
+    self.interval = 10 -- 间距
 
     if param then
         if type(param.data) == "table" then
@@ -88,12 +88,16 @@ function Toggle:ctor(param)
                 if i < #self.data then
                     size.width = size.width + interval
                 end
+
+                size.height = math.max(size.height, toggleBtn.size.height)
             else
                 size.height = size.height + toggleBtn.size.height
 
                 if i < #self.data then
                     size.height = size.height + interval
                 end
+
+                size.width = math.max(size.width, toggleBtn.size.width)
             end
         end
     end

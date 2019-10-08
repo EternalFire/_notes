@@ -17,9 +17,11 @@ todo:
 - [x] combobox
 - [x] combobox item
 - [x] slider
-- [ ] drag input
+- [x] drag input
 - [ ] dialog
 - [ ] action unit panel
 - [ ] flow panel
 - [ ] menu
+- [ ] tips
+- [x] progress bar
 ]]

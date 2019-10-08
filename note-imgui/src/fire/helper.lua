@@ -364,3 +364,42 @@ function calcCellInfo(param)
         return result
     end
 end
+
+function markIt(param)
+    param = param or {}
+
+    local scene = cc.Director:getInstance():getRunningScene()
+    if not scene then
+        return
+    end
+
+    local target = param.target -- node
+    local worldPos = param.worldPos
+    local color = param.color or cc.c4f(0.8, 0.01, 0.6, 0.7)
+    local clear = param.clear -- boolean
+    local zOrder = 100000
+    local drawName = "mark_it_node"
+    local draw = scene:getChildByName(drawName)
+
+    if not draw then
+        draw = cc.DrawNode:create()
+        draw:addTo(scene)
+    end
+
+    if clear then
+        draw:clear()
+    end
+
+    if target then
+        worldPos = target:convertToWorldSpace(cc.p(0,0))
+    end
+
+    if worldPos then
+        --                                       drawLineToCenter
+        --                                             |
+        --                                             v
+        -- draw:drawCircle(worldPos, 5, math.pi/2, 50, true, 1.0, 1.0, color)
+
+        draw:drawSolidCircle(worldPos, 10, math.pi/2, 50, 1.0, 1.0, color)
+    end
+end
