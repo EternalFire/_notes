@@ -256,6 +256,114 @@ local function test_ui()
             end
         end, 0.1)
     end
+    -------------------------------------------
+    local Menu = require("fire.ui.Menu")
+    do
+        local menu = Menu.new{
+            level = 1,
+            -- isHorizontal = false,
+            -- size = cc.size(100, 100),
+            data = {
+                {
+                    text = "item 1",
+                    callback = function()
+                        print("1")
+                    end
+                },
+                {
+                    text = "sub menu",
+                    callback = function()
+                        print("2")
+                    end,
+                    child = {
+                        {
+                            text = "sub 1",
+                            callback = function()
+                                print("2-11")
+                            end,
+                        },
+                        {
+                            text = "sub 2",
+                            callback = function()
+                                print("2-22")
+                            end,
+                        },
+                        {
+                            text = "sub 3",
+                            callback = function()
+                                print("2-33")
+                            end,
+                            child = {
+                                {
+                                    text = "2-33.01",
+                                    callback = function()
+                                        print("2-33.01")
+                                    end
+                                },
+                                {
+                                    text = "2-33.02",
+                                    callback = function()
+                                        print("2-33.02")
+                                    end
+                                },
+                                {
+                                    text = "2-33.03",
+                                    callback = function()
+                                        print("2-33.03")
+                                    end
+                                },
+                                {
+                                    text = "2-33.04",
+                                    child = {
+                                        {
+
+                                        },
+                                        {
+                                            callback = function()
+                                                print("??!!??!!")
+                                            end
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    }
+                },
+                {
+                    callback = function()
+                        print("3")
+                    end,
+                    child = {
+                        {
+                            text = "3-1",
+                            callback = function()
+                                print("3-1")
+                            end
+                        },
+                        {
+                            text = "3-2",
+                            callback = function()
+                                print("3-2")
+                            end
+                        },
+                    }
+                },
+                {
+                    callback = function()
+                        print("4")
+                    end
+                },
+                {
+                    child = {
+                        {}, {}, {}, {}, {}, {}, {}
+                    }
+                }
+            }
+        }
+        menu.node:addTo(layer)
+            -- :move(display.cx, display.height - menu.size.height / 2)
+    end
+
 end
 
 return test_ui
