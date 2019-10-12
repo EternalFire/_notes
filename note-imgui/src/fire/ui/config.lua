@@ -21,7 +21,7 @@ todo:
 - [ ] dialog
 - [ ] action unit panel
 - [ ] flow panel
-- [ ] menu
+- [x] menu
 - [ ] tips
 - [x] progress bar
 ]]
