@@ -565,7 +565,9 @@ local function main()
         -- case_imgui()
     end
 
-    setTimeout(function() run() end, 0)
+    setTimeout(function()
+        run()
+    end, 0)
 end
 
 function _test()
