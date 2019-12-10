@@ -265,9 +265,9 @@ local function test_ui()
             -- size = cc.size(100, 100),
             data = {
                 {
-                    text = "item 1",
+                    text = "TrendMap",
                     callback = function()
-                        print("1")
+                        require("case.TrendMap.TrendEnv").play()
                     end
                 },
                 {
