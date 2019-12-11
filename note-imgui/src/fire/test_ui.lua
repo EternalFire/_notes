@@ -277,9 +277,9 @@ local function test_ui()
                     end,
                     child = {
                         {
-                            text = "sub 1",
+                            text = "Landlord CardType",
                             callback = function()
-                                print("2-11")
+                                require("case.Landlord.TestCardTypePanel").test()
                             end,
                         },
                         {

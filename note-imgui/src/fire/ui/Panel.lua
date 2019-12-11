@@ -40,7 +40,7 @@ function Panel:ctor(param)
     self.touchListener = nil
 
     if param then
-        local properties = { "size", "text" }
+        local properties = { "size", "text", "bgColor" }
         for _, value in ipairs(properties) do
             if param[value] then
                 self[value] = param[value]
